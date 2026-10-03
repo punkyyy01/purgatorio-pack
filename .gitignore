@@ -30,3 +30,6 @@ eula.txt
 *.key
 **/secrets*
 **/token*
+
+# Artefactos regenerables
+/build/
