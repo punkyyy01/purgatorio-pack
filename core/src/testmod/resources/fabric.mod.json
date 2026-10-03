@@ -1,0 +1,16 @@
+{
+	"schemaVersion": 1,
+	"id": "purgatorio_core_testmod",
+	"version": "0.1.0",
+	"name": "Purgatorio Core (pruebas)",
+	"description": "Solo para el servidor de pruebas. Nunca instalar en produccion.",
+	"license": "MIT",
+	"environment": "server",
+	"entrypoints": {
+		"main": ["com.purgatorio.coretest.CoreTestMod"]
+	},
+	"depends": {
+		"purgatorio_core": "*",
+		"minecraft": "~26.3"
+	}
+}
