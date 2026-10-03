@@ -14,9 +14,14 @@ export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/dev/.gradle}"
 "$HERE/server.sh" stop >/dev/null 2>&1 || true
 "$HERE/setup-test-server.sh" ${WITH_GRAVES:+--with-graves} >/dev/null
 rm -f "$DEST/purgatorio-test-results.txt"
+rm -rf "$DEST/test-world"   # mundo nuevo en cada ejecucion: pruebas reproducibles
 "$HERE/server.sh" start
 sleep 2
-"$HERE/server.sh" rcon "purgatorio_test run ${1:-}"
+CMD="purgatorio_test run"
+[ -n "${1:-}" ] && CMD="$CMD $1"
+"$HERE/server.sh" rcon "$CMD" >/dev/null
+# las pruebas corren como tarea del servidor: esperar al informe (max 5 min)
+for _ in $(seq 1 300); do [ -f "$DEST/purgatorio-test-results.txt" ] && break; sleep 1; done
 echo "---- informe ----"
 cat "$DEST/purgatorio-test-results.txt"
 "$HERE/server.sh" stop
