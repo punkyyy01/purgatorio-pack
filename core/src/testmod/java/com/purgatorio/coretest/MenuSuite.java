@@ -39,7 +39,8 @@ public final class MenuSuite implements Suite {
 		// Diario vacio, luego con un descubrimiento.
 		ctx.check(!diary.toString().isEmpty(), "el Diario es un item");
 		CriteriaTriggers.TICK.trigger(p);
-		p.snapTo(40.5, -60, 40.5, 0, 0);
+		var inside = RuinHelper.inside(ctx.level);
+		p.snapTo(inside.x, inside.y, inside.z, 0, 0);
 		CriteriaTriggers.LOCATION.trigger(p);
 		ctx.eq(AlmaRules.fromPoints(58), alma.getCentis(p), "descubrir suma 8 (50 -> 58)");
 		SimpleGui gui2 = MainMenu.open(p);

@@ -34,6 +34,8 @@ public final class CoreTestMod implements ModInitializer {
 		all.add(new MenuSuite());
 		all.add(new CommandSuite());
 		all.add(new XpCompatSuite());
+		all.add(new RuinaSuite());
+		all.add(new FeedbackSuite());
 		return all;
 	}
 
@@ -47,6 +49,12 @@ public final class CoreTestMod implements ModInitializer {
 					ServerLevel level = server.overworld();
 					for (int cx = -1; cx <= 3; cx++) {
 						for (int cz = -1; cz <= 3; cz++) {
+							level.setChunkForced(cx, cz, false);
+						}
+					}
+					net.minecraft.world.level.ChunkPos rc = RuinHelper.chunk(level);
+					for (int cx = rc.x() - 2; cx <= rc.x() + 2; cx++) {
+						for (int cz = rc.z() - 2; cz <= rc.z() + 2; cz++) {
 							level.setChunkForced(cx, cz, false);
 						}
 					}
@@ -80,8 +88,15 @@ public final class CoreTestMod implements ModInitializer {
 				level.setChunkForced(cx, cz, true);
 			}
 		}
+		// Zona de la ruina: hay que generarla con ticks reales para que sus entidades existan.
+		net.minecraft.world.level.ChunkPos rc = RuinHelper.chunk(level);
+		for (int cx = rc.x() - 2; cx <= rc.x() + 2; cx++) {
+			for (int cz = rc.z() - 2; cz <= rc.z() + 2; cz++) {
+				level.setChunkForced(cx, cz, true);
+			}
+		}
 		pendingFilter = filter;
-		ticksUntilRun = 60;
+		ticksUntilRun = 100;
 		source.sendSuccess(() -> Component.literal("Pruebas programadas (en 60 ticks); resultados en purgatorio-test-results.txt"), false);
 		return 1;
 	}
