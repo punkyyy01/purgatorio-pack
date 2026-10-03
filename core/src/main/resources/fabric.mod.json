@@ -23,7 +23,9 @@
 		"java": ">=25",
 		"fabric-api": "*",
 		"polymer-core": "*",
-		"polymer-resource-pack": "*"
+		"polymer-resource-pack": "*",
+		"filament": "*",
+		"sgui": "*"
 	},
 	"mixins": [
 		"purgatorio_core.mixins.json"
