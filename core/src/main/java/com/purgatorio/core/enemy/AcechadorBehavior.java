@@ -1,7 +1,9 @@
 package com.purgatorio.core.enemy;
 
 import com.purgatorio.core.PurgatorioCore;
-import com.purgatorio.core.alma.AlmaEvents;
+import com.purgatorio.core.feedback.AlmaReason;
+import com.purgatorio.core.feedback.Diary;
+import com.purgatorio.core.feedback.Fx;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,10 +66,9 @@ public final class AcechadorBehavior {
 		ServerTickEvents.END_SERVER_TICK.register(AcechadorBehavior::tick);
 		ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((level, killer, killed, source) -> {
 			if (killer instanceof ServerPlayer player && killed.entityTags().contains(TAG)) {
-				int gained = PurgatorioCore.alma().add(player, ALMA_REWARD_CENTIS);
-				if (gained > 0) {
-					player.sendSystemMessage(Component.literal("+" + AlmaEvents.format(gained) + " de Alma").withStyle(net.minecraft.ChatFormatting.GREEN), true);
-				}
+				PurgatorioCore.alma().add(player, ALMA_REWARD_CENTIS, AlmaReason.DERROTA);
+				Diary.award(player, "acechador");       // la primera vez: titulo "Ceniza al viento" (funcion del datapack)
+				Fx.sound(player, SoundEvents.WITHER_BREAK_BLOCK, 0.5F, 1.4F);
 			}
 		});
 	}
@@ -143,6 +144,7 @@ public final class AcechadorBehavior {
 		}
 		state.destination = destination;
 		state.telegraph = TELEGRAPH_TICKS;
+		Fx.actionbar(player, Component.literal("Sientes una presencia a tu espalda…").withStyle(net.minecraft.ChatFormatting.DARK_GRAY, net.minecraft.ChatFormatting.ITALIC));
 		level.playSound(null, mob.getX(), mob.getY(), mob.getZ(), SoundEvents.ENDERMAN_STARE, SoundSource.HOSTILE, 1.0F, 0.5F);
 	}
 

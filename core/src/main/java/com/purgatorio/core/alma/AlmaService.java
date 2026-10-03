@@ -33,14 +33,23 @@ public final class AlmaService {
 		return value;
 	}
 
-	/** Suma Alma. Devuelve cuanto se aplico de verdad (puede ser menos si se llego al tope). */
+	/** Suma Alma sin feedback. Devuelve cuanto se aplico de verdad (puede ser menos si se llego al tope). */
 	public int add(ServerPlayer player, int centis) {
+		return add(player, centis, com.purgatorio.core.feedback.AlmaReason.SILENT);
+	}
+
+	/** Suma Alma y avisa a los oyentes ({@link AlmaEvents#GAINED}) con el motivo, que decide el feedback. */
+	public int add(ServerPlayer player, int centis, com.purgatorio.core.feedback.AlmaReason reason) {
 		if (centis <= 0) {
 			return 0;
 		}
 		int before = getCentis(player);
 		int after = set(player, AlmaRules.add(before, centis));
-		return after - before;
+		int applied = after - before;
+		if (applied > 0) {
+			AlmaEvents.GAINED.invoker().onGained(player, applied, reason);
+		}
+		return applied;
 	}
 
 	/** Resta Alma sin condiciones (no es un gasto). Devuelve cuanto se quito de verdad. */

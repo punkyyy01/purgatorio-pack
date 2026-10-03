@@ -52,7 +52,10 @@ public final class PurgatorioCommands {
 						.then(Commands.literal("add")
 							.then(Commands.argument("jugador", EntityArgument.players())
 								.then(Commands.argument("puntos", DoubleArgumentType.doubleArg(0, 100))
-									.executes(c -> almaChange(c, Mode.ADD)))))
+									.executes(c -> almaChange(c, Mode.ADD))
+									.then(Commands.argument("motivo", com.mojang.brigadier.arguments.StringArgumentType.word())
+										.suggests((ctx, b) -> net.minecraft.commands.SharedSuggestionProvider.suggest(new String[] {"descubrimiento", "derrota", "otro"}, b))
+										.executes(c -> almaChange(c, Mode.ADD))))))
 						.then(Commands.literal("remove")
 							.then(Commands.argument("jugador", EntityArgument.players())
 								.then(Commands.argument("puntos", DoubleArgumentType.doubleArg(0, 100))
@@ -86,10 +89,16 @@ public final class PurgatorioCommands {
 	private static int almaChange(CommandContext<CommandSourceStack> c, Mode mode) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
 		Collection<ServerPlayer> players = EntityArgument.getPlayers(c, "jugador");
 		int centis = (int) Math.round(DoubleArgumentType.getDouble(c, "puntos") * AlmaRules.SCALE);
+		com.purgatorio.core.feedback.AlmaReason reason = com.purgatorio.core.feedback.AlmaReason.SILENT;
+		try {
+			reason = com.purgatorio.core.feedback.AlmaReason.parse(com.mojang.brigadier.arguments.StringArgumentType.getString(c, "motivo"));
+		} catch (IllegalArgumentException ignored) {
+			// sin motivo: suma silenciosa (administracion)
+		}
 		for (ServerPlayer player : players) {
 			switch (mode) {
 				case SET -> PurgatorioCore.alma().set(player, centis);
-				case ADD -> PurgatorioCore.alma().add(player, centis);
+				case ADD -> PurgatorioCore.alma().add(player, centis, reason);
 				case REMOVE -> PurgatorioCore.alma().remove(player, centis);
 			}
 		}

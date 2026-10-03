@@ -6,6 +6,8 @@ import com.purgatorio.core.alma.AttachmentAlmaStorage;
 import com.purgatorio.core.alma.XpBarAlmaDisplay;
 import com.purgatorio.core.command.PurgatorioCommands;
 import com.purgatorio.core.enemy.AcechadorBehavior;
+import com.purgatorio.core.feedback.AlmaFeedback;
+import com.purgatorio.core.feedback.PlaceAmbience;
 import com.purgatorio.core.forge.ForgeRecipeLoader;
 import com.purgatorio.core.forge.ForgeService;
 import com.purgatorio.core.item.ColmilloTrait;
@@ -47,12 +49,14 @@ public final class PurgatorioCore implements ModInitializer {
 	public void onInitialize() {
 		alma = new AlmaService(new AttachmentAlmaStorage(), new XpBarAlmaDisplay());
 		AlmaEvents.register(alma);
+		AlmaEvents.GAINED.register(AlmaFeedback::onGain);
 
 		PurgatorioItems.init();
 		ColmilloTrait.register();
 		forgeRecipes = ForgeRecipeLoader.register();
 		forgeService = new ForgeService(alma);
 		AcechadorBehavior.register();
+		PlaceAmbience.register();
 		PurgatorioCommands.register();
 
 		// Los modelos/texturas propios van al resource pack automatico de Polymer.

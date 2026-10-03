@@ -26,6 +26,21 @@ public final class AlmaEvents {
 		}
 	);
 
+	/** Se dispara cuando un jugador gana Alma (cantidad realmente aplicada, en centesimas). */
+	public static final Event<Gained> GAINED = EventFactory.createArrayBacked(
+		Gained.class,
+		listeners -> (player, gainedCentis, reason) -> {
+			for (Gained listener : listeners) {
+				listener.onGained(player, gainedCentis, reason);
+			}
+		}
+	);
+
+	@FunctionalInterface
+	public interface Gained {
+		void onGained(ServerPlayer player, int gainedCentis, com.purgatorio.core.feedback.AlmaReason reason);
+	}
+
 	@FunctionalInterface
 	public interface LostOnDeath {
 		void onLostOnDeath(ServerPlayer player, int lostCentis, DamageSource source);
@@ -54,9 +69,9 @@ public final class AlmaEvents {
 			alma.refresh(newPlayer);
 			Integer lost = PENDING_NOTICE.remove(oldPlayer.getUUID());
 			if (lost != null) {
-				newPlayer.sendSystemMessage(Component.literal(
-					"Tu Alma se derrama... pierdes " + format(lost) + " (te quedan " + format(alma.getCentis(newPlayer)) + ")."
-				));
+				com.purgatorio.core.feedback.AlmaFeedback.onDeathLoss(newPlayer, lost, alma.getCentis(newPlayer));
+				newPlayer.sendSystemMessage(Component.literal("Tu Alma se derrama... pierdes " + format(lost) + " (te quedan "
+					+ format(alma.getCentis(newPlayer)) + ")."));
 			}
 		});
 

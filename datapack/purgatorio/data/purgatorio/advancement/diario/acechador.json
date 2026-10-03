@@ -1,0 +1,29 @@
+{
+	"parent": "purgatorio:diario/raiz",
+	"criteria": {
+		"vencerlo": {
+			"trigger": "minecraft:impossible"
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"text": "Venciste a lo que acechaba tras tu espalda."
+		},
+		"icon": {
+			"id": "minecraft:bone"
+		},
+		"show_toast": true,
+		"title": {
+			"text": "Ceniza al viento"
+		}
+	},
+	"requirements": [
+		[
+			"vencerlo"
+		]
+	],
+	"rewards": {
+		"function": "purgatorio:descubrimiento/acechador"
+	}
+}

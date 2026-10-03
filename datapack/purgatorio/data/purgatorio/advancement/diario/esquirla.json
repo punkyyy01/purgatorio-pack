@@ -1,0 +1,36 @@
+{
+	"parent": "purgatorio:diario/raiz",
+	"criteria": {
+		"tenerla": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "purgatorio:esquirla_de_brasa"
+					}
+				]
+			}
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"text": "Algo tibio que la forja sabrá aprovechar."
+		},
+		"icon": {
+			"id": "purgatorio:esquirla_de_brasa"
+		},
+		"show_toast": true,
+		"title": {
+			"text": "Fragmentos de brasa"
+		}
+	},
+	"requirements": [
+		[
+			"tenerla"
+		]
+	],
+	"rewards": {
+		"function": "purgatorio:descubrimiento/esquirla"
+	}
+}

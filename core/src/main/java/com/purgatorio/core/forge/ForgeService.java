@@ -105,6 +105,7 @@ public final class ForgeService {
 		int newLevel = preview.currentLevel() + 1;
 		UpgradeData.set(stack, newLevel);
 		((Upgradeable) stack.getItem()).applyLevel(stack, newLevel);
+		com.purgatorio.core.feedback.AlmaFeedback.onSpend(player, preview.almaCostCentis());
 		return new Outcome(true, Component.literal("Mejora aplicada: nivel " + newLevel + ". Gastaste " + preview.next().alma() + " de Alma."));
 	}
 
