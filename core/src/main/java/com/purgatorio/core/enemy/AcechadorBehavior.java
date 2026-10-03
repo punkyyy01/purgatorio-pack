@@ -74,7 +74,10 @@ public final class AcechadorBehavior {
 
 	/** Empieza a seguir a un Acechador (idempotente). */
 	public static void track(Mob mob) {
-		STATES.computeIfAbsent(mob.getUUID(), id -> new State(mob));
+		STATES.computeIfAbsent(mob.getUUID(), id -> {
+			EnemySpawner.applyDefinition(mob);
+			return new State(mob);
+		});
 	}
 
 	public static int trackedCount() {

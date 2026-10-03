@@ -9,10 +9,7 @@
 					"entity": "this",
 					"predicate": {
 						"minecraft:location": {
-							"position": {
-								"x": { "min": 36, "max": 45 },
-								"z": { "min": 36, "max": 45 }
-							}
+							"structures": "purgatorio:ruina_de_ceniza"
 						}
 					}
 				}
@@ -21,12 +18,22 @@
 	},
 	"display": {
 		"announce_to_chat": false,
-		"description": { "text": "Una ruina cubierta de ceniza, con una linterna que aún arde." },
-		"icon": { "id": "minecraft:soul_lantern" },
+		"description": {
+			"text": "Humo gris sobre una colina: una ruina que aún respira brasas."
+		},
+		"icon": {
+			"id": "minecraft:soul_lantern"
+		},
 		"show_toast": true,
-		"title": { "text": "La Ruina de Ceniza" }
+		"title": {
+			"text": "La Ruina de Ceniza"
+		}
 	},
-	"requirements": [["entrar"]],
+	"requirements": [
+		[
+			"entrar"
+		]
+	],
 	"rewards": {
 		"function": "purgatorio:descubrimiento/ruina_de_ceniza"
 	}

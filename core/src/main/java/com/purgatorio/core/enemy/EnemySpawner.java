@@ -22,6 +22,30 @@ public final class EnemySpawner {
 	private EnemySpawner() {
 	}
 
+	/**
+	 * Asegura los atributos del Acechador en una entidad ya existente (p. ej. generada por la estructura o cargada del disco).
+	 * Idempotente: si ya los tiene, no toca nada.
+	 */
+	public static void applyDefinition(net.minecraft.world.entity.Mob mob) {
+		var health = mob.getAttribute(Attributes.MAX_HEALTH);
+		if (health != null && health.getBaseValue() != ACECHADOR_HEALTH) {
+			health.setBaseValue(ACECHADOR_HEALTH);
+			mob.setHealth((float) ACECHADOR_HEALTH);
+		}
+		var speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
+		if (speed != null && speed.getBaseValue() != ACECHADOR_SPEED) {
+			speed.setBaseValue(ACECHADOR_SPEED);
+		}
+		var damage = mob.getAttribute(Attributes.ATTACK_DAMAGE);
+		if (damage != null && damage.getBaseValue() != ACECHADOR_DAMAGE) {
+			damage.setBaseValue(ACECHADOR_DAMAGE);
+		}
+	}
+
+	public static final double ACECHADOR_HEALTH = 36.0;
+	public static final double ACECHADOR_SPEED = 0.30;
+	public static final double ACECHADOR_DAMAGE = 4.0;
+
 	public static Husk spawnAcechador(ServerLevel level, Vec3 pos) {
 		Husk husk = EntityTypes.HUSK.create(level, EntitySpawnReason.COMMAND);
 		// El botin sale de un datapack: se asigna por el mismo campo que usa vanilla al cargar la entidad.
@@ -35,10 +59,7 @@ public final class EnemySpawner {
 		husk.setCustomName(Component.literal("Acechador de Ceniza"));
 		husk.setCustomNameVisible(true);
 		husk.setPersistenceRequired();
-		husk.getAttribute(Attributes.MAX_HEALTH).setBaseValue(36.0);
-		husk.setHealth(36.0F);
-		husk.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.30);
-		husk.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(4.0);
+		applyDefinition(husk);
 		if (level.addFreshEntity(husk)) {
 			AcechadorBehavior.track(husk);
 		}
