@@ -2,6 +2,7 @@ package com.purgatorio.core.mixin;
 
 import com.purgatorio.core.PurgatorioCore;
 import com.purgatorio.core.alma.AlmaRules;
+import com.purgatorio.core.alma.MenuLevelBridge;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +23,19 @@ public abstract class ServerPlayerMixin {
 		at = @At(value = "NEW", target = "(FII)Lnet/minecraft/network/protocol/game/ClientboundSetExperiencePacket;")
 	)
 	private ClientboundSetExperiencePacket purgatorio$almaInsteadOfXp(float progress, int total, int level) {
-		int centis = PurgatorioCore.alma().getCentis((ServerPlayer) (Object) this);
+		ServerPlayer self = (ServerPlayer) (Object) this;
+		if (MenuLevelBridge.inLevelMenu(self)) {
+			// Con el menu de encantar/yunque abierto el cliente necesita ver un nivel suficiente (ver MenuLevelBridge).
+			return new ClientboundSetExperiencePacket(0.0F, MenuLevelBridge.MENU_LEVEL, MenuLevelBridge.MENU_LEVEL);
+		}
+		int centis = PurgatorioCore.alma().getCentis(self);
 		int almaLevel = AlmaRules.displayLevel(centis);
 		return new ClientboundSetExperiencePacket(AlmaRules.displayProgress(centis), almaLevel, almaLevel);
+	}
+
+	@Inject(method = "doTick", at = @At("HEAD"))
+	private void purgatorio$menuLevelBridge(CallbackInfo ci) {
+		MenuLevelBridge.tick((ServerPlayer) (Object) this);
 	}
 
 	@Inject(method = "giveExperiencePoints", at = @At("HEAD"), cancellable = true)

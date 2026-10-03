@@ -39,7 +39,10 @@ azul + sonido y ~1 s despues aparece detras. Matarlo suelta Esquirlas y suma 3 d
 **7. Muerte.** `/purgatorio admin alma set @s 100`, `/kill @s`, reaparece: barra en 70 y mensaje "Tu Alma se derrama...".
 Un segundo `/kill @s` → 49.
 
-**8. Encantar y yunque (estado actual conocido).** Pon una mesa de encantamientos con lapis y un yunque. Anota lo que
-ves: se espera que NO se puedan usar (el XP real es 0). Es la decision de diseno pendiente; solo hay que confirmarlo.
+**8. Encantar, yunque y Mending (P0).** Ver `docs/xp-vanilla-compat.md`.
+- Mesa de encantamientos con estanterias y lapis: se pueden elegir las opciones y se encanta gastando solo lapis. Con la mesa abierta la barra muestra 39; al cerrar vuelve a tu Alma.
+- Yunque: combina un libro encantado con una espada; se puede tomar el resultado sin gastar niveles. Se muestra "Coste de encantamiento" pero no se cobra.
+- Mending: `/give @s diamond_pickaxe[enchantments={mending:1},damage=500]`, matar mobs o fundir cerca: aparecen orbes, la herramienta se repara y el Alma NO sube.
+- Sin objetos con Mending danados no deben aparecer orbes de XP.
 
 **9. Extra.** Cambiar de dimension (portal) y volver: la barra sigue mostrando el Alma. Salir y entrar: se conserva.

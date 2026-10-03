@@ -33,6 +33,7 @@ public final class CoreTestMod implements ModInitializer {
 		all.add(new EnemySuite());
 		all.add(new MenuSuite());
 		all.add(new CommandSuite());
+		all.add(new XpCompatSuite());
 		return all;
 	}
 
