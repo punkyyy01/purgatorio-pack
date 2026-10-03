@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "purgatorio_core",
+	"version": "${version}",
+	"name": "Purgatorio Core",
+	"description": "Nucleo server-side de Purgatorio: Alma, forja, descubrimientos y menu.",
+	"authors": ["Purgatorio"],
+	"contact": {
+		"sources": "https://github.com/punkyyy01/purgatorio-pack"
+	},
+	"license": "MIT",
+	"environment": "server",
+	"entrypoints": {
+		"main": ["com.purgatorio.core.PurgatorioCore"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*",
+		"polymer-core": "*",
+		"polymer-resource-pack": "*"
+	}
+}
