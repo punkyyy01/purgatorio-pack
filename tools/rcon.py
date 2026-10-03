@@ -32,8 +32,9 @@ def _read(sock):
     return rid, ptype, body[8:-2].decode(errors="replace")
 
 
-def command(cmd, host="127.0.0.1"):
+def command(cmd, host=None):
     p = _props()
+    host = host or p.get("server-ip") or "127.0.0.1"
     s = socket.create_connection((host, int(p["rcon.port"])), timeout=10)
     _pkt(s, 1, 3, p["rcon.password"])
     rid, _, _ = _read(s)

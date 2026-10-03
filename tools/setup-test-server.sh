@@ -23,7 +23,7 @@ echo "eula=true" > eula.txt   # ya aceptado por el propietario en el servidor re
 
 if [ ! -f server.properties ]; then
 	RCON_PASS="$(head -c 18 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | head -c 20)"
-	sed "s/__RCON_PASSWORD__/$RCON_PASS/" "$REPO/tools/test-server.properties.template" > server.properties
+	sed "s/__RCON_PASSWORD__/$RCON_PASS/" "${PROPS_TEMPLATE:-$REPO/tools/test-server.properties.template}" > server.properties
 fi
 
 # Mods de terceros necesarios (copiados del servidor real, solo lectura)
@@ -39,13 +39,20 @@ if [ "${1:-}" = "--full-pack" ]; then
 	cp "$PROD_MODS"/*.jar mods/
 fi
 
-# Polymer: sin autohost en pruebas (el pack se genera en polymer/resource_pack.zip)
-cat > config/polymer/auto-host.json <<'J'
+# Polymer: sin autohost en pruebas automaticas (el pack se genera en polymer/resource_pack.zip).
+# AUTOHOST_ENABLED=1 (pruebas con cliente real): el pack se sirve por el mismo puerto y es obligatorio, como en produccion.
+if [ "${AUTOHOST_ENABLED:-}" = "1" ]; then
+	cat > config/polymer/auto-host.json <<'J'
+{ "enabled": true, "type": "polymer:automatic", "required": true }
+J
+else
+	cat > config/polymer/auto-host.json <<'J'
 { "enabled": false }
 J
+fi
 
 # Nuestro mod + mod de pruebas (este ultimo SOLO existe en el servidor de pruebas)
 cp "$REPO"/core/build/libs/purgatorio-core-*[0-9].jar mods/
-cp "$REPO"/core/build/libs/purgatorio-core-testmod-*.jar mods/
+[ "${NO_TESTMOD:-}" = "1" ] || cp "$REPO"/core/build/libs/purgatorio-core-testmod-*.jar mods/
 echo "Servidor de pruebas listo en $DEST"
 ls mods
