@@ -39,6 +39,9 @@ if [ "${1:-}" = "--full-pack" ]; then
 	cp "$PROD_MODS"/*.jar mods/
 fi
 
+# Mods extra opcionales (p. ej. un datapack-mod de poda en pruebas): EXTRA_MODS=/ruta/con/jars
+[ -n "${EXTRA_MODS:-}" ] && cp "$EXTRA_MODS"/*.jar mods/
+
 # Polymer: sin autohost en pruebas automaticas (el pack se genera en polymer/resource_pack.zip).
 # AUTOHOST_ENABLED=1 (pruebas con cliente real): el pack se sirve por el mismo puerto y es obligatorio, como en produccion.
 if [ "${AUTOHOST_ENABLED:-}" = "1" ]; then
