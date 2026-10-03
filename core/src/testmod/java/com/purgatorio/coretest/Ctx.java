@@ -45,7 +45,7 @@ public final class Ctx {
 			return channel;
 		}
 
-		void setPlayer(ServerPlayer player) {
+		public void setPlayer(ServerPlayer player) {
 			this.player = player;
 		}
 	}

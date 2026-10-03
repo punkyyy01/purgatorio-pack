@@ -137,6 +137,32 @@ public final class AlmaSuite implements Suite {
 		sent = ctx.lastXp(a);
 		ctx.check(sent != null && sent.getExperienceLevel() == 100 && sent.getExperienceProgress() == 1.0F, "con Alma 100 la barra va llena (nivel 100)");
 
+		// ---- cambio de dimension: vanilla reenvia la barra, debe seguir mostrando Alma ----
+		alma().set(pa, AlmaRules.fromPoints(33));
+		net.minecraft.server.level.ServerLevel nether = ctx.server.getLevel(net.minecraft.world.level.Level.NETHER);
+		ctx.check(nether != null, "existe el Nether en el mundo de pruebas");
+		if (nether != null) {
+			ServerPlayer moved = pa.teleport(new net.minecraft.world.level.portal.TeleportTransition(
+				nether, new Vec3(0.5, 70, 0.5), Vec3.ZERO, 0.0F, 0.0F, net.minecraft.world.level.portal.TeleportTransition.DO_NOTHING));
+			ctx.check(moved != null && moved.level() == nether, "el jugador cambio de dimension (Nether)");
+			if (moved != null) {
+				moved.doTick();
+				ClientboundSetExperiencePacket afterPortal = ctx.lastXp(a);
+				ctx.check(afterPortal != null && afterPortal.getExperienceLevel() == 33, "tras cambiar de dimension la barra sigue mostrando Alma (33), real="
+					+ (afterPortal == null ? "sin paquete" : afterPortal.getExperienceLevel()));
+				ctx.eq(AlmaRules.fromPoints(33), alma().getCentis(moved), "y el Alma no cambia por viajar");
+				pa = moved;
+				a.setPlayer(moved);
+				ServerPlayer back = moved.teleport(new net.minecraft.world.level.portal.TeleportTransition(
+					ctx.level, new Vec3(0.5, 80, 0.5), Vec3.ZERO, 0.0F, 0.0F, net.minecraft.world.level.portal.TeleportTransition.DO_NOTHING));
+				if (back != null) {
+					pa = back;
+					a.setPlayer(back);
+				}
+				pa.hasChangedDimension();    // el cliente confirma el cambio (sin esto el jugador queda invulnerable)
+			}
+		}
+
 		// ---- el XP vanilla no genera Alma ----
 		alma().set(pa, AlmaRules.fromPoints(40));
 		pa.experienceLevel = 0;
