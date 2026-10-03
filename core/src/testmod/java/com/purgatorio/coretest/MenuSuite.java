@@ -64,6 +64,7 @@ public final class MenuSuite implements Suite {
 		p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.STICK));
 		SimpleGui empty = ForgeGui.open(p, null);
 		ctx.check(empty.getGuiElement(13).getItemStack().is(Items.BARRIER), "sin objeto mejorable la forja explica que no hay nada que mejorar");
-		ctx.check(empty.getGuiElement(22) == null || empty.getGuiElement(22).getItemStack().isEmpty(), "y no ofrece boton de mejora");
+		ctx.check(!empty.getGuiElement(22).getItemStack().is(Items.ANVIL), "y no ofrece boton de mejora");
+		ctx.check(gui.getGuiElement(0).getItemStack().is(Items.STAINED_GLASS_PANE.black()), "el menu tiene marco de relleno (acabado visual)");
 	}
 }

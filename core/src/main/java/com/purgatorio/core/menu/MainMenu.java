@@ -23,32 +23,50 @@ public final class MainMenu {
 
 	public static SimpleGui open(ServerPlayer player) {
 		SimpleGui gui = new SimpleGui(MenuType.GENERIC_9x3, player, false);
-		gui.setTitle(Component.literal("Purgatorio"));
+		gui.setTitle(Ui.title("Purgatorio"));
+		Ui.fillAll(gui, 27);
 
 		int centis = PurgatorioCore.alma().getCentis(player);
 		double bonus = (AlmaRules.damageMultiplier(centis) - 1.0) * 100.0;
 		gui.setSlot(11, new GuiElementBuilder(Items.EXPERIENCE_BOTTLE)
-			.setName(Component.literal("Tu Alma: " + AlmaEvents.format(centis) + " / 100").withStyle(ChatFormatting.GREEN))
-			.addLoreLine(Component.literal(String.format("Bonus de daño: +%.1f%% (máximo +10%%)", bonus)).withStyle(ChatFormatting.GRAY))
-			.addLoreLine(Component.literal("Al morir pierdes ~30% de tu Alma.").withStyle(ChatFormatting.RED))
-			.addLoreLine(Component.literal("Gastarla en la forja mejora tu equipo para siempre.").withStyle(ChatFormatting.DARK_GRAY)));
+			.setName(Component.literal("Tu Alma · " + AlmaEvents.format(centis) + " / 100").withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD))
+			.addLoreLine(Ui.bar(centis / (double) AlmaRules.MAX, 20, ChatFormatting.GREEN))
+			.addLoreLine(Component.literal("Bonus de daño: +" + Ui.num(bonus) + " %").withStyle(ChatFormatting.YELLOW)
+				.append(Component.literal("  (máximo +10 %)").withStyle(ChatFormatting.DARK_GRAY)))
+			.addLoreLine(Ui.blank())
+			.addLoreLine(Ui.text("Se gana descubriendo lugares y derrotando", ChatFormatting.GRAY))
+			.addLoreLine(Ui.text("enemigos. Se gasta en la forja.", ChatFormatting.GRAY))
+			.addLoreLine(Ui.text("Al morir pierdes ~30 % de tu Alma.", ChatFormatting.RED))
+			.addLoreLine(Ui.blank())
+			.addLoreLine(Ui.text("El Alma que gastas ya no se pierde.", ChatFormatting.DARK_GRAY)));
 
 		gui.setSlot(13, new GuiElementBuilder(Items.ANVIL)
-			.setName(Component.literal("Forja").withStyle(ChatFormatting.GOLD))
-			.addLoreLine(Component.literal("Mejora el objeto que tienes en la mano").withStyle(ChatFormatting.GRAY))
-			.addLoreLine(Component.literal("con materiales y Alma.").withStyle(ChatFormatting.GRAY))
+			.setName(Ui.text("Forja", ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD))
+			.addLoreLine(Ui.text("Mejora el objeto que sostienes en la mano.", ChatFormatting.GRAY))
+			.addLoreLine(Ui.text("Cuesta Alma y materiales; la mejora es", ChatFormatting.GRAY))
+			.addLoreLine(Ui.text("permanente.", ChatFormatting.GRAY))
+			.addLoreLine(Ui.blank())
+			.addLoreLine(Ui.text("▶ Clic para abrir", ChatFormatting.YELLOW))
 			.setCallback((index, type, action, gui2) -> ForgeGui.open(player, () -> open(player))));
 
 		GuiElementBuilder diary = new GuiElementBuilder(Items.WRITABLE_BOOK)
-			.setName(Component.literal("Diario").withStyle(ChatFormatting.AQUA));
+			.setName(Ui.text("Diario", ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
 		List<Component> found = discoveries(player);
 		if (found.isEmpty()) {
-			diary.addLoreLine(Component.literal("Todavía no has descubierto nada.").withStyle(ChatFormatting.GRAY));
+			diary.addLoreLine(Ui.text("Todavía no has descubierto nada.", ChatFormatting.GRAY));
+			diary.addLoreLine(Ui.text("Explora: lo que encuentres quedará anotado aquí.", ChatFormatting.DARK_GRAY));
 		} else {
-			diary.addLoreLine(Component.literal("Lo que has descubierto:").withStyle(ChatFormatting.GRAY));
+			diary.addLoreLine(Ui.text("Descubrimientos: " + found.size(), ChatFormatting.GRAY));
+			diary.addLoreLine(Ui.blank());
 			found.forEach(diary::addLoreLine);
+			diary.addLoreLine(Ui.blank());
+			diary.addLoreLine(Ui.text("También en la pestaña de logros (tecla L).", ChatFormatting.DARK_GRAY));
 		}
 		gui.setSlot(15, diary);
+
+		gui.setSlot(22, new GuiElementBuilder(Items.BARRIER)
+			.setName(Ui.text("Cerrar", ChatFormatting.RED))
+			.setCallback((index, type, action, gui2) -> gui.close()));
 		gui.open();
 		return gui;
 	}
@@ -64,7 +82,7 @@ public final class MainMenu {
 			if (player.getAdvancements().getOrStartProgress(holder).isDone()) {
 				DisplayInfo display = holder.value().display().orElse(null);
 				if (display != null) {
-					out.add(Component.literal("• ").append(display.title()).withStyle(ChatFormatting.WHITE));
+					out.add(Component.literal("✦ ").withStyle(ChatFormatting.AQUA).append(display.title().copy().withStyle(ChatFormatting.WHITE)));
 				}
 			}
 		}

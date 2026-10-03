@@ -66,7 +66,7 @@ public final class AcechadorBehavior {
 			if (killer instanceof ServerPlayer player && killed.entityTags().contains(TAG)) {
 				int gained = PurgatorioCore.alma().add(player, ALMA_REWARD_CENTIS);
 				if (gained > 0) {
-					player.sendSystemMessage(Component.literal("+" + AlmaEvents.format(gained) + " de Alma"));
+					player.sendSystemMessage(Component.literal("+" + AlmaEvents.format(gained) + " de Alma").withStyle(net.minecraft.ChatFormatting.GREEN), true);
 				}
 			}
 		});
