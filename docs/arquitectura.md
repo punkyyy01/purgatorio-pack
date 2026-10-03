@@ -43,7 +43,7 @@ Dependencias solo hacia la izquierda: `AlmaRules` no conoce a nadie; `AlmaServic
 
 ## Forja (prueba minima)
 
-- Receta data-driven: `data/purgatorio/forge/<item>.json` (JSON propio, recargable con `/reload`).
+- Receta data-driven: `data/<ns>/forja/<item>.json` (JSON propio, recargable con `/reload`, verificado).
 - `ForgeService.tryUpgrade(player, stack)` valida: item mejorable, nivel siguiente, materiales en inventario, Alma suficiente. Si todo es valido, consume materiales, llama a `AlmaService.spend` y sube el nivel. Si algo falla no cambia nada.
 - El nivel de mejora vive **en el propio item** (componente `custom_data`), asi que es permanente y viaja con el objeto.
 - Interfaz: pantalla sgui abierta desde el menu o `/purgatorio forja`. (Estacion fisica = trabajo futuro.)
@@ -70,11 +70,18 @@ Dependencias solo hacia la izquierda: `AlmaRules` no conoce a nadie; `AlmaServic
 - Mundo nuevo (nunca una copia del mundo real).
 - Se reconstruye con `tools/` desde el repo.
 
+## Estado de implementacion (vertical slice)
+
+Implementado y probado: `alma` (reglas, servicio, persistencia, barra, mixins de XP y dano, perdida por muerte),
+`forge` (recetas, servicio, GUI), `item` (Colmillo de Ceniza), `enemy` (Acechador), `menu`, `command`, datapack
+(Diario, descubrimiento, botin, forja, esquirla en Filament). Sin implementar: Alma derramada en la tumba, fatiga
+anti-granja, escalado por region, estacion fisica de forja, constantes en archivo de configuracion.
+
 ## Pruebas
 
 | Nivel | Herramienta | Cubre |
 |---|---|---|
 | Reglas | JUnit | rangos, tope 100, bonus <= 10%, perdida 30%, gasto |
-| Integracion en el servidor | Fabric GameTest con jugadores simulados | dano con Alma, XP vanilla no da Alma, muerte, persistencia, dos jugadores |
-| Humo | Servidor de pruebas + RCON | el mod carga, el datapack y los logros existen, comandos responden |
-| Manual (pendiente) | Cliente real | barra de XP, modelo del item, GUIs |
+| Integracion en el servidor | Mod de pruebas `purgatorio_core_testmod` (comando `/purgatorio_test`) con jugadores simulados reales (ServerPlayer + canal de red simulado) | 200 comprobaciones en 7 suites: Alma, forja, item, descubrimiento, enemigo, menu, comandos |
+| Compatibilidad | Mismas suites con los 154 mods del servidor real (`FULL_PACK=1`) | el mod arranca y funciona junto al resto de mods |
+| Manual (pendiente) | Cliente real, ver `docs/pruebas-manuales.md` | barra de XP, modelos, GUIs, resource pack |

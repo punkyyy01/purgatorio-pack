@@ -30,6 +30,13 @@ cd core
 
 Nunca se prueba en el servidor real. Ver `tools/README.md`.
 
+```bash
+tools/run-integration-tests.sh            # 200 comprobaciones, servidor de pruebas aislado
+FULL_PACK=1 JAVA_XMX=3G tools/run-integration-tests.sh   # con todos los mods del servidor real
+```
+
+Estado y limitaciones: `docs/informe-vertical-slice.md`. Comprobaciones con cliente real: `docs/pruebas-manuales.md`.
+
 ## Filosofia de diseno
 
 Ver `docs/diseno-fase1.md`. Resumen: RPG de aventura, progresion sin puertas, el equipo es la principal fuente de poder, y **Alma** (0-100, max +10% de dano) es la experiencia del jugador.
