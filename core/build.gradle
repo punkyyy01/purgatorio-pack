@@ -16,6 +16,23 @@ repositories {
 	}
 }
 
+// Mod de PRUEBAS (no va a produccion): comandos que ejecutan suites dentro de un servidor de test.
+sourceSets {
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+	}
+}
+
+tasks.register('testmodJar', Jar) {
+	group = 'build'
+	description = 'Empaqueta el mod de pruebas de integracion (solo para el servidor de test).'
+	archiveBaseName = 'purgatorio-core-testmod'
+	archiveVersion = project.version.toString()
+	from sourceSets.testmod.output
+	destinationDirectory = layout.buildDirectory.dir('libs')
+}
+
 // Mod 100% de servidor: no hay codigo ni recursos de cliente.
 loom {
 	mods {
@@ -59,4 +76,8 @@ java {
 
 test {
 	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs << '-Xlint:deprecation'
 }
