@@ -4,6 +4,7 @@ import com.purgatorio.core.alma.AlmaEvents;
 import com.purgatorio.core.alma.AlmaService;
 import com.purgatorio.core.alma.AttachmentAlmaStorage;
 import com.purgatorio.core.alma.XpBarAlmaDisplay;
+import com.purgatorio.core.command.PurgatorioCommands;
 import com.purgatorio.core.enemy.AcechadorBehavior;
 import com.purgatorio.core.forge.ForgeRecipeLoader;
 import com.purgatorio.core.forge.ForgeService;
@@ -52,6 +53,7 @@ public final class PurgatorioCore implements ModInitializer {
 		forgeRecipes = ForgeRecipeLoader.register();
 		forgeService = new ForgeService(alma);
 		AcechadorBehavior.register();
+		PurgatorioCommands.register();
 
 		// Los modelos/texturas propios van al resource pack automatico de Polymer.
 		PolymerResourcePackUtils.addModAssets(MOD_ID);

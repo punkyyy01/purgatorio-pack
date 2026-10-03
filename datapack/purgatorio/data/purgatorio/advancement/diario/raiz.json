@@ -1,0 +1,16 @@
+{
+	"criteria": {
+		"entrar": {
+			"trigger": "minecraft:tick"
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"background": "minecraft:gui/advancements/backgrounds/adventure",
+		"description": { "text": "Lo que vas descubriendo en Purgatorio queda anotado aquí." },
+		"icon": { "id": "minecraft:writable_book" },
+		"show_toast": false,
+		"title": { "text": "Diario de Purgatorio" }
+	},
+	"requirements": [["entrar"]]
+}
