@@ -1,0 +1,87 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = 'purgatorio-core'
+}
+
+repositories {
+	maven {
+		name = 'Nucleoid'
+		url = 'https://maven.nucleoid.xyz'
+	}
+}
+
+// Mod de PRUEBAS (no va a produccion): comandos que ejecutan suites dentro de un servidor de test.
+sourceSets {
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+	}
+}
+
+tasks.register('testmodJar', Jar) {
+	group = 'build'
+	description = 'Empaqueta el mod de pruebas de integracion (solo para el servidor de test).'
+	archiveBaseName = 'purgatorio-core-testmod'
+	archiveVersion = project.version.toString()
+	from sourceSets.testmod.output
+	destinationDirectory = layout.buildDirectory.dir('libs')
+}
+
+// Mod 100% de servidor: no hay codigo ni recursos de cliente.
+loom {
+	mods {
+		"purgatorio_core" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	implementation "eu.pb4:polymer-core:${project.polymer_version}"
+	implementation "eu.pb4:polymer-resource-pack:${project.polymer_version}"
+	implementation "eu.pb4:polymer-virtual-entity:${project.polymer_version}"
+	implementation "eu.pb4:sgui:${project.sgui_version}"
+
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+def modVersion = project.version.toString()
+processResources {
+	// El datapack vive en ../datapack/purgatorio y se empaqueta dentro del jar (un solo artefacto).
+	from('../datapack/purgatorio/data') {
+		into 'data'
+	}
+	inputs.property "version", modVersion
+	filesMatching("fabric.mod.json") {
+		expand "version": modVersion
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+test {
+	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs << '-Xlint:deprecation'
+}

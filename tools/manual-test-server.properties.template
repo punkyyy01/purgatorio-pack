@@ -1,0 +1,20 @@
+# Servidor de PRUEBAS para cliente real. Escucha SOLO en la IP de Tailscale (se rellena al arrancar).
+server-ip=__BIND_IP__
+server-port=25690
+online-mode=true
+enable-rcon=true
+rcon.port=25691
+rcon.password=__RCON_PASSWORD__
+level-name=manual-world
+level-type=minecraft\:flat
+generator-settings={"layers"\:[{"block"\:"minecraft\:bedrock","height"\:1},{"block"\:"minecraft\:dirt","height"\:2},{"block"\:"minecraft\:grass_block","height"\:1}],"biome"\:"minecraft\:plains","structure_overrides"\:["purgatorio\:ruina_de_ceniza"]}
+generate-structures=true
+spawn-protection=0
+max-players=4
+view-distance=8
+simulation-distance=6
+difficulty=normal
+gamemode=survival
+motd=Purgatorio PRUEBAS (solo tailnet)
+white-list=false
+enable-command-block=true

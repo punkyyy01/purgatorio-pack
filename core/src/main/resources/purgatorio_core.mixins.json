@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "com.purgatorio.core.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"ExperienceOrbMixin",
+		"LivingEntityMixin",
+		"ServerPlayerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

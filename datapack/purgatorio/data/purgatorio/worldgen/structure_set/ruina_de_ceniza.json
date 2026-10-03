@@ -1,0 +1,18 @@
+{
+	"placement": {
+		"type": "minecraft:random_spread",
+		"exclusion_zone": {
+			"chunk_count": 4,
+			"other_set": "minecraft:villages"
+		},
+		"salt": 20261003,
+		"separation": 6,
+		"spacing": 20
+	},
+	"structures": [
+		{
+			"structure": "purgatorio:ruina_de_ceniza",
+			"weight": 1
+		}
+	]
+}

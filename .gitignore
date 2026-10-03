@@ -1,0 +1,35 @@
+# Gradle / Loom / IDE
+core/.gradle/
+core/build/
+core/run/
+core/.idea/
+*.iml
+.idea/
+.vscode/
+.gradle/
+
+# Entornos locales y datos del servidor: NUNCA versionar
+test-server/
+*.log
+*.log.gz
+world/
+**/world/
+level.dat*
+playerdata/
+usercache.json
+whitelist.json
+ops.json
+banned-*.json
+server.properties
+eula.txt
+
+# Secretos
+.env
+*.env
+*.pem
+*.key
+**/secrets*
+**/token*
+
+# Artefactos regenerables
+/build/

@@ -1,0 +1,40 @@
+{
+	"parent": "purgatorio:diario/raiz",
+	"criteria": {
+		"entrar": {
+			"trigger": "minecraft:location",
+			"conditions": {
+				"player": {
+					"type": "minecraft:entity_properties",
+					"entity": "this",
+					"predicate": {
+						"minecraft:location": {
+							"structures": "purgatorio:ruina_de_ceniza"
+						}
+					}
+				}
+			}
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"text": "Humo gris sobre una colina: una ruina que aún respira brasas."
+		},
+		"icon": {
+			"id": "minecraft:soul_lantern"
+		},
+		"show_toast": true,
+		"title": {
+			"text": "La Ruina de Ceniza"
+		}
+	},
+	"requirements": [
+		[
+			"entrar"
+		]
+	],
+	"rewards": {
+		"function": "purgatorio:descubrimiento/ruina_de_ceniza"
+	}
+}

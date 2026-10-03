@@ -1,0 +1,36 @@
+{
+	"parent": "purgatorio:diario/raiz",
+	"criteria": {
+		"tenerlo": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": "purgatorio:colmillo_de_ceniza"
+					}
+				]
+			}
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"text": "El arma que dejó la ceniza: tiene un rasgo que arde."
+		},
+		"icon": {
+			"id": "purgatorio:colmillo_de_ceniza"
+		},
+		"show_toast": true,
+		"title": {
+			"text": "Un colmillo aún caliente"
+		}
+	},
+	"requirements": [
+		[
+			"tenerlo"
+		]
+	],
+	"rewards": {
+		"function": "purgatorio:descubrimiento/colmillo"
+	}
+}

@@ -1,0 +1,158 @@
+{
+	"type": "minecraft:chest",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "purgatorio:colmillo_de_ceniza"
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "purgatorio:esquirla_de_brasa",
+					"modifier": [
+						{
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 4
+							},
+							"type": "minecraft:set_count"
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:written_book",
+					"weight": 1,
+					"modifier": [
+						{
+							"components": {
+								"minecraft:written_book_content": {
+									"title": {
+										"raw": "Nota bajo la ceniza"
+									},
+									"author": "Alguien que se quedó",
+									"pages": [
+										{
+											"raw": "La torre ardía cuando llegamos. Nadie la encendió.\n\nLo que vigila el patio no duerme, pero se deja ver antes de golpear. Cuéntalo si sobrevives."
+										}
+									]
+								}
+							},
+							"type": "minecraft:set_components"
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:written_book",
+					"weight": 1,
+					"modifier": [
+						{
+							"components": {
+								"minecraft:written_book_content": {
+									"title": {
+										"raw": "Cuaderno quemado"
+									},
+									"author": "Una voz cansada",
+									"pages": [
+										{
+											"raw": "Hay otro sitio donde el suelo es del color de las brasas. Está hacia donde se pone el humo cuando sopla el viento del este.\n\nNo vayas con las manos vacías."
+										}
+									]
+								}
+							},
+							"type": "minecraft:set_components"
+						}
+					]
+				}
+			]
+		},
+		{
+			"rolls": {
+				"type": "minecraft:uniform",
+				"min": 2,
+				"max": 3
+			},
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:coal",
+					"weight": 4,
+					"modifier": [
+						{
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 3,
+								"max": 8
+							},
+							"type": "minecraft:set_count"
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:iron_nugget",
+					"weight": 3,
+					"modifier": [
+						{
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 4,
+								"max": 12
+							},
+							"type": "minecraft:set_count"
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:bone",
+					"weight": 3,
+					"modifier": [
+						{
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 2,
+								"max": 6
+							},
+							"type": "minecraft:set_count"
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:arrow",
+					"weight": 2,
+					"modifier": [
+						{
+							"count": {
+								"type": "minecraft:uniform",
+								"min": 4,
+								"max": 10
+							},
+							"type": "minecraft:set_count"
+						}
+					]
+				},
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:golden_apple",
+					"weight": 1
+				}
+			]
+		}
+	]
+}
