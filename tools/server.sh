@@ -13,7 +13,7 @@ case "${1:-}" in
 		running && { echo "ya esta corriendo"; exit 0; }
 		cd "$DEST"
 		: > logs-run.txt
-		nohup nice -n 15 "$JAVA" -Xms512M -Xmx2G -XX:+UseG1GC -jar fabric-server-launch.jar nogui \
+		nohup nice -n 15 "$JAVA" -Xms512M -Xmx${JAVA_XMX:-2G} -XX:+UseG1GC -jar fabric-server-launch.jar nogui \
 			< /dev/null > logs-run.txt 2>&1 &
 		echo $! > "$PIDFILE"
 		for _ in $(seq 1 180); do

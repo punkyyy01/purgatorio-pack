@@ -3,7 +3,7 @@
 #   - escucha solo en 127.0.0.1, puerto 25690 (RCON 25691)
 #   - mundo nuevo (flat, sin estructuras), online-mode=false
 #   - heap 2 GB
-# Uso: tools/setup-test-server.sh [--with-graves]
+# Uso: tools/setup-test-server.sh [--with-graves | --full-pack]
 set -euo pipefail
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -33,6 +33,10 @@ for pattern in "fabric-api-*" "polymer-bundled-*" "filament-*"; do
 done
 if [ "${1:-}" = "--with-graves" ]; then
 	cp "$PROD_MODS"/graves-*.jar "$PROD_MODS"/down-but-not-out-*.jar mods/
+fi
+# Prueba de compatibilidad: TODOS los mods del servidor real (copia de solo lectura)
+if [ "${1:-}" = "--full-pack" ]; then
+	cp "$PROD_MODS"/*.jar mods/
 fi
 
 # Polymer: sin autohost en pruebas (el pack se genera en polymer/resource_pack.zip)

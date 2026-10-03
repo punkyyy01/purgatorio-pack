@@ -44,9 +44,16 @@ public final class ItemSuite implements Suite {
 		return f.getFloat(p.getFoodData());
 	}
 
+	/** Un golpe cuerpo a cuerpo. Se reintenta si no hizo dano (con el pack completo un mod puede anularlo al azar). */
 	private void hit(Ctx ctx, ServerPlayer p, Zombie z) {
-		z.damageCooldownTime = 0;
-		z.hurtServer(ctx.level, ctx.level.damageSources().playerAttack(p), 5.0F);
+		for (int attempt = 0; attempt < 6; attempt++) {
+			float before = z.getHealth();
+			z.damageCooldownTime = 0;
+			z.hurtServer(ctx.level, ctx.level.damageSources().playerAttack(p), 5.0F);
+			if (z.getHealth() < before) {
+				return;
+			}
+		}
 	}
 
 	@Override

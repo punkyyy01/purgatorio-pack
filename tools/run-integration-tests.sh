@@ -12,7 +12,7 @@ export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/dev/.gradle}"
 
 (cd "$REPO/core" && nice -n 10 ./gradlew --no-daemon -q build testmodJar)
 "$HERE/server.sh" stop >/dev/null 2>&1 || true
-"$HERE/setup-test-server.sh" ${WITH_GRAVES:+--with-graves} >/dev/null
+"$HERE/setup-test-server.sh" ${WITH_GRAVES:+--with-graves} ${FULL_PACK:+--full-pack} >/dev/null
 rm -f "$DEST/purgatorio-test-results.txt"
 rm -rf "$DEST/test-world"   # mundo nuevo en cada ejecucion: pruebas reproducibles
 "$HERE/server.sh" start

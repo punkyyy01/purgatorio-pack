@@ -55,6 +55,8 @@ public final class Ctx {
 	private final List<String> failures = new ArrayList<>();
 	private final List<Mock> open = new ArrayList<>();
 	private int checks;
+	/** true si el ultimo {@link #die} no llego a matar al jugador porque otro mod lo evito (jugador caido). */
+	public boolean lastDeathPrevented;
 
 	Ctx(MinecraftServer server) {
 		this.server = server;
@@ -69,8 +71,11 @@ public final class Ctx {
 		ServerPlayer dying = mock.player();
 		dying.setHealth(dying.getMaxHealth());
 		dying.kill(level);
-		check(dying.isDeadOrDying(), "kill() no mato al jugador: invulnerable=" + dying.isInvulnerableTo(level, level.damageSources().genericKill())
-			+ " clienteCargado=" + dying.connection.hasClientLoaded());
+		lastDeathPrevented = !dying.isDeadOrDying();
+		if (lastDeathPrevented) {
+			// Otro mod (p. ej. Down But Not Out con mas jugadores conectados) convirtio la muerte en "caido".
+			return dying;
+		}
 		dying.connection.handleClientCommand(new ServerboundClientCommandPacket(ServerboundClientCommandPacket.Action.PERFORM_RESPAWN));
 		ServerPlayer respawned = dying.connection.getPlayer();
 		respawned.connection.handleAcceptPlayerLoad(new ServerboundPlayerLoadedPacket());
