@@ -68,7 +68,28 @@ public final class ItemSuite implements Suite {
 		ctx.check(client.is(Items.IRON_SWORD), "un cliente vanilla recibe una espada de hierro (real=" + client.getItem() + ")");
 		Identifier model = client.get(DataComponents.ITEM_MODEL);
 		ctx.eq("purgatorio:colmillo_de_ceniza", model == null ? null : model.toString(), "con item_model propio (el modelo del resource pack)");
-		ctx.check(sword.getHoverName() != null, "tiene nombre");
+		// Regresion: el cliente veia la clave "item.purgatorio.colmillo_de_ceniza". El nombre legible vive en el archivo de
+		// idioma del resource pack (en_us es el idioma de reserva de TODOS los clientes). Aqui se comprueba que existe.
+		String key = PurgatorioItems.COLMILLO_DE_CENIZA.getDescriptionId();
+		try (var in = PurgatorioCore.class.getResourceAsStream("/assets/purgatorio/lang/en_us.json")) {
+			ctx.check(in != null, "existe assets/purgatorio/lang/en_us.json en el mod (Polymer lo copia al resource pack)");
+			if (in != null) {
+				var lang = com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+				ctx.check(lang.has(key), "el idioma traduce la clave " + key);
+				ctx.eq("Colmillo de Ceniza", lang.has(key) ? lang.get(key).getAsString() : null, "con el nombre legible");
+			}
+		}
+		var clientName = client.get(DataComponents.ITEM_NAME);
+		ctx.check(clientName != null && clientName.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents tc && tc.getKey().equals(key),
+			"el cliente recibe el nombre como la clave traducible que el pack resuelve");
+		var shard = ForgeSuite.shard();
+		ctx.eq("Esquirla de Brasa", shard == null ? null : shard.getDefaultInstance().getHoverName().getString(), "la Esquirla (Filament) lleva su nombre literal");
+		var lines = new java.util.ArrayList<net.minecraft.network.chat.Component>();
+		PurgatorioItems.COLMILLO_DE_CENIZA.appendHoverText(sword, net.minecraft.world.item.Item.TooltipContext.EMPTY,
+			net.minecraft.world.item.component.TooltipDisplay.DEFAULT, lines::add, net.minecraft.world.item.TooltipFlag.NORMAL);
+		String tooltip = lines.stream().map(net.minecraft.network.chat.Component::getString).reduce("", (x, y) -> x + "\n" + y);
+		ctx.check(tooltip.contains("Brasa") && tooltip.contains("Costo") && tooltip.contains("Mejora"), "el tooltip describe rasgo, costo y mejora");
+		ctx.check(!tooltip.contains("item.purgatorio") && !tooltip.contains("tooltip."), "el tooltip no contiene claves de traduccion sin resolver");
 
 		// ---- el rasgo Brasa: 3 golpes seguidos al mismo enemigo -> fuego + cuesta hambre ----
 		Zombie z = zombie(ctx);
