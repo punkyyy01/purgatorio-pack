@@ -1,0 +1,8 @@
+{
+	"item": "purgatorio:colmillo_de_ceniza",
+	"levels": [
+		{ "alma": 10, "materials": [ { "item": "minecraft:iron_ingot", "count": 4 } ] },
+		{ "alma": 20, "materials": [ { "item": "purgatorio:esquirla_de_brasa", "count": 2 } ] },
+		{ "alma": 30, "materials": [ { "item": "purgatorio:esquirla_de_brasa", "count": 4 }, { "item": "minecraft:diamond", "count": 1 } ] }
+	]
+}

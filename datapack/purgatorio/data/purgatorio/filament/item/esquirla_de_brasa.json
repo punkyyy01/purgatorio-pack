@@ -1,0 +1,22 @@
+{
+	"id": "purgatorio:esquirla_de_brasa",
+	"vanillaItem": "minecraft:blaze_powder",
+	"itemResource": {
+		"parent": "minecraft:item/generated",
+		"textures": {
+			"default": {
+				"layer0": "purgatorio:item/esquirla_de_brasa"
+			}
+		}
+	},
+	"properties": {
+		"stackSize": 64
+	},
+	"components": {
+		"minecraft:item_name": { "text": "Esquirla de Brasa" },
+		"minecraft:lore": [
+			{ "text": "Un fragmento aún caliente.", "color": "gray", "italic": true },
+			{ "text": "Sirve en la forja para mejorar equipo.", "color": "dark_gray", "italic": false }
+		]
+	}
+}

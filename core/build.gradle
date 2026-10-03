@@ -58,6 +58,10 @@ dependencies {
 
 def modVersion = project.version.toString()
 processResources {
+	// El datapack vive en ../datapack/purgatorio y se empaqueta dentro del jar (un solo artefacto).
+	from('../datapack/purgatorio/data') {
+		into 'data'
+	}
 	inputs.property "version", modVersion
 	filesMatching("fabric.mod.json") {
 		expand "version": modVersion

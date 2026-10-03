@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public final class AttachmentAlmaStorage implements AlmaStorage {
 	public static final AttachmentType<Integer> ALMA = AttachmentRegistry.create(
-		Identifier.fromNamespaceAndPath(PurgatorioCore.MOD_ID, "alma"),
+		PurgatorioCore.id("alma"),
 		builder -> builder.persistent(Codec.INT).copyOnDeath().initializer(() -> 0)
 	);
 
