@@ -1,6 +1,7 @@
 package com.purgatorio.coretest;
 
 import com.purgatorio.guia.book.GuideBook;
+import com.purgatorio.guia.gui.HubGui;
 import com.purgatorio.guia.gui.InspectorGui;
 import com.purgatorio.guia.inspect.Descriptions;
 import com.purgatorio.guia.inspect.EnchantmentEntries;
@@ -73,6 +74,7 @@ public final class GuiaSuite implements Suite {
 		inspectorEquipment(ctx);
 		specialItems(ctx);
 		consumeEffects(ctx);
+		menus(ctx);
 	}
 
 	/**
@@ -908,6 +910,202 @@ public final class GuiaSuite implements Suite {
 				lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
 				ctx.check(lore.contains(e.getValue()), e.getKey() + " dice '" + e.getValue() + "': " + lore);
 			}
+		}
+	}
+
+	// ---- menu principal y secciones ----
+	private static eu.pb4.sgui.api.gui.SimpleGui current(ServerPlayer p) {
+		return (eu.pb4.sgui.api.gui.SimpleGui) ((eu.pb4.sgui.api.containerwrappers.SlotBasedWrapperMenu) p.containerMenu).getBackingGui();
+	}
+
+	private static String titleOf(ServerPlayer p) {
+		return current(p).getTitle().getString();
+	}
+
+	/** Linea marcada con "▶" (la opcion elegida) del boton de filtro de ese hueco. */
+	private static String selectedOption(ServerPlayer p, int slot) {
+		var lore = current(p).getGuiElement(slot).getItemStack().get(DataComponents.LORE);
+		return lore.lines().stream().map(Component::getString).filter(l -> l.startsWith("▶ ")).findFirst().orElse("?").substring(2);
+	}
+
+	/** "36 en total" del cartel del hueco 52 -> 36. */
+	private static int totalOf(ServerPlayer p) {
+		var e = current(p).getGuiElement(52);
+		return e == null ? 0 : Integer.parseInt(e.getItemStack().getHoverName().getString().split(" ")[0]);
+	}
+
+	private void menus(Ctx ctx) {
+		ServerPlayer p = ctx.join("guia-menu").player();
+		GuideBook.strip(p);   // el del inventario (si no, habria dos hasta el siguiente ciclo de comprobacion)
+		p.setItemInHand(InteractionHand.MAIN_HAND, GuideBook.create());
+
+		// El libro y /guia abren el MENU PRINCIPAL.
+		UseItemCallback.EVENT.invoker().interact(p, ctx.level, InteractionHand.MAIN_HAND);
+		ctx.eq("Guía del Purgatorio", titleOf(p), "el libro abre el menu principal");
+		var hub = current(p);
+		ctx.check(hub.getGuiElement(10).getItemStack().is(Items.HOPPER) && hub.getGuiElement(12).getItemStack().is(Items.ENCHANTED_BOOK)
+			&& hub.getGuiElement(14).getItemStack().is(Items.POTION) && hub.getGuiElement(16).getItemStack().is(Items.KNOWLEDGE_BOOK),
+			"el menu tiene las cuatro secciones");
+		p.closeContainer();
+		ctx.server.getCommands().performPrefixedCommand(p.createCommandSourceStack(), "guia");
+		ctx.eq("Guía del Purgatorio", titleOf(p), "/guia abre el menu principal");
+
+		// Inspector desde el menu, y vuelta.
+		packet(p, 10, 0, ContainerInput.PICKUP);
+		ctx.eq("Inspector de objetos", titleOf(p), "el boton abre el inspector");
+		ctx.check(current(p).getGuiElement(46).getItemStack().is(Items.ARROW), "el inspector tiene boton de volver");
+		packet(p, 46, 0, ContainerInput.PICKUP);
+		ctx.eq("Guía del Purgatorio", titleOf(p), "y volver lleva al menu principal");
+
+		// ---- catalogo de encantamientos ----
+		var registry = ctx.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		var described = registry.listElements().filter(h -> Descriptions.get(EnchantmentEntries.idOf(h)) != null).toList();
+		packet(p, 12, 0, ContainerInput.PICKUP);
+		ctx.eq("Catálogo de encantamientos", titleOf(p), "el boton abre el catalogo de encantamientos");
+		ctx.eq(described.size(), totalOf(p), "el catalogo lista todos los encantamientos descritos (" + described.size() + ")");
+		ctx.eq(Math.min(36, described.size()), countEntries(current(p)), "la primera pagina muestra hasta 36");
+		if (described.size() > 36) {
+			ctx.check(current(p).getGuiElement(53).getItemStack().is(Items.ARROW), "con mas de 36 hay boton de pagina siguiente");
+			packet(p, 53, 0, ContainerInput.PICKUP);
+			ctx.check(current(p).getGuiElement(52).getItemStack().getHoverName().getString().isEmpty() == false
+				&& current(p).getGuiElement(52).getItemStack().get(DataComponents.LORE).lines().get(0).getString().contains("Página 2"), "la pagina siguiente es la 2");
+			packet(p, 51, 0, ContainerInput.PICKUP);
+		}
+		String first = loreOf(current(p), 9, 9);
+		ctx.check(first.contains("Nivel máximo"), "cada ficha dice su nivel maximo: " + first);
+
+		// Filtro por tipo de objeto: espadas (clic) -> los que admite una espada de diamante.
+		var sword = new ItemStack(Items.DIAMOND_SWORD);
+		packet(p, 47, 0, ContainerInput.PICKUP);
+		ctx.eq("Espadas", selectedOption(p, 47), "la etiqueta del filtro de tipo dice lo que filtra");
+		ctx.eq((int) described.stream().filter(h -> h.value().isSupportedItem(sword)).count(), totalOf(p), "filtro 'Espadas': solo los que admite una espada");
+		packet(p, 47, 1, ContainerInput.PICKUP);   // clic derecho: vuelve a "Todos"
+		ctx.eq(described.size(), totalOf(p), "clic derecho vuelve al filtro anterior (Todos)");
+		packet(p, 47, 1, ContainerInput.PICKUP);   // clic derecho desde "Todos": da la vuelta a la ultima categoria
+		int lastCategory = totalOf(p);
+		ctx.check(lastCategory > 0 && lastCategory < described.size(), "clic derecho en 'Todos' salta a la ultima categoria (" + lastCategory + ")");
+		packet(p, 47, 0, ContainerInput.PICKUP);   // vuelve a Todos
+
+		// Filtro por origen: el primero es vanilla.
+		packet(p, 48, 0, ContainerInput.PICKUP);
+		ctx.eq((int) described.stream().filter(h -> h.key().identifier().getNamespace().equals("minecraft")).count(), totalOf(p), "filtro de origen: Vanilla");
+		packet(p, 48, 1, ContainerInput.PICKUP);
+
+		// Maldiciones.
+		packet(p, 49, 0, ContainerInput.PICKUP);
+		ctx.eq("Solo maldiciones", selectedOption(p, 49), "la etiqueta del filtro de maldiciones dice lo que filtra");
+		int curses = (int) described.stream().filter(h -> h.is(net.minecraft.tags.EnchantmentTags.CURSE)).count();
+		ctx.eq(curses, totalOf(p), "filtro 'Solo maldiciones'");
+		packet(p, 49, 0, ContainerInput.PICKUP);
+		ctx.eq("Sin maldiciones", selectedOption(p, 49), "y la siguiente etiqueta");
+		ctx.eq(described.size() - curses, totalOf(p), "filtro 'Sin maldiciones'");
+		packet(p, 49, 0, ContainerInput.PICKUP);
+		packet(p, 45, 0, ContainerInput.PICKUP);
+		ctx.eq("Guía del Purgatorio", titleOf(p), "volver del catalogo lleva al menu principal");
+
+		// ---- catalogo de efectos y pociones ----
+		packet(p, 14, 0, ContainerInput.PICKUP);
+		ctx.eq("Efectos y pociones", titleOf(p), "el boton abre efectos y pociones");
+		int effects = BuiltInRegistries.MOB_EFFECT.size();
+		ctx.eq(effects, totalOf(p), "lista todos los efectos (" + effects + ")");
+		packet(p, 48, 0, ContainerInput.PICKUP);
+		ctx.eq("Beneficiosos", selectedOption(p, 48), "la etiqueta del filtro de efectos dice lo que filtra");
+		int beneficial = (int) BuiltInRegistries.MOB_EFFECT.listElements().filter(h -> h.value().getCategory() == net.minecraft.world.effect.MobEffectCategory.BENEFICIAL).count();
+		ctx.eq(beneficial, totalOf(p), "filtro 'Beneficiosos'");
+		String effectLore = loreOf(current(p), 9, 44);
+		ctx.check(effectLore.contains("Por nivel:"), "las fichas de efecto muestran lo que hacen por nivel");
+		packet(p, 48, 1, ContainerInput.PICKUP);
+		packet(p, 47, 0, ContainerInput.PICKUP);   // modo Pociones
+		ctx.eq("Pociones", selectedOption(p, 47), "la etiqueta del modo dice Pociones");
+		int potions = BuiltInRegistries.POTION.size();
+		ctx.eq(potions, totalOf(p), "el modo Pociones lista todas las pociones (" + potions + ")");
+		packet(p, 48, 0, ContainerInput.PICKUP);
+		int withEffects = (int) BuiltInRegistries.POTION.listElements().filter(h -> !h.value().getEffects().isEmpty()).count();
+		ctx.eq(withEffects, totalOf(p), "pociones 'Con efectos'");
+		packet(p, 48, 0, ContainerInput.PICKUP);
+		ctx.eq(potions - withEffects, totalOf(p), "pociones 'Sin efectos (bases)'");
+		String bases = loreOf(current(p), 9, 44);
+		ctx.check(bases.contains("sin efectos") && bases.contains("base"), "las bases explican para que sirven: " + bases);
+		packet(p, 45, 0, ContainerInput.PICKUP);
+		ctx.eq("Guía del Purgatorio", titleOf(p), "volver de efectos lleva al menu principal");
+
+		// ---- guia del servidor ----
+		packet(p, 16, 0, ContainerInput.PICKUP);
+		ctx.eq("Guía del servidor", titleOf(p), "el boton abre la guia del servidor");
+		var topics = com.purgatorio.guia.inspect.Topics.available();
+		ctx.eq(topics.size(), topics.isEmpty() ? 0 : totalOf(p), "la guia lista los temas de los mods cargados");
+		if (!topics.isEmpty()) {
+			var topic = topics.get(0);
+			packet(p, 9, 0, ContainerInput.PICKUP);
+			ctx.eq(topic.titulo(), titleOf(p), "un tema abre su pantalla: " + topic.titulo());
+			long cards = topic.objetos().stream().filter(id -> present(id) && Descriptions.item(id) != null).count();
+			ctx.eq(topic.parrafos().size() + (int) cards, totalOf(p), "el tema muestra sus parrafos y las fichas de sus objetos");
+			packet(p, 45, 0, ContainerInput.PICKUP);
+			ctx.eq("Guía del servidor", titleOf(p), "volver de un tema lleva a la lista de temas");
+		}
+		packet(p, 45, 0, ContainerInput.PICKUP);
+		ctx.eq("Guía del Purgatorio", titleOf(p), "y de la lista, al menu principal");
+		p.closeContainer();
+		ctx.eq(1, GuideBook.count(p), "el inventario sigue intacto");
+
+		writeMenuSamples(ctx, p);
+
+		// Datos de la guia del servidor: todo lo que citan existe y esta descrito.
+		for (var t : com.purgatorio.guia.inspect.Topics.all()) {
+			ctx.check(!t.titulo().isBlank() && !t.resumen().isBlank() && !t.parrafos().isEmpty(), t.id() + ": tiene titulo, resumen y parrafos");
+			if (t.available()) {
+				for (String id : t.objetos()) {
+					ctx.check(present(id), t.id() + ": el objeto citado existe: " + id);
+					ctx.check(Descriptions.item(id) != null, t.id() + ": el objeto citado esta descrito: " + id);
+				}
+			}
+		}
+		if (present("serverbackpacks:small")) {
+			var mochilas = com.purgatorio.guia.inspect.Topics.all().stream().filter(t -> t.id().equals("mochilas")).findFirst().orElseThrow();
+			String text = mochilas.parrafos().stream().map(x -> x.texto()).collect(Collectors.joining(" "));
+			ctx.check(text.contains("pequeña (9 huecos), mediana (18) y grande (27)"), "los tamaños del tema mochilas coinciden con los medidos (9/18/27)");
+		}
+	}
+
+	/** Fichas de los menus tal como las lee el jugador (purgatorio-guia-menu.txt en el servidor de pruebas). */
+	private void writeMenuSamples(Ctx ctx, ServerPlayer p) {
+		StringBuilder out = new StringBuilder();
+		java.util.function.BiConsumer<String, eu.pb4.sgui.api.gui.SimpleGui> dump = (title, g) -> {
+			out.append("=================== ").append(title).append(" [").append(g.getTitle().getString()).append("]\n");
+			for (int i = 0; i < 54; i++) {
+				var e = g.getGuiElement(i);
+				if (e == null || e.getItemStack().is(Items.STAINED_GLASS_PANE.black())) {
+					continue;
+				}
+				var st = e.getItemStack();
+				if (i >= 9 && i <= 44 && i > 14 && !title.contains("hub") && !title.contains("guia")) {
+					continue;
+				}
+				out.append("  [").append(i).append("] ").append(st.getHoverName().getString()).append('\n');
+				ItemLore lore = st.get(DataComponents.LORE);
+				if (lore != null) {
+					lore.lines().forEach(l -> out.append("        ").append(l.getString()).append('\n'));
+				}
+			}
+		};
+		HubGui.open(p);
+		dump.accept("hub", current(p));
+		new com.purgatorio.guia.gui.EnchantmentCatalogGui(p, () -> { }).open();
+		dump.accept("catalogo de encantamientos (primeras 6 fichas + filtros)", current(p));
+		new com.purgatorio.guia.gui.EffectCatalogGui(p, () -> { }).open();
+		dump.accept("catalogo de efectos (primeras 6 fichas + filtros)", current(p));
+		var topics = com.purgatorio.guia.inspect.Topics.available();
+		if (!topics.isEmpty()) {
+			new com.purgatorio.guia.gui.ServerGuideGui(p, () -> { }).open();
+			dump.accept("guia del servidor", current(p));
+			new com.purgatorio.guia.gui.TopicGui(p, topics.get(0), () -> { }).open();
+			dump.accept("guia: tema " + topics.get(0).titulo(), current(p));
+		}
+		p.closeContainer();
+		try {
+			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-menu.txt"), out.toString(), java.nio.charset.StandardCharsets.UTF_8);
+		} catch (java.io.IOException e) {
+			ctx.check(false, "no se pudieron escribir las muestras del menu: " + e);
 		}
 	}
 

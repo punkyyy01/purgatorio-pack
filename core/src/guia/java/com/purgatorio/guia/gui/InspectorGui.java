@@ -28,6 +28,7 @@ public final class InspectorGui {
 	static final int PAGE_SIZE = 36;
 	static final int SELECTED_SLOT = 4;
 	static final int CLOSE_SLOT = 45;
+	static final int BACK_SLOT = 46;
 	static final int PREV_SLOT = 48;
 	static final int PAGE_INFO_SLOT = 49;
 	static final int NEXT_SLOT = 50;
@@ -37,17 +38,24 @@ public final class InspectorGui {
 
 	private final ServerPlayer player;
 	private final SimpleGui gui;
+	private final Runnable onBack;
 	private ItemStack inspected = ItemStack.EMPTY;
 	private int page;
 
-	private InspectorGui(ServerPlayer player) {
+	private InspectorGui(ServerPlayer player, Runnable onBack) {
 		this.player = player;
+		this.onBack = onBack;
 		this.gui = new SimpleGui(MenuType.GENERIC_9x6, player, true);
 		gui.setTitle(Ui.title("Inspector de objetos"));
 	}
 
 	public static InspectorGui open(ServerPlayer player) {
-		InspectorGui inspector = new InspectorGui(player);
+		return open(player, null);
+	}
+
+	/** Con {@code onBack} se muestra un boton para volver al menu principal. */
+	public static InspectorGui open(ServerPlayer player, Runnable onBack) {
+		InspectorGui inspector = new InspectorGui(player, onBack);
 		inspector.render();
 		inspector.gui.open();
 		return inspector;
@@ -85,6 +93,10 @@ public final class InspectorGui {
 			.setName(Ui.text("Cerrar", ChatFormatting.RED))
 			.setCallback((index, type, action, g) -> gui.close()));
 
+		if (onBack != null) {
+			gui.setSlot(BACK_SLOT, new GuiElementBuilder(Items.ARROW).setName(Ui.text("◀ Menú principal", ChatFormatting.YELLOW))
+				.setCallback((index, type, action, g) -> onBack.run()));
+		}
 		if (inspected.isEmpty()) {
 			gui.setSlot(SELECTED_SLOT, new GuiElementBuilder(Items.HOPPER)
 				.setName(Ui.text("Elige un objeto", ChatFormatting.YELLOW).withStyle(ChatFormatting.BOLD))

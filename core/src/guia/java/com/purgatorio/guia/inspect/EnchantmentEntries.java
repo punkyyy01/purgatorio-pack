@@ -58,6 +58,28 @@ public final class EnchantmentEntries {
 		return new Result(false, out);
 	}
 
+	/** Ficha de catalogo: la entrada sin nivel mas una linea por nivel con su efecto (donde la descripcion lo define). */
+	public static GuiElementBuilder catalogEntry(Holder<Enchantment> holder) {
+		GuiElementBuilder b = entry(holder, null);
+		Descriptions.Entry d = Descriptions.get(idOf(holder));
+		if (d != null) {
+			boolean any = false;
+			for (int lvl = 1; lvl <= holder.value().getMaxLevel(); lvl++) {
+				String line = d.effectAt(lvl);
+				if (line == null) {
+					continue;
+				}
+				if (!any) {
+					b.addLoreLine(Ui.blank());
+					b.addLoreLine(Ui.text("Por nivel:", ChatFormatting.AQUA));
+					any = true;
+				}
+				b.addLoreLine(Ui.text(Text.roman(lvl) + ": " + line, ChatFormatting.YELLOW));
+			}
+		}
+		return b;
+	}
+
 	/** Mismo criterio que tools/inventario-guia.py para "de jugador": alguna via normal de conseguirlo. */
 	public static boolean obtainable(Holder<Enchantment> h) {
 		return h.is(EnchantmentTags.IN_ENCHANTING_TABLE) || h.is(EnchantmentTags.TRADEABLE) || h.is(EnchantmentTags.TREASURE)

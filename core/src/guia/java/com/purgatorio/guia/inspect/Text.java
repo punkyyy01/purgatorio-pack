@@ -23,6 +23,12 @@ public final class Text {
 		return (amount >= 0 ? "+" : "-") + num(Math.abs(percent ? amount * 100.0 : amount)) + (percent ? " %" : "");
 	}
 
+	/** 1 -> "I", 4 -> "IV"... (niveles de encantamiento y efecto); fuera de 1-10 devuelve el numero. */
+	public static String roman(int n) {
+		String[] r = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+		return n >= 1 && n <= 10 ? r[n] : String.valueOf(n);
+	}
+
 	/** Duracion en ticks como "m:ss" (3600 ticks = "3:00"); los minutos no pasan a horas (6000 s = "100:00"). */
 	public static String duration(int ticks) {
 		int seconds = Math.max(0, ticks) / 20;
