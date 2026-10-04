@@ -62,6 +62,10 @@ processResources {
 	from('../datapack/purgatorio/data') {
 		into 'data'
 	}
+	// Traducciones al espanol (generadas por tools/build-i18n.py; ver docs/traduccion-es.md).
+	from('../build/i18n/assets') {
+		into 'assets'
+	}
 	inputs.property "version", modVersion
 	filesMatching("fabric.mod.json") {
 		expand "version": modVersion

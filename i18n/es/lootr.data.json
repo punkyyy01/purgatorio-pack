@@ -1,0 +1,6 @@
+{
+  "entity.lootr.lootr_minecart": "Vagoneta con cofre de botín",
+  "lootr.message.cart_should_sneak3": "por jugador y por vagoneta",
+  "lootr.message.invalid_block": "El contenedor que has intentado abrir no es válido porque no ha generado su identificador.",
+  "lootr.message.should_sneak3": "por jugador y por cofre"
+}

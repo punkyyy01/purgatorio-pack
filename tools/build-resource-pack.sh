@@ -10,6 +10,7 @@ DEST="${TEST_SERVER_DIR:-$HOME/dev/test-server}"
 JAVA_HOME="${JAVA_HOME:-$HOME/dev/tools/jdk-25.0.4.1}"; export JAVA_HOME
 export PATH="$JAVA_HOME/bin:$PATH" GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/dev/.gradle}"
 
+python3 "$HERE/build-i18n.py"   # traducciones al espanol -> build/i18n (las empaqueta el mod)
 (cd "$REPO/core" && ./gradlew --no-daemon -q build)
 "$HERE/server.sh" stop >/dev/null 2>&1 || true
 "$HERE/setup-test-server.sh" ${FULL_PACK:+--full-pack} >/dev/null
