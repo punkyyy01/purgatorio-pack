@@ -1,0 +1,11 @@
+{
+  "text.graves.admin_graves": "Todas las tumbas",
+  "text.graves.grave_unlock_payment.no_access": "¡No tienes acceso a esta tumba!",
+  "text.graves.grave_unlock_payment.accepted": "¡Has desbloqueado la tumba!",
+  "text.graves.grave_unlock_payment.failed": "¡No tienes suficiente moneda para desbloquear la tumba! Necesitas: %s",
+  "text.graves.gui.cost.not_enough": "¡Recursos insuficientes!",
+  "text.graves.gui.teleport.cost": "Coste:",
+  "text.graves.gui.unlock_grave": "Desbloquear tumba",
+  "block.universal_graves.container_grave": "Lápida",
+  "screen.graves.settings": "Ajustes de Universal Graves"
+}

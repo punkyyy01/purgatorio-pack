@@ -1,0 +1,9 @@
+{
+  "item.babyfat.ranchu_spawn_egg": "Huevo generador de ranchu",
+  "item.babyfat.ranchu_bucket": "Cubo de ranchu",
+  "entity.babyfat.ranchu": "Ranchu",
+  "block.babyfat.water_lettuce": "Lechuga de agua",
+  "item.babyfat.water_lettuce": "Lechuga de agua",
+  "tooltip.babyfat.domesticated": "Domesticado",
+  "itemGroup.babyfat": "Baby Fat"
+}

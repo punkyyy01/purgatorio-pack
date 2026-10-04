@@ -56,6 +56,7 @@ fi
 
 # Nuestro mod + mod de pruebas (este ultimo SOLO existe en el servidor de pruebas)
 cp "$REPO"/core/build/libs/purgatorio-core-*[0-9].jar mods/
+[ -f "$REPO/build/i18n/zz_purgatorio_es-1.0.0.jar" ] && cp "$REPO"/build/i18n/zz_purgatorio_es-1.0.0.jar mods/   # espanol (tools/build-i18n.py)
 [ "${NO_TESTMOD:-}" = "1" ] || cp "$REPO"/core/build/libs/purgatorio-core-testmod-*.jar mods/
 echo "Servidor de pruebas listo en $DEST"
 ls mods

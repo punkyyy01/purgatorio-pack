@@ -1,0 +1,15 @@
+{
+  "collective.shared.message.adminusage": "Uso de administrador de %s:",
+  "collective.shared.message.commandsusage": "--- Uso de los comandos de %s ---",
+  "collective.shared.message.nopermission": "No tienes permiso para usar ese comando.",
+  "collective.shared.message.playeronly": "Este comando solo puede ejecutarlo un jugador.",
+  "collective.shared.message.reloadsconfigfile": "Recarga el archivo de configuración.",
+  "collective.shared.message.showmessage": "Muestra este mensaje.",
+  "collective.shared.message.successfullygeneratedhead": "Se han generado correctamente %1$s cabeza(s) de %2$s.",
+  "collective.shared.message.usage": "Uso de %s:",
+  "collective.shared.message.wanderingtraderspawnfailed": "No se pudo generar al comerciante errante, inténtalo de nuevo.",
+  "collective.shared.message.wanderingtraderspawnsuccesful": "¡El comerciante errante se ha generado!",
+  "collective.collective.gui.reset": "Restablecer",
+  "collective.collective.message.headcachehelp": "Restablece los datos en caché de cabezas de jugador de Collective, por ejemplo para actualizar skins.",
+  "collective.collective.message.headcachereset": "La caché de cabezas de jugador se ha restablecido correctamente."
+}
