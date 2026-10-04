@@ -3,6 +3,7 @@ package com.purgatorio.coretest;
 import com.purgatorio.guia.book.GuideBook;
 import com.purgatorio.guia.gui.InspectorGui;
 import com.purgatorio.guia.inspect.Descriptions;
+import com.purgatorio.guia.inspect.EnchantmentEntries;
 import com.purgatorio.guia.inspect.Text;
 import eu.pb4.sgui.api.ClickType;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -440,8 +441,11 @@ public final class GuiaSuite implements Suite {
 		String all = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
 		ctx.check(all.contains("Daño extra: +2"), "Filo III describe su efecto en ese nivel (+2): " + all);
 		ctx.check(all.contains("Nivel 3 de 5"), "muestra nivel actual y maximo del Filo");
-		ctx.check(all.contains("Sin descripción todavía."), "lo que no esta descrito lo dice (Irrompibilidad)");
-		ctx.check(all.contains("minecraft:unbreaking"), "e incluye el id para poder reportarlo");
+		ctx.check(all.contains("Usos gratis: 66,7 % en herramientas y armas"), "Irrompibilidad II describe su efecto por nivel: " + all);
+		// La ruta "sin descripcion" se prueba con un encantamiento SIN id de registro (Holder.direct), asi no depende de lo que falte describir.
+		var undescribed = EnchantmentEntries.entry(Holder.direct(unbreaking.value()), 2).asStack().get(DataComponents.LORE);
+		String undescribedLore = undescribed.lines().stream().map(Component::getString).collect(Collectors.joining("\n"));
+		ctx.check(undescribedLore.contains("Sin descripción todavía.") && undescribedLore.contains("?"), "lo que no esta descrito lo dice y muestra su id: " + undescribedLore);
 		ctx.eq(2, countOf(gui, Items.ENCHANTED_BOOK), "una entrada por encantamiento (2)");
 
 		ItemStack real = p.getInventory().getItem(9);

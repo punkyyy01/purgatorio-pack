@@ -7,16 +7,25 @@
 		"  niveles (lista)  alternativa a 'efecto'+'valores' para formulas no lineales: un texto por nivel (1, 2, 3...).",
 		"Lo que no aparezca aqui se muestra como 'Sin descripcion todavia' (ver docs/guia-inventario.md)."
 	],
-
 	"minecraft:sharpness": {
 		"desc": "Aumenta el daño que haces cuerpo a cuerpo con espadas y hachas.",
 		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
-		"valores": { "v": { "base": 1.0, "paso": 0.5 } }
+		"valores": {
+			"v": {
+				"base": 1.0,
+				"paso": 0.5
+			}
+		}
 	},
 	"minecraft:protection": {
 		"desc": "Reduce casi todo el daño que recibes. Se suma entre las piezas de armadura (tope total: 80 %). No protege del vacío.",
 		"efecto": "Reduce el daño recibido un {v} %",
-		"valores": { "v": { "base": 4.0, "paso": 4.0 } }
+		"valores": {
+			"v": {
+				"base": 4.0,
+				"paso": 4.0
+			}
+		}
 	},
 	"minecraft:efficiency": {
 		"desc": "Hace que la herramienta rompa bloques más rápido.",
@@ -30,5 +39,332 @@
 	},
 	"minecraft:mending": {
 		"desc": "El objeto se repara solo con la experiencia que recoges: cada punto de experiencia repara 2 de durabilidad."
+	},
+	"minecraft:aqua_affinity": {
+		"desc": "Bajo el agua rompes bloques a la velocidad normal, en vez de muy despacio."
+	},
+	"minecraft:bane_of_arthropods": {
+		"desc": "Hace más daño a los artrópodos (arañas, arañas de cueva, pececillos de plata, endermitas y abejas) y los ralentiza al golpearlos. Solo cuenta en golpes directos.",
+		"efecto": "Daño extra a artrópodos: +{v} · Lentitud IV hasta {w} s",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			},
+			"w": {
+				"base": 1.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:binding_curse": {
+		"desc": "Una vez puesta, no puedes quitarte esta pieza (salvo en modo creativo o si se rompe)."
+	},
+	"minecraft:blast_protection": {
+		"desc": "Reduce el daño de las explosiones y lo que te empujan.",
+		"efecto": "Daño de explosiones: -{v} % · Empuje de explosiones: -{w} %",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			},
+			"w": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:breach": {
+		"desc": "Maza: ignora parte de la armadura del enemigo al golpear.",
+		"efecto": "Ignora un {v} % de la armadura",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:channeling": {
+		"desc": "Si hay tormenta eléctrica y el objetivo está a cielo abierto, tu tridente invoca un rayo al impactar."
+	},
+	"minecraft:density": {
+		"desc": "Maza: cada bloque que caes antes del golpe hace más daño.",
+		"efecto": "Daño extra: +{v} por cada bloque caído",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:depth_strider": {
+		"desc": "El agua te frena menos al nadar. Con nivel III te mueves en ella como en tierra.",
+		"efecto": "Reduce lo que te frena el agua un {v} %",
+		"valores": {
+			"v": {
+				"base": 33.33333333,
+				"paso": 33.33333333,
+				"tope": 100
+			}
+		}
+	},
+	"minecraft:feather_falling": {
+		"desc": "Reduce el daño por caída.",
+		"efecto": "Daño por caída: -{v} %",
+		"valores": {
+			"v": {
+				"base": 12,
+				"paso": 12
+			}
+		}
+	},
+	"minecraft:fire_aspect": {
+		"desc": "Prende fuego a quien golpeas (solo en golpes directos).",
+		"efecto": "Quema al objetivo durante {v} s",
+		"valores": {
+			"v": {
+				"base": 4,
+				"paso": 4
+			}
+		}
+	},
+	"minecraft:fire_protection": {
+		"desc": "Reduce el daño del fuego y el tiempo que ardes.",
+		"efecto": "Daño de fuego: -{v} % · Ardes un {w} % menos tiempo",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			},
+			"w": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:flame": {
+		"desc": "Las flechas salen ardiendo y prenden fuego a lo que impactan."
+	},
+	"minecraft:fortune": {
+		"desc": "Al romper minerales y otros bloques que lo permiten sueltan más objetos; cuanto más nivel, más botín."
+	},
+	"minecraft:frost_walker": {
+		"desc": "Al caminar sobre el agua la congela bajo tus pies con hielo escarchado, que se derrite solo. También te protege del daño de los bloques de magma.",
+		"efecto": "Congela un radio de {v} bloques",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:impaling": {
+		"desc": "Tridente: hace más daño a las criaturas acuáticas (peces, calamares, delfines, guardianes, tortugas, ajolotes...).",
+		"efecto": "Daño extra a criaturas acuáticas: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"minecraft:infinity": {
+		"desc": "Disparar no gasta flechas normales (las de efecto y las espectrales sí se gastan). Sigue haciendo falta tener al menos una en el inventario."
+	},
+	"minecraft:knockback": {
+		"desc": "Empuja más lejos a quien golpeas.",
+		"efecto": "Empuje extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:looting": {
+		"desc": "Las criaturas sueltan más botín al matarlas y es más probable que suelten su equipo.",
+		"efecto": "Probabilidad extra de que suelten su equipo: +{v} %",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:loyalty": {
+		"desc": "El tridente vuelve solo a tu mano tras lanzarlo; a más nivel, vuelve más rápido."
+	},
+	"minecraft:luck_of_the_sea": {
+		"desc": "Al pescar salen más tesoros y menos basura.",
+		"efecto": "Suerte de pesca: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:lunge": {
+		"desc": "Lanza: al hacer la estocada te lanza hacia delante; a más nivel, más impulso. No funciona en el agua, planeando ni montado, y hace falta tener al menos 7 puntos de hambre (salvo en creativo).",
+		"efecto": "Hambre gastada por estocada: {v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:lure": {
+		"desc": "Los peces pican antes.",
+		"efecto": "Los peces tardan {v} s menos en picar",
+		"valores": {
+			"v": {
+				"base": 5,
+				"paso": 5
+			}
+		}
+	},
+	"minecraft:multishot": {
+		"desc": "Ballesta: dispara 3 proyectiles a la vez en abanico."
+	},
+	"minecraft:piercing": {
+		"desc": "Ballesta: la flecha atraviesa a las criaturas y sigue su camino.",
+		"efecto": "Atraviesa {v} objetivo(s) antes de detenerse",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:power": {
+		"desc": "Más daño con arcos y ballestas.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:projectile_protection": {
+		"desc": "Reduce el daño de los proyectiles (flechas, bolas de fuego...).",
+		"efecto": "Daño de proyectiles: -{v} %",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			}
+		}
+	},
+	"minecraft:punch": {
+		"desc": "Las flechas empujan más lejos a quien alcanzan.",
+		"efecto": "Empuje extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:quick_charge": {
+		"desc": "Recargas la ballesta más rápido.",
+		"efecto": "Carga {v} s más rápida",
+		"valores": {
+			"v": {
+				"base": 0.25,
+				"paso": 0.25
+			}
+		}
+	},
+	"minecraft:respiration": {
+		"desc": "Aguantas más tiempo bajo el agua.",
+		"efecto": "Aguantas {v} s bajo el agua (sin encantamiento: 15)",
+		"valores": {
+			"v": {
+				"base": 30,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:riptide": {
+		"desc": "Tridente: al lanzarlo estando en el agua o bajo la lluvia, sales disparado con él en vez de soltarlo.",
+		"efecto": "Impulso: {v}",
+		"valores": {
+			"v": {
+				"base": 1.5,
+				"paso": 0.75
+			}
+		}
+	},
+	"minecraft:silk_touch": {
+		"desc": "Los bloques se recogen enteros (mena, hielo, cristal...) y no sueltan experiencia."
+	},
+	"minecraft:smite": {
+		"desc": "Hace más daño a los muertos vivientes (zombis, esqueletos, Wither, fantasmas...).",
+		"efecto": "Daño extra a muertos vivientes: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"minecraft:soul_speed": {
+		"desc": "Vas más rápido sobre arena y tierra de almas y esos bloques no te frenan.",
+		"efecto": "Velocidad sobre ellos: +{v} %",
+		"valores": {
+			"v": {
+				"base": 40.5,
+				"paso": 10.5
+			}
+		}
+	},
+	"minecraft:sweeping_edge": {
+		"desc": "Espada: el barrido daña a los enemigos cercanos.",
+		"niveles": [
+			"Los cercanos reciben el 50 % de tu daño",
+			"Los cercanos reciben el 66,7 % de tu daño",
+			"Los cercanos reciben el 75 % de tu daño"
+		]
+	},
+	"minecraft:swift_sneak": {
+		"desc": "Vas más rápido agachado.",
+		"efecto": "Agachado te mueves al {v} % de tu velocidad normal (sin encantamiento: 30 %)",
+		"valores": {
+			"v": {
+				"base": 45,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:thorns": {
+		"desc": "Devuelve daño a quien te golpea; la pieza pierde durabilidad cada vez que lo hace.",
+		"efecto": "{v} % de probabilidad de devolver de 1 a 5 de daño; la pieza pierde 2 de durabilidad",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:unbreaking": {
+		"desc": "El objeto se desgasta menos: a veces un uso no gasta durabilidad. Es más eficaz en herramientas y armas que en armadura.",
+		"niveles": [
+			"Usos gratis: 50 % en herramientas y armas · 20 % en armadura",
+			"Usos gratis: 66,7 % en herramientas y armas · 26,7 % en armadura",
+			"Usos gratis: 75 % en herramientas y armas · 30 % en armadura"
+		]
+	},
+	"minecraft:vanishing_curse": {
+		"desc": "El objeto desaparece al morir en vez de soltarse."
+	},
+	"minecraft:wind_burst": {
+		"desc": "Maza: si golpeas tras caer al menos 1,5 bloques, una ráfaga de viento te lanza hacia arriba.",
+		"niveles": [
+			"Potencia de la ráfaga: ×1,2",
+			"Potencia de la ráfaga: ×1,75",
+			"Potencia de la ráfaga: ×2,2"
+		]
 	}
 }
