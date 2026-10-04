@@ -18,6 +18,7 @@ SERVER = os.environ.get("SERVER_DIR") or glob.glob(os.path.expanduser(
     "~/umbrel/app-data/brcly-crafty/data/servers/*/"))[0].rstrip("/")
 OUT = os.path.join(REPO, "build", "guia")
 ES_VANILLA = os.path.join(REPO, "build", "i18n-cache", "mojang-es_es-26.3.json")
+DESCRIPCIONES = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "encantamientos.json")
 
 ENCH_RE = re.compile(r"^data/([^/]+)/enchantment/(.+)\.json$")
 TAG_RE = re.compile(r"^data/([^/]+)/tags/enchantment/(.+)\.json$")
@@ -163,6 +164,16 @@ def main():
         if m and m.group(1) != "duration":
             effects.setdefault(f"{m.group(1)}:{m.group(2)}", {"nombre_en": None, "nombre_es": v})
 
+    # Descripciones ya escritas para el inspector (las claves que empiezan por "_" son notas del formato).
+    described = set()
+    if os.path.exists(DESCRIPCIONES):
+        described = {k for k in json.load(open(DESCRIPCIONES, encoding="utf-8")) if not k.startswith("_")}
+    for r in result:
+        r["descrita"] = r["id"] in described
+    unknown = sorted(described - {r["id"] for r in result})
+    if unknown:
+        print("AVISO: descripciones de ids que no existen en el servidor:", unknown)
+
     os.makedirs(OUT, exist_ok=True)
     json.dump(result, open(os.path.join(OUT, "enchantments.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(effects, open(os.path.join(OUT, "effects.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
@@ -182,10 +193,13 @@ def write_doc(result, effects):
          "**botin** = sin etiqueta pero algun loot table/receta lo menciona; **interno** = nadie lo da al jugador "
          "(jefes, estructuras, logica del mod): no necesita descripcion.", ""]
     c = collections.Counter(r["tipo"] for r in result)
+    needed = [r for r in result if r["tipo"] != "interno"]
+    done = sum(1 for r in needed if r["descrita"])
     L += [f"**{len(result)} encantamientos definidos**: {c['jugador']} de jugador, {c['botin']} por botin, "
-          f"{c['interno']} internos. **Descripciones por escribir: {c['jugador'] + c['botin']}.**", ""]
+          f"{c['interno']} internos. **Descripciones: {done} escritas de {len(needed)} necesarias, "
+          f"{len(needed) - done} por escribir.** (Las escritas viven en `core/src/guia/resources/purgatorio_guia/encantamientos.json`.)", ""]
     for ns, rs in sorted(by_ns.items()):
-        L += [f"## `{ns}` ({len(rs)})", "", "| id | tipo | max | nombre (es) | etiquetas | nota |", "|---|---|---|---|---|---|"]
+        L += [f"## `{ns}` ({len(rs)})", "", "| id | tipo | max | nombre (es) | etiquetas | descrita | nota |", "|---|---|---|---|---|---|---|"]
         for r in rs:
             note = []
             if r["sobrescribe_vanilla"]:
@@ -193,7 +207,7 @@ def write_doc(result, effects):
             if not r["nombre_es"] and r["tipo"] != "interno":
                 note.append("sin nombre en espanol")
             L.append(f"| `{r['id'].split(':', 1)[1]}` | {r['tipo']} | {r['max_level']} | {r['nombre_es'] or r['nombre_en'] or ''} "
-                     f"| {', '.join(r['etiquetas'])} | {'; '.join(note)} |")
+                     f"| {', '.join(r['etiquetas'])} | {'si' if r['descrita'] else ('' if r['tipo'] == 'interno' else 'NO')} | {'; '.join(note)} |")
         L.append("")
     L += ["## Efectos con nombre conocido", "",
           f"{len(effects)} efectos aparecen en los ficheros de idioma (vanilla + mods). El registro real, que incluye "

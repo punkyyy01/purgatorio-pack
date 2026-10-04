@@ -10,7 +10,7 @@ export JAVA_HOME
 export PATH="$JAVA_HOME/bin:$PATH"
 export GRADLE_USER_HOME="${GRADLE_USER_HOME:-$HOME/dev/.gradle}"
 
-(cd "$REPO/core" && nice -n 10 ./gradlew --no-daemon -q build testmodJar)
+(cd "$REPO/core" && nice -n 10 ./gradlew --no-daemon -q build testmodJar guiaJar)
 "$HERE/server.sh" stop >/dev/null 2>&1 || true
 "$HERE/setup-test-server.sh" ${WITH_GRAVES:+--with-graves} ${FULL_PACK:+--full-pack} >/dev/null
 rm -f "$DEST/purgatorio-test-results.txt"

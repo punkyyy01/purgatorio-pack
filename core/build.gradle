@@ -16,12 +16,35 @@ repositories {
 	}
 }
 
+// Mod de la GUIA (inspector de objetos): jar INDEPENDIENTE de purgatorio-core. Va a produccion aunque alli no este
+// el nucleo, asi que su classpath NO incluye sourceSets.main.output: no puede referenciar clases del nucleo.
 // Mod de PRUEBAS (no va a produccion): comandos que ejecutan suites dentro de un servidor de test.
 sourceSets {
-	testmod {
-		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
-		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+	guia {
+		compileClasspath += sourceSets.main.compileClasspath
+		runtimeClasspath += sourceSets.main.runtimeClasspath
 	}
+	testmod {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output + sourceSets.guia.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output + sourceSets.guia.output
+	}
+}
+
+tasks.named('processGuiaResources') {
+	def guiaVersion = project.version.toString()
+	inputs.property "version", guiaVersion
+	filesMatching("fabric.mod.json") {
+		expand "version": guiaVersion
+	}
+}
+
+tasks.register('guiaJar', Jar) {
+	group = 'build'
+	description = 'Empaqueta purgatorio-guia (inspector de objetos), independiente del nucleo.'
+	archiveBaseName = 'purgatorio-guia'
+	archiveVersion = project.version.toString()
+	from sourceSets.guia.output
+	destinationDirectory = layout.buildDirectory.dir('libs')
 }
 
 tasks.register('testmodJar', Jar) {

@@ -1,0 +1,34 @@
+{
+	"_formato": [
+		"Una entrada por id de encantamiento. Campos:",
+		"  desc    (texto)  que hace, en una o dos frases.",
+		"  efecto  (texto)  linea con el efecto del NIVEL del objeto; usa {v}, {w}... definidos en 'valores'.",
+		"  valores (objeto) nombre -> {base, paso}: valor(nivel) = base + paso * (nivel - 1).",
+		"  niveles (lista)  alternativa a 'efecto'+'valores' para formulas no lineales: un texto por nivel (1, 2, 3...).",
+		"Lo que no aparezca aqui se muestra como 'Sin descripcion todavia' (ver docs/guia-inventario.md)."
+	],
+
+	"minecraft:sharpness": {
+		"desc": "Aumenta el daño que haces cuerpo a cuerpo con espadas y hachas.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": { "v": { "base": 1.0, "paso": 0.5 } }
+	},
+	"minecraft:protection": {
+		"desc": "Reduce casi todo el daño que recibes. Se suma entre las piezas de armadura (tope total: 80 %). No protege del vacío.",
+		"efecto": "Reduce el daño recibido un {v} %",
+		"valores": { "v": { "base": 4.0, "paso": 4.0 } }
+	},
+	"minecraft:efficiency": {
+		"desc": "Hace que la herramienta rompa bloques más rápido.",
+		"niveles": [
+			"Velocidad de minado: +2",
+			"Velocidad de minado: +5",
+			"Velocidad de minado: +10",
+			"Velocidad de minado: +17",
+			"Velocidad de minado: +26"
+		]
+	},
+	"minecraft:mending": {
+		"desc": "El objeto se repara solo con la experiencia que recoges: cada punto de experiencia repara 2 de durabilidad."
+	}
+}
