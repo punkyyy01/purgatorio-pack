@@ -1,0 +1,51 @@
+package com.purgatorio.guia.inspect;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+/** Utilidades de texto para los tooltips. */
+public final class Text {
+	private Text() {
+	}
+
+	/** Numero con coma decimal y sin ceros sobrantes ("6,5", "8"). */
+	public static String num(double value) {
+		String s = String.format(Locale.ROOT, "%.2f", value);
+		if (s.contains(".")) {
+			s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
+		}
+		return s.replace('.', ',');
+	}
+
+	/** "+7", "-3,1" o, si es proporcional, "+20 %" (la cantidad de un modificador de atributo). */
+	public static String signed(double amount, boolean percent) {
+		return (amount >= 0 ? "+" : "-") + num(Math.abs(percent ? amount * 100.0 : amount)) + (percent ? " %" : "");
+	}
+
+	/** Duracion en ticks como "m:ss" (3600 ticks = "3:00"); los minutos no pasan a horas (6000 s = "100:00"). */
+	public static String duration(int ticks) {
+		int seconds = Math.max(0, ticks) / 20;
+		return (seconds / 60) + ":" + String.format(Locale.ROOT, "%02d", seconds % 60);
+	}
+
+	/** Parte un texto en lineas de como mucho {@code width} caracteres (los tooltips de lore no se ajustan solos). */
+	public static List<String> wrap(String text, int width) {
+		List<String> lines = new ArrayList<>();
+		StringBuilder line = new StringBuilder();
+		for (String word : text.split("\\s+")) {
+			if (!line.isEmpty() && line.length() + 1 + word.length() > width) {
+				lines.add(line.toString());
+				line.setLength(0);
+			}
+			if (!line.isEmpty()) {
+				line.append(' ');
+			}
+			line.append(word);
+		}
+		if (!line.isEmpty()) {
+			lines.add(line.toString());
+		}
+		return lines;
+	}
+}

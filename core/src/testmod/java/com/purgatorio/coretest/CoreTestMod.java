@@ -36,6 +36,7 @@ public final class CoreTestMod implements ModInitializer {
 		all.add(new XpCompatSuite());
 		all.add(new RuinaSuite());
 		all.add(new FeedbackSuite());
+		all.add(new GuiaSuite());
 		return all;
 	}
 

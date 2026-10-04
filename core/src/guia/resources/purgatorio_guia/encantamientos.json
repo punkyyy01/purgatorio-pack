@@ -1,0 +1,1057 @@
+{
+	"_formato": [
+		"Una entrada por id de encantamiento. Campos:",
+		"  desc    (texto)  que hace, en una o dos frases.",
+		"  efecto  (texto)  linea con el efecto del NIVEL del objeto; usa {v}, {w}... definidos en 'valores'.",
+		"  valores (objeto) nombre -> {base, paso}: valor(nivel) = base + paso * (nivel - 1).",
+		"  niveles (lista)  alternativa a 'efecto'+'valores' para formulas no lineales: un texto por nivel (1, 2, 3...).",
+		"Lo que no aparezca aqui se muestra como 'Sin descripcion todavia' (ver docs/guia-inventario.md)."
+	],
+	"minecraft:sharpness": {
+		"desc": "Aumenta el daño que haces cuerpo a cuerpo con espadas y hachas.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": {
+			"v": {
+				"base": 1.0,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:protection": {
+		"desc": "Reduce casi todo el daño que recibes. Se suma entre las piezas de armadura (tope total: 80 %). No protege del vacío.",
+		"efecto": "Reduce el daño recibido un {v} %",
+		"valores": {
+			"v": {
+				"base": 4.0,
+				"paso": 4.0
+			}
+		}
+	},
+	"minecraft:efficiency": {
+		"desc": "Hace que la herramienta rompa bloques más rápido.",
+		"niveles": [
+			"Velocidad de minado: +2",
+			"Velocidad de minado: +5",
+			"Velocidad de minado: +10",
+			"Velocidad de minado: +17",
+			"Velocidad de minado: +26"
+		]
+	},
+	"minecraft:mending": {
+		"desc": "El objeto se repara solo con la experiencia que recoges: cada punto de experiencia repara 2 de durabilidad."
+	},
+	"minecraft:aqua_affinity": {
+		"desc": "Bajo el agua rompes bloques a la velocidad normal, en vez de muy despacio."
+	},
+	"minecraft:bane_of_arthropods": {
+		"desc": "Hace más daño a los artrópodos (arañas, arañas de cueva, pececillos de plata, endermitas y abejas) y los ralentiza al golpearlos. Solo cuenta en golpes directos.",
+		"efecto": "Daño extra a artrópodos: +{v} · Lentitud IV hasta {w} s",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			},
+			"w": {
+				"base": 1.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:binding_curse": {
+		"desc": "Una vez puesta, no puedes quitarte esta pieza (salvo en modo creativo o si se rompe)."
+	},
+	"minecraft:blast_protection": {
+		"desc": "Reduce el daño de las explosiones y lo que te empujan.",
+		"efecto": "Daño de explosiones: -{v} % · Empuje de explosiones: -{w} %",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			},
+			"w": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:breach": {
+		"desc": "Maza: ignora parte de la armadura del enemigo al golpear.",
+		"efecto": "Ignora un {v} % de la armadura",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:channeling": {
+		"desc": "Si hay tormenta eléctrica y el objetivo está a cielo abierto, tu tridente invoca un rayo al impactar."
+	},
+	"minecraft:density": {
+		"desc": "Maza: cada bloque que caes antes del golpe hace más daño.",
+		"efecto": "Daño extra: +{v} por cada bloque caído",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:depth_strider": {
+		"desc": "El agua te frena menos al nadar. Con nivel III te mueves en ella como en tierra.",
+		"efecto": "Reduce lo que te frena el agua un {v} %",
+		"valores": {
+			"v": {
+				"base": 33.33333333,
+				"paso": 33.33333333,
+				"tope": 100
+			}
+		}
+	},
+	"minecraft:feather_falling": {
+		"desc": "Reduce el daño por caída.",
+		"efecto": "Daño por caída: -{v} %",
+		"valores": {
+			"v": {
+				"base": 12,
+				"paso": 12
+			}
+		}
+	},
+	"minecraft:fire_aspect": {
+		"desc": "Prende fuego a quien golpeas (solo en golpes directos).",
+		"efecto": "Quema al objetivo durante {v} s",
+		"valores": {
+			"v": {
+				"base": 4,
+				"paso": 4
+			}
+		}
+	},
+	"minecraft:fire_protection": {
+		"desc": "Reduce el daño del fuego y el tiempo que ardes.",
+		"efecto": "Daño de fuego: -{v} % · Ardes un {w} % menos tiempo",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			},
+			"w": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:flame": {
+		"desc": "Las flechas salen ardiendo y prenden fuego a lo que impactan."
+	},
+	"minecraft:fortune": {
+		"desc": "Al romper minerales y otros bloques que lo permiten sueltan más objetos; cuanto más nivel, más botín."
+	},
+	"minecraft:frost_walker": {
+		"desc": "Al caminar sobre el agua la congela bajo tus pies con hielo escarchado, que se derrite solo. También te protege del daño de los bloques de magma.",
+		"efecto": "Congela un radio de {v} bloques",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:impaling": {
+		"desc": "Tridente: hace más daño a las criaturas acuáticas (peces, calamares, delfines, guardianes, tortugas, ajolotes...).",
+		"efecto": "Daño extra a criaturas acuáticas: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"minecraft:infinity": {
+		"desc": "Disparar no gasta flechas normales (las de efecto y las espectrales sí se gastan). Sigue haciendo falta tener al menos una en el inventario."
+	},
+	"minecraft:knockback": {
+		"desc": "Empuja más lejos a quien golpeas.",
+		"efecto": "Empuje extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:looting": {
+		"desc": "Las criaturas sueltan más botín al matarlas y es más probable que suelten su equipo.",
+		"efecto": "Probabilidad extra de que suelten su equipo: +{v} %",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:loyalty": {
+		"desc": "El tridente vuelve solo a tu mano tras lanzarlo; a más nivel, vuelve más rápido."
+	},
+	"minecraft:luck_of_the_sea": {
+		"desc": "Al pescar salen más tesoros y menos basura.",
+		"efecto": "Suerte de pesca: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:lunge": {
+		"desc": "Lanza: al hacer la estocada te lanza hacia delante; a más nivel, más impulso. No funciona en el agua, planeando ni montado, y hace falta tener al menos 7 puntos de hambre (salvo en creativo).",
+		"efecto": "Hambre gastada por estocada: {v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:lure": {
+		"desc": "Los peces pican antes.",
+		"efecto": "Los peces tardan {v} s menos en picar",
+		"valores": {
+			"v": {
+				"base": 5,
+				"paso": 5
+			}
+		}
+	},
+	"minecraft:multishot": {
+		"desc": "Ballesta: dispara 3 proyectiles a la vez en abanico."
+	},
+	"minecraft:piercing": {
+		"desc": "Ballesta: la flecha atraviesa a las criaturas y sigue su camino.",
+		"efecto": "Atraviesa {v} objetivo(s) antes de detenerse",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:power": {
+		"desc": "Más daño con arcos y ballestas.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 0.5
+			}
+		}
+	},
+	"minecraft:projectile_protection": {
+		"desc": "Reduce el daño de los proyectiles (flechas, bolas de fuego...).",
+		"efecto": "Daño de proyectiles: -{v} %",
+		"valores": {
+			"v": {
+				"base": 8,
+				"paso": 8
+			}
+		}
+	},
+	"minecraft:punch": {
+		"desc": "Las flechas empujan más lejos a quien alcanzan.",
+		"efecto": "Empuje extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"minecraft:quick_charge": {
+		"desc": "Recargas la ballesta más rápido.",
+		"efecto": "Carga {v} s más rápida",
+		"valores": {
+			"v": {
+				"base": 0.25,
+				"paso": 0.25
+			}
+		}
+	},
+	"minecraft:respiration": {
+		"desc": "Aguantas más tiempo bajo el agua.",
+		"efecto": "Aguantas {v} s bajo el agua (sin encantamiento: 15)",
+		"valores": {
+			"v": {
+				"base": 30,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:riptide": {
+		"desc": "Tridente: al lanzarlo estando en el agua o bajo la lluvia, sales disparado con él en vez de soltarlo.",
+		"efecto": "Impulso: {v}",
+		"valores": {
+			"v": {
+				"base": 1.5,
+				"paso": 0.75
+			}
+		}
+	},
+	"minecraft:silk_touch": {
+		"desc": "Los bloques se recogen enteros (mena, hielo, cristal...) y no sueltan experiencia."
+	},
+	"minecraft:smite": {
+		"desc": "Hace más daño a los muertos vivientes (zombis, esqueletos, Wither, fantasmas...).",
+		"efecto": "Daño extra a muertos vivientes: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"minecraft:soul_speed": {
+		"desc": "Vas más rápido sobre arena y tierra de almas y esos bloques no te frenan.",
+		"efecto": "Velocidad sobre ellos: +{v} %",
+		"valores": {
+			"v": {
+				"base": 40.5,
+				"paso": 10.5
+			}
+		}
+	},
+	"minecraft:sweeping_edge": {
+		"desc": "Espada: el barrido daña a los enemigos cercanos.",
+		"niveles": [
+			"Los cercanos reciben el 50 % de tu daño",
+			"Los cercanos reciben el 66,7 % de tu daño",
+			"Los cercanos reciben el 75 % de tu daño"
+		]
+	},
+	"minecraft:swift_sneak": {
+		"desc": "Vas más rápido agachado.",
+		"efecto": "Agachado te mueves al {v} % de tu velocidad normal (sin encantamiento: 30 %)",
+		"valores": {
+			"v": {
+				"base": 45,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:thorns": {
+		"desc": "Devuelve daño a quien te golpea; la pieza pierde durabilidad cada vez que lo hace.",
+		"efecto": "{v} % de probabilidad de devolver de 1 a 5 de daño; la pieza pierde 2 de durabilidad",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"minecraft:unbreaking": {
+		"desc": "El objeto se desgasta menos: a veces un uso no gasta durabilidad. Es más eficaz en herramientas y armas que en armadura.",
+		"niveles": [
+			"Usos gratis: 50 % en herramientas y armas · 20 % en armadura",
+			"Usos gratis: 66,7 % en herramientas y armas · 26,7 % en armadura",
+			"Usos gratis: 75 % en herramientas y armas · 30 % en armadura"
+		]
+	},
+	"minecraft:vanishing_curse": {
+		"desc": "El objeto desaparece al morir en vez de soltarse."
+	},
+	"minecraft:wind_burst": {
+		"desc": "Maza: si golpeas tras caer al menos 1,5 bloques, una ráfaga de viento te lanza hacia arriba.",
+		"niveles": [
+			"Potencia de la ráfaga: ×1,2",
+			"Potencia de la ráfaga: ×1,75",
+			"Potencia de la ráfaga: ×2,2"
+		]
+	},
+	"enchantsplus:breaking_curse": {
+		"desc": "Maldición: cada vez que gastas un uso, el objeto pierde 4 de durabilidad en vez de 1."
+	},
+	"enchantsplus:breeze_burst": {
+		"desc": "Arco: cuando la flecha se clava, provoca una ráfaga de viento (una carga de viento) en ese punto."
+	},
+	"enchantsplus:clumsiness_curse": {
+		"desc": "Maldición: al romper bloques o al golpear, hay un 10 % de probabilidad de que sueltes el objeto que sostienes (en el golpe sale despedido 2 bloques por delante). No puedes recogerlo durante 3 s."
+	},
+	"enchantsplus:crabs_touch": {
+		"desc": "Herramientas: te permite romper y colocar bloques desde más lejos.",
+		"efecto": "Alcance de bloques: +{v} (normal: 4,5)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"enchantsplus:displacement_curse": {
+		"desc": "Maldición: al golpear, hay un 50 % de probabilidad de que el enemigo sea recolocado en un punto al azar cerca de ti (no afecta al Ender Dragon)."
+	},
+	"enchantsplus:double_edge_curse": {
+		"desc": "Maldición: al golpear, hay un 40 % de probabilidad de que tú recibas de 2 a 4 de daño mágico (1 a 2 corazones)."
+	},
+	"enchantsplus:gluttony": {
+		"desc": "Mientras sostienes el objeto, lo que sueltan los bloques y las criaturas va directo hacia ti (lo que tú sueltas no).",
+		"niveles": [
+			"Atrae los objetos que caen a menos de 2,5 bloques",
+			"Atrae los objetos que caen a menos de 9 bloques",
+			"Atrae los objetos (9 bloques) y la experiencia (6 bloques)"
+		]
+	},
+	"enchantsplus:graviole": {
+		"desc": "Élitros: mientras planeas, la gravedad te afecta menos y caes más despacio.",
+		"efecto": "Gravedad al volar: -{v} %",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"enchantsplus:ice_aspect": {
+		"desc": "Espada: al golpear hay una probabilidad de congelar al objetivo: queda inmóvil 3 s dentro de un bloque de hielo (sin IA ni movimiento). No afecta al Ender Dragon ni al Wither, y el fuego descongela a los jugadores.",
+		"efecto": "Probabilidad de congelar: {v} %",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"enchantsplus:kinetic_protection": {
+		"desc": "Casco: mientras vuelas con élitros, reduce el daño de chocar contra una pared.",
+		"efecto": "Daño de chocar volando: -{v} %",
+		"valores": {
+			"v": {
+				"base": 16,
+				"paso": 16
+			}
+		}
+	},
+	"enchantsplus:outreach": {
+		"desc": "Espada: aumenta tu alcance para golpear a las criaturas.",
+		"efecto": "Alcance de ataque: +{v} bloques (normal: 3)",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"enchantsplus:precision": {
+		"desc": "Arco y ballesta: la flecha no cae mientras va rápida, vuela recta.",
+		"niveles": [
+			"La flecha vuela recta hasta que pierde algo de velocidad",
+			"La flecha vuela recta casi hasta el final de su recorrido"
+		]
+	},
+	"enchantsplus:pyrolysis": {
+		"desc": "Los bloques que rompes sueltan ya fundidos, como si pasaran por un horno: mena de hierro, cobre y oro → lingotes; arena → cristal; piedra → piedra lisa; adoquín → piedra; restos antiguos → chatarra de netherita; patatas → patatas asadas, y más."
+	},
+	"enchantsplus:retrieval": {
+		"desc": "Peto: al recibir un flechazo, hay una probabilidad de recuperar esa flecha (la espectral, si te la dispararon con una).",
+		"efecto": "Probabilidad de recuperarla: {v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 20
+			}
+		}
+	},
+	"enchantsplus:scorch_walker": {
+		"desc": "Botas: al caminar sobre lava la convierte en bloques de magma bajo tus pies. Te protege del daño de los bloques de magma y del frío.",
+		"efecto": "Convierte un radio de {v} bloques",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 1
+			}
+		}
+	},
+	"enchantsplus:stride": {
+		"desc": "Pantalones: subes escalones más altos sin saltar.",
+		"niveles": [
+			"Altura de escalón: 0,78 bloques (normal: 0,6)",
+			"Altura de escalón: 0,96 bloques (normal: 0,6)",
+			"Altura de escalón: 1,14 bloques: subes bloques enteros sin saltar"
+		]
+	},
+	"enchantsplus:swift_strike": {
+		"desc": "Espada: golpeas más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 12.5,
+				"paso": 12.5
+			}
+		}
+	},
+	"enchantsplus:toxic": {
+		"desc": "Arco: las flechas envenenan (Veneno durante 1:30) y no se pueden recoger. No cambia las flechas que ya llevan efecto."
+	},
+	"enchantsplus:vitality": {
+		"desc": "Peto: aumenta tu vida máxima.",
+		"efecto": "Vida máxima: +{v} (1 corazón por nivel)",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
+	},
+	"enchantments:attack_speed": {
+		"desc": "Espada: golpeas muchísimo más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 50,
+				"paso": 600
+			}
+		}
+	},
+	"enchantments:big_foot": {
+		"desc": "Botas: subes escalones mucho más altos sin saltar.",
+		"niveles": [
+			"Altura de escalón: 1,2 bloques (normal: 0,6)",
+			"Altura de escalón: 2,1 bloques (normal: 0,6)",
+			"Altura de escalón: 3 bloques (normal: 0,6)"
+		]
+	},
+	"enchantments:block_reach": {
+		"desc": "Solo en el casco de tortuga: te permite romper y colocar bloques desde mucho más lejos.",
+		"efecto": "Alcance de bloques: +{v} % (normal: 4,5 bloques)",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:burning_protection": {
+		"desc": "Armadura: dejas de arder del todo; el tiempo en llamas se reduce a cero."
+	},
+	"enchantments:burst": {
+		"desc": "Lanza: golpeas más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 50,
+				"paso": 50
+			}
+		}
+	},
+	"enchantments:curse_of_decaying": {
+		"desc": "Maldición: el objeto se gasta muchísimo más deprisa. Cada uso gasta 21 de durabilidad en vez de 1 (201 si además tiene Reparación)."
+	},
+	"enchantments:curse_of_giantism": {
+		"desc": "Maldición: armadura que te hace un 30 % más grande."
+	},
+	"enchantments:curse_of_smallism": {
+		"desc": "Maldición: armadura que te hace un 22 % más pequeño."
+	},
+	"enchantments:dolphins_grace": {
+		"desc": "Botas: mientras te mueves tienes Gracia del delfín, que te hace nadar más rápido.",
+		"niveles": [
+			"Gracia del delfín I",
+			"Gracia del delfín III",
+			"Gracia del delfín V"
+		]
+	},
+	"enchantments:entity_reach": {
+		"desc": "Solo en el casco de tortuga: aumenta mucho tu alcance para golpear criaturas.",
+		"efecto": "Alcance de ataque: +{v} % (normal: 3 bloques)",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:evoking": {
+		"desc": "Cada golpe invoca colmillos de Evocador que muerden al enemigo."
+	},
+	"enchantments:falling_wings": {
+		"desc": "Botas: puedes caer desde un poco más alto sin hacerte daño.",
+		"niveles": [
+			"Caída segura: 3,24 bloques (normal: 3)",
+			"Caída segura: 4,44 bloques (normal: 3)",
+			"Caída segura: 5,64 bloques (normal: 3)"
+		]
+	},
+	"enchantments:frozen": {
+		"desc": "Al golpear ralentiza al enemigo con una Lentitud fuerte (de nivel III a VII al azar).",
+		"niveles": [
+			"Lentitud III-VII durante 3 s",
+			"Lentitud III-VII durante 3 a 8 s",
+			"Lentitud III-VII durante 3 a 13 s"
+		]
+	},
+	"enchantments:glow": {
+		"desc": "Al golpear hace brillar al enemigo: se ve a través de los bloques.",
+		"niveles": [
+			"Brilla durante 5 s",
+			"Brilla durante 5 a 10 s",
+			"Brilla durante 5 a 15 s"
+		]
+	},
+	"enchantments:gravity": {
+		"desc": "Armadura: pesas menos y caes más despacio.",
+		"efecto": "La gravedad te afecta un {v} % menos",
+		"valores": {
+			"v": {
+				"base": 17,
+				"paso": 0
+			}
+		}
+	},
+	"enchantments:harvesting_touch": {
+		"desc": "Al romper un cultivo maduro (trigo, zanahorias, patatas o remolacha) cosechas también los maduros de alrededor (3×3) y se vuelven a plantar solos."
+	},
+	"enchantments:haste": {
+		"desc": "Herramienta: rompes bloques muchísimo más rápido.",
+		"efecto": "Velocidad de minado: ×{v}",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 2
+			}
+		}
+	},
+	"enchantments:healthy": {
+		"desc": "Armadura: aumenta un poco tu vida máxima.",
+		"niveles": [
+			"Vida máxima: +0,4 puntos (2 %)",
+			"Vida máxima: +1 punto (5 %)",
+			"Vida máxima: +1,6 puntos (8 %)"
+		]
+	},
+	"enchantments:invisibility": {
+		"desc": "Al golpear te vuelves invisible un rato.",
+		"niveles": [
+			"Invisible durante 5 a 10 s",
+			"Invisible durante 5 a 15 s",
+			"Invisible durante 5 a 20 s"
+		]
+	},
+	"enchantments:jump": {
+		"desc": "Botas: saltas más alto.",
+		"efecto": "Fuerza de salto: +{v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:knockback_protection": {
+		"desc": "Armadura: debería reducir el empuje que recibes, pero casi no hace nada: sin netherita no cambia nada y con ella solo suma una milésima.",
+		"efecto": "Con netherita: +{v} % de resistencia al empuje (con otras armaduras, nada)",
+		"valores": {
+			"v": {
+				"base": 0.1,
+				"paso": 0.2
+			}
+		}
+	},
+	"enchantments:lava_walker": {
+		"desc": "Botas: al caminar sobre lava la convierte en obsidiana a tu alrededor (3×3). La obsidiana se queda para siempre."
+	},
+	"enchantments:lifesteal": {
+		"desc": "Al golpear recibes Regeneración durante 1 s; a más nivel, más fuerte.",
+		"niveles": [
+			"Regeneración I durante 1 s (no llega a curar nada)",
+			"Regeneración III durante 1 s (cura 1 vida por golpe)",
+			"Regeneración V durante 1 s (cura 6 vidas por golpe)"
+		]
+	},
+	"enchantments:shulker": {
+		"desc": "Arco: al impactar levita al enemigo (Levitación de nivel III a V al azar).",
+		"niveles": [
+			"Levita durante 1 a 3 s",
+			"Levita durante 3 a 5 s",
+			"Levita durante 3 a 9 s"
+		]
+	},
+	"enchantments:smelting_touch": {
+		"desc": "Herramienta: mientras la usas, el mineral crudo (hierro, cobre y oro) que haya suelto a menos de 5 bloques de ti se convierte en lingotes."
+	},
+	"enchantments:speed": {
+		"desc": "Botas: caminas y corres más rápido.",
+		"efecto": "Velocidad de movimiento: +{v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:spider": {
+		"desc": "Al golpear hay una probabilidad de dejar una telaraña sobre el enemigo.",
+		"efecto": "Probabilidad de telaraña: {v} %",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:strength": {
+		"desc": "Arma: aumenta el daño de tus golpes (sobre el daño total del arma, no solo el básico).",
+		"efecto": "Daño de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:telekinesis": {
+		"desc": "Herramienta: al usarla (por ejemplo, al romper un bloque), todos los objetos sueltos a menos de 10 bloques vuelan hasta ti."
+	},
+	"enchantments:thunderbolt": {
+		"desc": "Maza: si hay tormenta eléctrica, cada golpe invoca un rayo sobre el enemigo."
+	},
+	"enchantments:vanquish": {
+		"desc": "Arma: hace más daño a los jefes (Wither, Warden, Ender Dragon y Guardián anciano).",
+		"efecto": "Daño extra a jefes: +{v}",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
+	},
+	"enchantments:villager_healer": {
+		"desc": "Con una esmeralda encantada: al golpear aplica Debilidad (nivel III a V al azar, de 1 a 30 s) al objetivo. Es lo que necesita un zombi aldeano para poder curarse con una manzana dorada."
+	},
+	"enchantments:vision": {
+		"desc": "Armadura: la cámara en tercera persona se aleja de ti.",
+		"efecto": "Distancia de la cámara: +{v} %",
+		"valores": {
+			"v": {
+				"base": 5,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:void_step": {
+		"desc": "Peto: si caes por debajo de Y -70 (al vacío), te teletransporta a un punto al azar a menos de 350 bloques del centro del mundo y te protege del daño 1 s. Cada vez gasta la mitad de la durabilidad máxima del peto, y si no le queda, se rompe."
+	},
+	"enchantments:wither": {
+		"desc": "Al golpear aplica Wither al enemigo (nivel III a V al azar), que le quita vida poco a poco.",
+		"niveles": [
+			"Wither durante 3 a 5 s",
+			"Wither durante 3 a 10 s",
+			"Wither durante 3 a 15 s"
+		]
+	},
+	"nova_structures:aerials_bane": {
+		"desc": "Hace más daño a los enemigos que están en el aire y a los voladores (Breeze, Vex y Wither). No cuenta si están en el agua o montados. Con arco o ballesta suma menos.",
+		"efecto": "Cuerpo a cuerpo: +{v} de daño · Con arco o ballesta: +{w}",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			},
+			"w": {
+				"base": 2,
+				"paso": 1
+			}
+		}
+	},
+	"nova_structures:antidote": {
+		"desc": "Peto: mientras tengas Veneno o Wither no recibes el daño de esos efectos, pero la pieza pierde 1 de durabilidad cada vez que te habría hecho daño."
+	},
+	"nova_structures:conductivity_curse": {
+		"desc": "Maldición (objetos de metal): con tormenta eléctrica y a cielo abierto, cada segundo hay un 10 % de probabilidad de que te caiga un rayo. Con una maza o una llave de cámara de pruebas en la mano sube a un 23 %."
+	},
+	"nova_structures:function_only": {
+		"desc": "Encantamiento técnico de Dungeons & Taverns, para palos y pedernales de los jefes: evita que el objeto se suelte al morir y activa mecánicas de jefes. No tiene ningún uso para el jugador."
+	},
+	"nova_structures:ghasted": {
+		"desc": "Ballesta: la flecha se convierte en una bola de fuego como la del Ghast, que explota al impactar. Cargar la ballesta tarda más.",
+		"niveles": [
+			"Explosión de potencia 1 · carga 1,5 s más lenta",
+			"Explosión de potencia 2 · carga 2 s más lenta",
+			"Explosión de potencia 3 · carga 2,5 s más lenta"
+		]
+	},
+	"nova_structures:gravity": {
+		"desc": "Ballesta: al impactar, la flecha atrae hacia el punto de impacto todo lo que haya cerca (unos 6 bloques si da a una criatura, 10 si se clava en un bloque), sin romper bloques.",
+		"niveles": [
+			"Atracción: ×0,75",
+			"Atracción: ×1",
+			"Atracción: ×1,25"
+		]
+	},
+	"nova_structures:hydro_veil": {
+		"desc": "Arnés de Happy Ghast: la montura se cura sola, arde un 25 % menos por nivel, empuja menos de las explosiones (25 % por nivel) y recibe un 20 % menos de daño de fuego y explosiones por nivel.",
+		"niveles": [
+			"La montura recupera 1 vida cada 4 s",
+			"La montura recupera 1 vida cada 3 s",
+			"La montura recupera 1 vida cada 2 s",
+			"La montura recupera 1 vida cada 1 s"
+		]
+	},
+	"nova_structures:illagers_bane": {
+		"desc": "Hace más daño a los illagers (saqueadores, vindicadores, evocadores, ilusionistas...), a los Vex, a los Ravager y a las brujas.",
+		"efecto": "Daño extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"nova_structures:multishot": {
+		"desc": "Arco: dispara 3 flechas a la vez en abanico."
+	},
+	"nova_structures:outreach": {
+		"desc": "Peto: aumenta tu alcance para romper y colocar bloques.",
+		"efecto": "Alcance de bloques: +{v} (normal: 4,5)",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"nova_structures:photosynthesis": {
+		"desc": "El objeto se repara solo poco a poco mientras hay luz suficiente (nivel de luz 9 o más, de día a cielo abierto o en el End): recupera de media 1 de durabilidad cada 5 s."
+	},
+	"nova_structures:piercing": {
+		"desc": "Arco: la flecha atraviesa a las criaturas y sigue su camino.",
+		"efecto": "Atraviesa {v} objetivo(s) antes de detenerse",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"nova_structures:power": {
+		"desc": "Ballesta: más daño.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 0.5
+			}
+		}
+	},
+	"nova_structures:spiteful": {
+		"desc": "Arma: cuando te queda poca vida (5 puntos o menos, 2,5 corazones) haces más daño. Y cuando te golpean tienes una probabilidad de recibir Fuerza I durante 1 a 3 s.",
+		"efecto": "Con poca vida: +{v} de daño · Probabilidad de Fuerza al ser golpeado: {w} %",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			},
+			"w": {
+				"base": 30,
+				"paso": 15
+			}
+		}
+	},
+	"nova_structures:swift_soar": {
+		"desc": "Arnés de Happy Ghast: la montura vuela más rápido, y aún más si corres (sprint) montado, y la cámara se aleja.",
+		"niveles": [
+			"Velocidad de vuelo +10 % (+10 % más al correr)",
+			"Velocidad de vuelo +15 % (+20 % más al correr)",
+			"Velocidad de vuelo +20 % (+30 % más al correr)"
+		]
+	},
+	"nova_structures:traveler": {
+		"desc": "Botas: al correr (no agachado, nadando ni volando) subes escalones más altos y vas un poco más rápido. Se gastan muy poco.",
+		"niveles": [
+			"Al correr: escalones +0,5 bloques y velocidad +10 %",
+			"Al correr: escalones +0,6 bloques y velocidad +15 %",
+			"Al correr: escalones +0,7 bloques y velocidad +20 %"
+		]
+	},
+	"nova_structures:wax_wings": {
+		"desc": "Élitros: planear con calma no gasta durabilidad, pero a gran velocidad (más de 30 bloques por segundo) o por encima de Y 500 de día, las alas se derriten y se gastan muy deprisa. Solo funciona mientras al élitro le queden más de 3 de durabilidad."
+	},
+	"nova_structures:wither_coated": {
+		"desc": "Espadas, lanzas, hachas, tridente y maza: cada golpe directo aplica Wither al enemigo (menos a los esqueletos del Wither); a más nivel, más fuerte pero más corto. El objeto gasta 1 de durabilidad extra por golpe.",
+		"niveles": [
+			"Wither I durante 12 s",
+			"Wither II durante 6 s",
+			"Wither III durante 3 s"
+		]
+	},
+	"dke:altitude": {
+		"desc": "Élitros: mientras planeas y miras hacia arriba (más de 30 grados), cada segundo recibes un fuerte impulso hacia arriba que te hace ganar altura sin cohetes."
+	},
+	"dke:clear_skies": {
+		"desc": "Escudo: al bloquear, disipa las nubes de aliento de dragón que haya a tu alrededor."
+	},
+	"dke:deterioration_curse": {
+		"desc": "Maldición del equipo del dragón: es incompatible con Reparación, así que el objeto no se puede reparar con la experiencia."
+	},
+	"dke:dragon_lungs": {
+		"desc": "Casco: aguantas más tiempo bajo el agua y minas bajo el agua sin la penalización habitual.",
+		"niveles": [
+			"Aguantas 30 s bajo el agua · minado bajo el agua: 1 (normal en tierra: 1; sin él: 0,2)",
+			"Aguantas 45 s bajo el agua · minado bajo el agua: 1,8",
+			"Aguantas 60 s bajo el agua · minado bajo el agua: 2,6"
+		]
+	},
+	"dke:dragonbane": {
+		"desc": "Arma: hace muchísimo más daño al Ender Dragon.",
+		"efecto": "Daño extra al Ender Dragon: +{v}",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"dke:dragonhearted": {
+		"desc": "Armadura: aumenta tu vida máxima. Cada pieza que lo lleve suma.",
+		"efecto": "Vida máxima: +{v} por pieza (1 corazón por nivel)",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
+	},
+	"dke:dragonsight": {
+		"desc": "Casco: ves en la oscuridad y cada segundo resalta con un brillo los minerales que haya delante de ti (en una zona de unos 30 bloques). El casco se gasta mientras lo usas (dura unos 5 minutos de uso) y se rompe cuando llega a 0."
+	},
+	"dke:dragonyield": {
+		"desc": "Armadura: cuando te golpea el Ender Dragon, hay una probabilidad de devolverle de 4 a 20 de daño.",
+		"efecto": "Probabilidad de devolver el golpe: {v} %",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"dke:exhalation": {
+		"desc": "Ballesta: tras volar un instante (0,3 s), la flecha explota al tocar una criatura y le hace 15 de daño (7,5 corazones). Contra el Ender Dragon, cerca de él, solo hace 1."
+	},
+	"dke:kickback": {
+		"desc": "Escudo: al bloquear un golpe, el atacante sale despedido 2,5 bloques hacia atrás y recibe 4 de daño mágico (2 corazones). El Ender Dragon sale despedido pero no recibe daño."
+	},
+	"dke:pillaring": {
+		"desc": "Pico: al romper un bloque, el pico rompe también tres bloques más en línea recta delante de ti (a 2, 3 y 4 bloques, uno tras otro), gastando un poco de durabilidad por cada uno. No rompe bloques indestructibles."
+	},
+	"dke:voidwalk": {
+		"desc": "Botas: si caes sin ningún bloque debajo (por ejemplo, al vacío), te da Levitación breve y Caída lenta para que no caigas."
+	},
+	"dke:wingspan": {
+		"desc": "Arma cuerpo a cuerpo: solo añade el sonido y el efecto visual de un aleteo al golpear; no cambia el daño ni afecta a los enemigos cercanos (el aumento de barrido que define se multiplica sobre cero)."
+	},
+	"dqc.bows:guiding": {
+		"desc": "Arco y ballesta: mientras vuela, la flecha gira poco a poco hacia donde apuntas; la diriges con la mirada."
+	},
+	"dqc.bows:hydrodynamic": {
+		"desc": "Arco y ballesta: la flecha no se frena bajo el agua, mantiene su velocidad."
+	},
+	"dqc.bows:phasing": {
+		"desc": "Arco, ballesta y flechas: la flecha atraviesa bloques sólidos en vez de clavarse en el primero (si la flecha también lleva Fase, se suman los niveles).",
+		"niveles": [
+			"Atraviesa hasta 1 bloque de grosor",
+			"Atraviesa hasta 2 bloques de grosor",
+			"Atraviesa hasta 3 bloques de grosor"
+		]
+	},
+	"dqc.bows:precision": {
+		"desc": "Arco: si mantienes el arco tenso 1,5 s o más (se oye una flauta), la flecha sale recta hacia donde miras, con menos dispersión cuanto más nivel.",
+		"niveles": [
+			"Con el arco tenso 1,5 s: muy poca dispersión",
+			"Con el arco tenso 1,5 s: dispersión mínima",
+			"Con el arco tenso 1,5 s: sin ninguna dispersión"
+		]
+	},
+	"dqc.bows:repeating": {
+		"desc": "Arco: la flecha se queda flotando como un arco que dispara flechas iguales a la primera, una cada 0,55 s.",
+		"niveles": [
+			"Dispara 1 flecha más",
+			"Dispara 2 flechas más",
+			"Dispara 3 flechas más"
+		]
+	},
+	"dqc.bows:ricochet": {
+		"desc": "Arco, ballesta y flechas: la flecha rebota en los bloques en vez de clavarse (si la flecha también lleva Rebote, se suman los niveles).",
+		"niveles": [
+			"Rebota 1 vez",
+			"Rebota 2 veces",
+			"Rebota 3 veces",
+			"Rebota 4 veces",
+			"Rebota 5 veces"
+		]
+	},
+	"dqc.bows:scrying": {
+		"desc": "Arco y ballesta: al disparar gastas un Ojo de Ender (gratis en creativo) y tu vista viaja con la flecha, como espectador, hasta que se detiene o pasan 50 s; entonces vuelves a tu cuerpo, que se queda quieto. Con flechas espectrales o con Flame tienes además visión nocturna durante el vuelo."
+	},
+	"dqc.bows:seeking": {
+		"desc": "Arco: la flecha se dirige sola hacia las criaturas que tengan el efecto Brillo (resplandor) y estén delante de ella, hasta unos 20 bloques (el cono se ensancha con la distancia)."
+	},
+	"dqc.bows:shulking": {
+		"desc": "Arco y ballesta: la flecha flota sin caer durante un rato, como un proyectil de shulker (si la flecha también lleva Shulking, se suman los niveles).",
+		"niveles": [
+			"Vuela sin caer durante 0,5 s",
+			"Vuela sin caer durante 1 s",
+			"Vuela sin caer durante 1,5 s"
+		]
+	},
+	"dqc.bows:subtle": {
+		"desc": "Arco y ballesta: la flecha no hace ruido. Al caer no activa los sensores de sculk ni al Warden cercanos, la víctima no suelta su sonido de daño y el golpe aparece como de «un atacante desconocido»."
+	},
+	"dqc.bows:warping": {
+		"desc": "Arco: la flecha lleva una perla de Ender. Cuando impacta, o tras 2 s en el aire, te teletransportas a donde está, pero recibes 10 de daño de caída (5 corazones)."
+	},
+	"warft:blazing": {
+		"desc": "Espadas, hachas, maza, arco y ballesta: al golpear provoca una explosión de radio 2 sobre el enemigo que prende fuego. Tú no la sufres. Después hay que esperar 6 s para que vuelva a funcionar."
+	},
+	"warft:core_strength": {
+		"desc": "Maza, pico y hacha: al golpear un bloque tras caer desde cierta altura, creas una onda expansiva que empuja y no te daña. A más altura de caída, más grande. Gasta 5 de durabilidad extra cada vez. Radio de la onda según la caída: de 3 a 10 bloques, radio 1; de 11 a 29, radio 2; de 30 a 63, radio 3; de 64 en adelante, radio 4."
+	},
+	"warft:dominator": {
+		"desc": "Espadas y hachas doradas o de netherita, y maza: contra las criaturas del Nether (esqueletos del Wither, Wither, cubos de magma, piglins, piglins zombificados, blazes, hoglins, zoglins, ghasts y striders) hacen más daño y sueltan más experiencia.",
+		"niveles": [
+			"Daño ×1,25 · experiencia ×1,34",
+			"Daño ×1,75 · experiencia ×1,67",
+			"Daño ×2,25 · experiencia ×2"
+		]
+	},
+	"warft:dominion": {
+		"desc": "Armadura dorada o de netherita: reduce el daño mágico indirecto (pociones de bruja, el rayo sónico del Warden y espinas) y hace arder a quien te golpea.",
+		"efecto": "Daño mágico indirecto: -{v} % · El atacante arde {w} s",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 12.5
+			},
+			"w": {
+				"base": 6,
+				"paso": 4
+			}
+		}
+	},
+	"warft:magma_walker": {
+		"desc": "Botas doradas o de netherita: al caminar sobre lava la convierte en obsidiana a tu alrededor (radio 2) y te protege del frío (congelación)."
+	},
+	"farmersdelight:backstabbing": {
+		"desc": "Cuchillo: los golpes por la espalda hacen más daño.",
+		"efecto": "Daño por la espalda: ×{v}",
+		"valores": {
+			"v": {
+				"base": 1.4,
+				"paso": 0.2
+			}
+		}
+	},
+	"incendium:poison_protection": {
+		"desc": "Armadura: te protege del daño del veneno. Con las cuatro piezas encantadas eres inmune; con menos, cada golpe de veneno se anula con un 20 % de probabilidad."
+	},
+	"serverbackpacks:capacity": {
+		"desc": "Mochilas: debería aumentar su capacidad, pero en este servidor no cambia el número de huecos (comprobado con las mochilas pequeña, mediana y grande)."
+	}
+}
