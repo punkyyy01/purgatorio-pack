@@ -56,16 +56,37 @@ def scan_mods():
     return en, es
 
 
+def compile_entrypoint():
+    """Compila la unica clase del mod (registra sus assets en Polymer). Necesita el JDK de ~/dev/tools."""
+    import subprocess, tempfile, io
+    work = os.path.join(CACHE, "javac"); os.makedirs(work, exist_ok=True)
+    polymer = os.path.join(work, "polymer-resource-pack.jar")
+    if not os.path.exists(polymer):
+        bundled = glob.glob(os.path.join(MODS_DIR, "polymer-bundled-*.jar"))[0]
+        zb = zipfile.ZipFile(bundled)
+        name = next(n for n in zb.namelist() if n.startswith("META-INF/jars/polymer-resource-pack-"))
+        open(polymer, "wb").write(zb.read(name))
+    loader = glob.glob(os.path.join(os.path.dirname(MODS_DIR), "libraries/net/fabricmc/fabric-loader/*/fabric-loader-*.jar"))[0]
+    javac = os.path.join(os.environ.get("JAVA_HOME", os.path.expanduser("~/dev/tools/jdk-25.0.4.1")), "bin", "javac")
+    subprocess.run([javac, "--release", "25", "-cp", f"{polymer}:{loader}", "-d", work,
+                    os.path.join(REPO, "tools", "i18n-mod", "EsMod.java")], check=True)
+    return os.path.join(work, "purgatorio", "es", "EsMod.class")
+
+
 def build_mod_jar():
     """Mod minimo `zz_purgatorio_es`: Fabric aplica los idiomas de los mods en orden alfabetico de id, asi que
     el nuestro tiene que ser el ULTIMO para ganar a los en_us de los demas (traducciones del lado servidor de
     Polymer: sswaystones, serverbackpacks... y el idioma de la consola). El resource pack sale de purgatorio_core."""
-    meta = {"schemaVersion": 1, "id": "zz_purgatorio_es", "version": "1.0.0", "name": "Purgatorio: espanol",
+    meta = {"schemaVersion": 1, "id": "zz_purgatorio_es", "version": "1.1.0", "name": "Purgatorio: espanol",
             "description": "Traduce al espanol los textos de los mods. Generado por tools/build-i18n.py.",
-            "authors": ["Purgatorio"], "license": "MIT", "environment": "server"}
-    jar = os.path.join(OUT, "zz_purgatorio_es-1.0.0.jar")
+            "authors": ["Purgatorio"], "license": "MIT", "environment": "server",
+            "entrypoints": {"main": ["purgatorio.es.EsMod"]},
+            "depends": {"fabricloader": ">=0.19.5", "polymer-resource-pack": "*"}}
+    jar = os.path.join(OUT, "zz_purgatorio_es-1.1.0.jar")
+    cls = compile_entrypoint()
     with zipfile.ZipFile(jar, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("fabric.mod.json", json.dumps(meta, indent=2))
+        z.write(cls, "purgatorio/es/EsMod.class")
         for root, _, files in os.walk(OUT):
             for f in files:
                 if f.endswith(".json"):
