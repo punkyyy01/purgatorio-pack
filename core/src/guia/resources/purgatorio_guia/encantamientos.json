@@ -946,5 +946,65 @@
 	},
 	"dke:wingspan": {
 		"desc": "Arma cuerpo a cuerpo: solo añade el sonido y el efecto visual de un aleteo al golpear; no cambia el daño ni afecta a los enemigos cercanos (el aumento de barrido que define se multiplica sobre cero)."
+	},
+	"dqc.bows:guiding": {
+		"desc": "Arco y ballesta: mientras vuela, la flecha gira poco a poco hacia donde apuntas; la diriges con la mirada."
+	},
+	"dqc.bows:hydrodynamic": {
+		"desc": "Arco y ballesta: la flecha no se frena bajo el agua, mantiene su velocidad."
+	},
+	"dqc.bows:phasing": {
+		"desc": "Arco, ballesta y flechas: la flecha atraviesa bloques sólidos en vez de clavarse en el primero (si la flecha también lleva Fase, se suman los niveles).",
+		"niveles": [
+			"Atraviesa hasta 1 bloque de grosor",
+			"Atraviesa hasta 2 bloques de grosor",
+			"Atraviesa hasta 3 bloques de grosor"
+		]
+	},
+	"dqc.bows:precision": {
+		"desc": "Arco: si mantienes el arco tenso 1,5 s o más (se oye una flauta), la flecha sale recta hacia donde miras, con menos dispersión cuanto más nivel.",
+		"niveles": [
+			"Con el arco tenso 1,5 s: muy poca dispersión",
+			"Con el arco tenso 1,5 s: dispersión mínima",
+			"Con el arco tenso 1,5 s: sin ninguna dispersión"
+		]
+	},
+	"dqc.bows:repeating": {
+		"desc": "Arco: la flecha se queda flotando como un arco que dispara flechas iguales a la primera, una cada 0,55 s.",
+		"niveles": [
+			"Dispara 1 flecha más",
+			"Dispara 2 flechas más",
+			"Dispara 3 flechas más"
+		]
+	},
+	"dqc.bows:ricochet": {
+		"desc": "Arco, ballesta y flechas: la flecha rebota en los bloques en vez de clavarse (si la flecha también lleva Rebote, se suman los niveles).",
+		"niveles": [
+			"Rebota 1 vez",
+			"Rebota 2 veces",
+			"Rebota 3 veces",
+			"Rebota 4 veces",
+			"Rebota 5 veces"
+		]
+	},
+	"dqc.bows:scrying": {
+		"desc": "Arco y ballesta: al disparar gastas un Ojo de Ender (gratis en creativo) y tu vista viaja con la flecha, como espectador, hasta que se detiene o pasan 50 s; entonces vuelves a tu cuerpo, que se queda quieto. Con flechas espectrales o con Flame tienes además visión nocturna durante el vuelo."
+	},
+	"dqc.bows:seeking": {
+		"desc": "Arco: la flecha se dirige sola hacia las criaturas que tengan el efecto Brillo (resplandor) y estén delante de ella, hasta unos 20 bloques (el cono se ensancha con la distancia)."
+	},
+	"dqc.bows:shulking": {
+		"desc": "Arco y ballesta: la flecha flota sin caer durante un rato, como un proyectil de shulker (si la flecha también lleva Shulking, se suman los niveles).",
+		"niveles": [
+			"Vuela sin caer durante 0,5 s",
+			"Vuela sin caer durante 1 s",
+			"Vuela sin caer durante 1,5 s"
+		]
+	},
+	"dqc.bows:subtle": {
+		"desc": "Arco y ballesta: la flecha no hace ruido. Al caer no activa los sensores de sculk ni al Warden cercanos, la víctima no suelta su sonido de daño y el golpe aparece como de «un atacante desconocido»."
+	},
+	"dqc.bows:warping": {
+		"desc": "Arco: la flecha lleva una perla de Ender. Cuando impacta, o tras 2 s en el aire, te teletransportas a donde está, pero recibes 10 de daño de caída (5 corazones)."
 	}
 }
