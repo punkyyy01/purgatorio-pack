@@ -23,7 +23,6 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -151,6 +150,7 @@ final class GuiaObserve {
 			damages(ctx, out);
 			hits(ctx, out);
 			voidStep(ctx, out);
+			capacity(ctx, out);
 		} catch (Throwable t) {
 			out.append("\nFALLO DEL ARNES: ").append(t).append('\n');
 			for (StackTraceElement e : t.getStackTrace()) {
@@ -485,16 +485,37 @@ final class GuiaObserve {
 		out.append(String.format("  distancia al centro (0,0): de %.1f a %.1f bloques%n", minD, maxD));
 	}
 
+	/** Capacidad de mochilas: cuantos huecos tiene de verdad cada mochila al abrirla con el encantamiento puesto. */
+	private static void capacity(Ctx ctx, StringBuilder out) {
+		out.append("\n######## CAPACIDAD DE MOCHILAS (huecos al abrir la mochila con serverbackpacks:capacity)\n");
+		Holder<Enchantment> h = enchantment(ctx, "serverbackpacks:capacity");
+		if (h == null) {
+			out.append("(no existe en este servidor)\n");
+			return;
+		}
+		ServerPlayer p = ctx.join("guia-obs-capacidad").player();
+		for (String id : List.of("serverbackpacks:small", "serverbackpacks:medium", "serverbackpacks:large")) {
+			StringBuilder row = new StringBuilder();
+			for (int lvl = 0; lvl <= h.value().getMaxLevel(); lvl++) {
+				ItemStack st = new ItemStack(item(id));
+				if (lvl > 0) {
+					st.enchant(h, lvl);
+				}
+				p.setItemInHand(InteractionHand.MAIN_HAND, st);
+				p.closeContainer();
+				st.use(ctx.level, p, InteractionHand.MAIN_HAND);
+				row.append(String.format(" n%d=%d huecos", lvl, p.containerMenu.slots.size() - 36));
+				p.closeContainer();
+			}
+			out.append(String.format("%-26s%s%n", id, row));
+		}
+	}
+
 	private static String name(MobEffectInstance e) {
 		return e.getEffect().unwrapKey().map(k -> k.identifier().getPath()).orElse("?");
 	}
 
 	private static String fmt(double v) {
 		return String.format(java.util.Locale.ROOT, "%.4f", v);
-	}
-
-	@SuppressWarnings("unused")
-	private static Entity unused(Player p) {
-		return p;
 	}
 }

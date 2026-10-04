@@ -59,7 +59,7 @@ public final class EnchantmentEntries {
 	}
 
 	/** Mismo criterio que tools/inventario-guia.py para "de jugador": alguna via normal de conseguirlo. */
-	static boolean obtainable(Holder<Enchantment> h) {
+	public static boolean obtainable(Holder<Enchantment> h) {
 		return h.is(EnchantmentTags.IN_ENCHANTING_TABLE) || h.is(EnchantmentTags.TRADEABLE) || h.is(EnchantmentTags.TREASURE)
 			|| h.is(EnchantmentTags.NON_TREASURE) || h.is(EnchantmentTags.ON_RANDOM_LOOT) || h.is(EnchantmentTags.CURSE);
 	}

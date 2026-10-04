@@ -1006,5 +1006,52 @@
 	},
 	"dqc.bows:warping": {
 		"desc": "Arco: la flecha lleva una perla de Ender. Cuando impacta, o tras 2 s en el aire, te teletransportas a donde está, pero recibes 10 de daño de caída (5 corazones)."
+	},
+	"warft:blazing": {
+		"desc": "Espadas, hachas, maza, arco y ballesta: al golpear provoca una explosión de radio 2 sobre el enemigo que prende fuego. Tú no la sufres. Después hay que esperar 6 s para que vuelva a funcionar."
+	},
+	"warft:core_strength": {
+		"desc": "Maza, pico y hacha: al golpear un bloque tras caer desde cierta altura, creas una onda expansiva que empuja y no te daña. A más altura de caída, más grande. Gasta 5 de durabilidad extra cada vez. Radio de la onda según la caída: de 3 a 10 bloques, radio 1; de 11 a 29, radio 2; de 30 a 63, radio 3; de 64 en adelante, radio 4."
+	},
+	"warft:dominator": {
+		"desc": "Espadas y hachas doradas o de netherita, y maza: contra las criaturas del Nether (esqueletos del Wither, Wither, cubos de magma, piglins, piglins zombificados, blazes, hoglins, zoglins, ghasts y striders) hacen más daño y sueltan más experiencia.",
+		"niveles": [
+			"Daño ×1,25 · experiencia ×1,34",
+			"Daño ×1,75 · experiencia ×1,67",
+			"Daño ×2,25 · experiencia ×2"
+		]
+	},
+	"warft:dominion": {
+		"desc": "Armadura dorada o de netherita: reduce el daño mágico indirecto (pociones de bruja, el rayo sónico del Warden y espinas) y hace arder a quien te golpea.",
+		"efecto": "Daño mágico indirecto: -{v} % · El atacante arde {w} s",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 12.5
+			},
+			"w": {
+				"base": 6,
+				"paso": 4
+			}
+		}
+	},
+	"warft:magma_walker": {
+		"desc": "Botas doradas o de netherita: al caminar sobre lava la convierte en obsidiana a tu alrededor (radio 2) y te protege del frío (congelación)."
+	},
+	"farmersdelight:backstabbing": {
+		"desc": "Cuchillo: los golpes por la espalda hacen más daño.",
+		"efecto": "Daño por la espalda: ×{v}",
+		"valores": {
+			"v": {
+				"base": 1.4,
+				"paso": 0.2
+			}
+		}
+	},
+	"incendium:poison_protection": {
+		"desc": "Armadura: te protege del daño del veneno. Con las cuatro piezas encantadas eres inmune; con menos, cada golpe de veneno se anula con un 20 % de probabilidad."
+	},
+	"serverbackpacks:capacity": {
+		"desc": "Mochilas: debería aumentar su capacidad, pero en este servidor no cambia el número de huecos (comprobado con las mochilas pequeña, mediana y grande)."
 	}
 }

@@ -71,6 +71,22 @@ por describir (descartando decoración, huevos y bloques).
 calcula el inspector leyendo el juego. Hay entradas para los 40 atributos porque un objeto puede llevar cualquiera; un
 atributo nuevo sin descripción hace fallar la suite.
 
+**Cobertura permanente:** `GuiaSuite` falla si un encantamiento que el jugador puede conseguir (mesa, aldeanos, botín,
+tesoro o maldición) no tiene descripción; igual que con efectos y atributos. Al añadir un mod con encantamientos, la
+suite avisa de cuáles faltan.
+
+**Cómo se verifican los números de los encantamientos (`GuiaObserve`):** las cifras de los textos no se calculan a mano
+ni se copian de la wiki; se **miden con el juego** y la suite comprueba que coinciden:
+- *Atributos* (velocidad, vida, alcance, escalón...): se aplican los modificadores del objeto y del encantamiento
+  (`EnchantmentHelper.forEachModifier`) al atributo real de un jugador y se lee el valor con el cálculo del juego. Así se
+  detectan multiplicadores sobre una base 0 (que no hacen nada) o valores desproporcionados.
+- *Daño* (Filo, Perdición, Smite, Dragonbane...): `EnchantmentHelper.modifyDamage` con un golpe de 10 de daño base.
+- *Efectos al golpear*: 300 golpes por nivel con `doPostAttackEffects`; se anotan efecto, amplificador, duración y
+  probabilidad reales (`purgatorio-guia-encantamientos.txt` en el servidor de pruebas).
+- *Funciones de datapack* (los de `advanced-archery`, `dke`, `warft`...): se leen las funciones; no se pueden medir con el
+  mismo método. Los textos de esos 24 encantamientos describen lo que dicen las funciones. Dudas: los **niveles** de
+  Pillaring (las funciones no distinguen niveles) y Phasing (cuántos bloques de grosor atraviesa).
+
 **Encantamientos:** editar `core/src/guia/resources/purgatorio_guia/encantamientos.json` (el formato está en la clave `_formato`):
 
 ```json
@@ -86,7 +102,7 @@ atributo nuevo sin descripción hace fallar la suite.
 mod o de vanilla) en vez de fiarse de la wiki; la suite valida que cada id existe y que `niveles` tiene un texto por nivel.
 
 Lo que no esté descrito se muestra como "Sin descripción todavía" con su id. `python3 tools/inventario-guia.py`
-regenera `docs/guia-inventario.md` con lo que falta (encantamientos: 4 de 147; efectos: 42 de 42). Para que el
+regenera `docs/guia-inventario.md` con lo que falta (encantamientos: 147 de 147; efectos: 42 de 42). Para que el
 inventario de efectos incluya los de todos los mods, antes: `FULL_PACK=1 tools/run-integration-tests.sh guia` (vuelca el
 registro real a `~/dev/test-server/purgatorio-guia-registro.json`).
 
@@ -109,6 +125,26 @@ Pendiente tras la fase 5:
   quema: leído del código, no probado con el paso del tiempo), la **Global** (solo se sabe su tamaño y su receta, no si
   comparte contenido) y la **brújula de tumba** (el uso sin tumba no hace nada; el menú con tumba se leyó de la config).
 - Unos 84 candidatos en `docs/guia-inventario.md` (casi todo Farmer's Delight: comida y utensilios de cocina).
-- Las **143 descripciones de encantamientos**: ahora son lo más visible, porque cualquier armadura, arma o herramienta
+- ~~Las 143 descripciones de encantamientos~~ (hechas), porque cualquier armadura, arma o herramienta
   sin encantar lista los que admite y casi todos salen como "Sin descripción todavía".
 - Cómo se elabora cada poción.
+
+## Hallazgos al describir los encantamientos (a revisar por quien administra el servidor)
+
+Al medir con el juego salieron cosas que probablemente no son lo que se pretendía; el inspector las describe tal cual:
+
+- **`moreenchantments` está sin equilibrar** (sus ids internos se llaman `example_*`): Velocidad de ataque +50 % / +650 % /
+  +1250 %; Prisa (haste) minado ×3 / ×5 / ×7; Pie grande, escalones de 1,2 / 2,1 / 3 bloques; Fuerza hasta +100 % del
+  daño total; Protección contra el fuego quema a 0; Velocidad y Salto +60 % en el nivel V. Se pueden obtener en la mesa
+  de encantamientos y con aldeanos (están en `in_enchanting_table` y `tradeable`).
+- **No hacen nada:** `knockback_protection` (multiplica sobre una base 0; con netherita suma una milésima),
+  `wingspan` (de Dragonkind: multiplica el barrido sobre 0, solo pone sonido y partículas) y `serverbackpacks:capacity`
+  (no cambia los huecos de la mochila; comprobado con pequeña, mediana y grande). `deterioration_curse` solo es
+  incompatible con Reparación.
+- **Cuidado al jugar:** `warping` (Advanced Archery) cuesta 10 de daño de caída (5 corazones); `void_step` gasta la mitad de la
+  durabilidad máxima del peto cada vez; `lifesteal` nivel I no llega a curar nada (Regeneración I dura 1 s).
+- **Mods que cambian vanilla:** `enchants-plus` sobrescribe `power` (también en ballesta) y `fire_aspect` (exclusivo con
+  `#sword_buffs`). En el servidor `minecraft:spider` ya no cuenta para la Perdición de los artrópodos pero sí
+  `spiderstpo:spider`, que es la araña que realmente aparece.
+- **Perdición de los artrópodos y similares** miden como los datos; Fuego/Explosión/Proyectil protección vanilla coinciden
+  con lo escrito.

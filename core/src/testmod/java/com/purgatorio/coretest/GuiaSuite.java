@@ -397,8 +397,13 @@ public final class GuiaSuite implements Suite {
 		// Cada id descrito existe de verdad y las listas por nivel tienen un texto por nivel.
 		var registry = ctx.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 		for (String id : Descriptions.ids()) {
-			var holder = registry.get(ResourceKey.create(Registries.ENCHANTMENT, Identifier.parse(id)));
-			ctx.check(holder.isPresent(), "el id descrito existe en el registro: " + id);
+			Identifier ident = Identifier.parse(id);
+			var holder = registry.get(ResourceKey.create(Registries.ENCHANTMENT, ident));
+			// Los encantamientos de mods solo se exigen si el mod esta cargado (alguno de su espacio de nombres esta registrado).
+			boolean modLoaded = registry.listElements().anyMatch(h -> h.key().identifier().getNamespace().equals(ident.getNamespace()));
+			if (modLoaded) {
+				ctx.check(holder.isPresent(), "el id descrito existe en el registro: " + id);
+			}
 			if (holder.isPresent()) {
 				Enchantment e = holder.get().value();
 				var entry = Descriptions.get(id);
@@ -407,6 +412,13 @@ public final class GuiaSuite implements Suite {
 				ctx.check(!entry.desc().isBlank(), id + ": tiene descripcion");
 			}
 		}
+		// Cobertura: todo encantamiento que el jugador puede conseguir (mesa, aldeanos, botin, tesoro o maldicion) esta descrito.
+		// Si un mod nuevo anade uno, esto falla hasta que se describa.
+		registry.listElements().forEach(h -> {
+			if (EnchantmentEntries.obtainable(h) && !EnchantmentEntries.idOf(h).contains("/")) {
+				ctx.check(Descriptions.get(EnchantmentEntries.idOf(h)) != null, "encantamiento obtenible sin descripcion: " + EnchantmentEntries.idOf(h));
+			}
+		});
 		ctx.eq("1", Text.num(1.0), "num: entero sin decimales");
 		ctx.eq("2,5", Text.num(2.5), "num: coma decimal");
 		ctx.eq("0,3", Text.num(0.1 + 0.2), "num: redondeo");
