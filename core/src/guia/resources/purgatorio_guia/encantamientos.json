@@ -366,5 +366,139 @@
 			"Potencia de la ráfaga: ×1,75",
 			"Potencia de la ráfaga: ×2,2"
 		]
+	},
+	"enchantsplus:breaking_curse": {
+		"desc": "Maldición: cada vez que gastas un uso, el objeto pierde 4 de durabilidad en vez de 1."
+	},
+	"enchantsplus:breeze_burst": {
+		"desc": "Arco: cuando la flecha se clava, provoca una ráfaga de viento (una carga de viento) en ese punto."
+	},
+	"enchantsplus:clumsiness_curse": {
+		"desc": "Maldición: al romper bloques o al golpear, hay un 10 % de probabilidad de que sueltes el objeto que sostienes (en el golpe sale despedido 2 bloques por delante). No puedes recogerlo durante 3 s."
+	},
+	"enchantsplus:crabs_touch": {
+		"desc": "Herramientas: te permite romper y colocar bloques desde más lejos.",
+		"efecto": "Alcance de bloques: +{v} (normal: 4,5)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"enchantsplus:displacement_curse": {
+		"desc": "Maldición: al golpear, hay un 50 % de probabilidad de que el enemigo sea recolocado en un punto al azar cerca de ti (no afecta al Ender Dragon)."
+	},
+	"enchantsplus:double_edge_curse": {
+		"desc": "Maldición: al golpear, hay un 40 % de probabilidad de que tú recibas de 2 a 4 de daño mágico (1 a 2 corazones)."
+	},
+	"enchantsplus:gluttony": {
+		"desc": "Mientras sostienes el objeto, lo que sueltan los bloques y las criaturas va directo hacia ti (lo que tú sueltas no).",
+		"niveles": [
+			"Atrae los objetos que caen a menos de 2,5 bloques",
+			"Atrae los objetos que caen a menos de 9 bloques",
+			"Atrae los objetos (9 bloques) y la experiencia (6 bloques)"
+		]
+	},
+	"enchantsplus:graviole": {
+		"desc": "Élitros: mientras planeas, la gravedad te afecta menos y caes más despacio.",
+		"efecto": "Gravedad al volar: -{v} %",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"enchantsplus:ice_aspect": {
+		"desc": "Espada: al golpear hay una probabilidad de congelar al objetivo: queda inmóvil 3 s dentro de un bloque de hielo (sin IA ni movimiento). No afecta al Ender Dragon ni al Wither, y el fuego descongela a los jugadores.",
+		"efecto": "Probabilidad de congelar: {v} %",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"enchantsplus:kinetic_protection": {
+		"desc": "Casco: mientras vuelas con élitros, reduce el daño de chocar contra una pared.",
+		"efecto": "Daño de chocar volando: -{v} %",
+		"valores": {
+			"v": {
+				"base": 16,
+				"paso": 16
+			}
+		}
+	},
+	"enchantsplus:outreach": {
+		"desc": "Espada: aumenta tu alcance para golpear a las criaturas.",
+		"efecto": "Alcance de ataque: +{v} bloques (normal: 3)",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"enchantsplus:precision": {
+		"desc": "Arco y ballesta: la flecha no cae mientras va rápida, vuela recta.",
+		"niveles": [
+			"La flecha vuela recta hasta que pierde algo de velocidad",
+			"La flecha vuela recta casi hasta el final de su recorrido"
+		]
+	},
+	"enchantsplus:pyrolysis": {
+		"desc": "Los bloques que rompes sueltan ya fundidos, como si pasaran por un horno: mena de hierro, cobre y oro → lingotes; arena → cristal; piedra → piedra lisa; adoquín → piedra; restos antiguos → chatarra de netherita; patatas → patatas asadas, y más."
+	},
+	"enchantsplus:retrieval": {
+		"desc": "Peto: al recibir un flechazo, hay una probabilidad de recuperar esa flecha (la espectral, si te la dispararon con una).",
+		"efecto": "Probabilidad de recuperarla: {v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 20
+			}
+		}
+	},
+	"enchantsplus:scorch_walker": {
+		"desc": "Botas: al caminar sobre lava la convierte en bloques de magma bajo tus pies. Te protege del daño de los bloques de magma y del frío.",
+		"efecto": "Convierte un radio de {v} bloques",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 1
+			}
+		}
+	},
+	"enchantsplus:stride": {
+		"desc": "Pantalones: subes escalones más altos sin saltar.",
+		"niveles": [
+			"Altura de escalón: 0,78 bloques (normal: 0,6)",
+			"Altura de escalón: 0,96 bloques (normal: 0,6)",
+			"Altura de escalón: 1,14 bloques: subes bloques enteros sin saltar"
+		]
+	},
+	"enchantsplus:swift_strike": {
+		"desc": "Espada: golpeas más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 12.5,
+				"paso": 12.5
+			}
+		}
+	},
+	"enchantsplus:toxic": {
+		"desc": "Arco: las flechas envenenan (Veneno durante 1:30) y no se pueden recoger. No cambia las flechas que ya llevan efecto."
+	},
+	"enchantsplus:vitality": {
+		"desc": "Peto: aumenta tu vida máxima.",
+		"efecto": "Vida máxima: +{v} (1 corazón por nivel)",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
 	}
 }
