@@ -881,5 +881,70 @@
 			"Wither II durante 6 s",
 			"Wither III durante 3 s"
 		]
+	},
+	"dke:altitude": {
+		"desc": "Élitros: mientras planeas y miras hacia arriba (más de 30 grados), cada segundo recibes un fuerte impulso hacia arriba que te hace ganar altura sin cohetes."
+	},
+	"dke:clear_skies": {
+		"desc": "Escudo: al bloquear, disipa las nubes de aliento de dragón que haya a tu alrededor."
+	},
+	"dke:deterioration_curse": {
+		"desc": "Maldición del equipo del dragón: es incompatible con Reparación, así que el objeto no se puede reparar con la experiencia."
+	},
+	"dke:dragon_lungs": {
+		"desc": "Casco: aguantas más tiempo bajo el agua y minas bajo el agua sin la penalización habitual.",
+		"niveles": [
+			"Aguantas 30 s bajo el agua · minado bajo el agua: 1 (normal en tierra: 1; sin él: 0,2)",
+			"Aguantas 45 s bajo el agua · minado bajo el agua: 1,8",
+			"Aguantas 60 s bajo el agua · minado bajo el agua: 2,6"
+		]
+	},
+	"dke:dragonbane": {
+		"desc": "Arma: hace muchísimo más daño al Ender Dragon.",
+		"efecto": "Daño extra al Ender Dragon: +{v}",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"dke:dragonhearted": {
+		"desc": "Armadura: aumenta tu vida máxima. Cada pieza que lo lleve suma.",
+		"efecto": "Vida máxima: +{v} por pieza (1 corazón por nivel)",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
+	},
+	"dke:dragonsight": {
+		"desc": "Casco: ves en la oscuridad y cada segundo resalta con un brillo los minerales que haya delante de ti (en una zona de unos 30 bloques). El casco se gasta mientras lo usas (dura unos 5 minutos de uso) y se rompe cuando llega a 0."
+	},
+	"dke:dragonyield": {
+		"desc": "Armadura: cuando te golpea el Ender Dragon, hay una probabilidad de devolverle de 4 a 20 de daño.",
+		"efecto": "Probabilidad de devolver el golpe: {v} %",
+		"valores": {
+			"v": {
+				"base": 15,
+				"paso": 15
+			}
+		}
+	},
+	"dke:exhalation": {
+		"desc": "Ballesta: tras volar un instante (0,3 s), la flecha explota al tocar una criatura y le hace 15 de daño (7,5 corazones). Contra el Ender Dragon, cerca de él, solo hace 1."
+	},
+	"dke:kickback": {
+		"desc": "Escudo: al bloquear un golpe, el atacante sale despedido 2,5 bloques hacia atrás y recibe 4 de daño mágico (2 corazones). El Ender Dragon sale despedido pero no recibe daño."
+	},
+	"dke:pillaring": {
+		"desc": "Pico: al romper un bloque, el pico rompe también tres bloques más en línea recta delante de ti (a 2, 3 y 4 bloques, uno tras otro), gastando un poco de durabilidad por cada uno. No rompe bloques indestructibles."
+	},
+	"dke:voidwalk": {
+		"desc": "Botas: si caes sin ningún bloque debajo (por ejemplo, al vacío), te da Levitación breve y Caída lenta para que no caigas."
+	},
+	"dke:wingspan": {
+		"desc": "Arma cuerpo a cuerpo: solo añade el sonido y el efecto visual de un aleteo al golpear; no cambia el daño ni afecta a los enemigos cercanos (el aumento de barrido que define se multiplica sobre cero)."
 	}
 }

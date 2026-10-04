@@ -59,6 +59,7 @@ final class GuiaObserve {
 	private static final Map<String, Expect> CHECKS = new LinkedHashMap<>();
 
 	static {
+		CHECKS.put("dke:dragonhearted", (b, v) -> "+" + Text.num(v - b));
 		CHECKS.put("enchantments:attack_speed", GuiaObserve::rel);
 		CHECKS.put("enchantments:big_foot", (b, v) -> Text.num(v) + " bloques");
 		CHECKS.put("enchantments:block_reach", GuiaObserve::rel);
@@ -147,6 +148,7 @@ final class GuiaObserve {
 		out.append('\n');
 		try {
 			attributes(ctx, out);
+			damages(ctx, out);
 			hits(ctx, out);
 			voidStep(ctx, out);
 		} catch (Throwable t) {
@@ -193,6 +195,10 @@ final class GuiaObserve {
 		new Attr("enchantments:speed", EquipmentSlot.FEET, "minecraft:diamond_boots", "minecraft:movement_speed"),
 		new Attr("enchantments:strength", EquipmentSlot.MAINHAND, "minecraft:diamond_sword", "minecraft:attack_damage"),
 		new Attr("enchantments:vision", EquipmentSlot.CHEST, "minecraft:diamond_chestplate", "minecraft:camera_distance"),
+		new Attr("dke:dragon_lungs", EquipmentSlot.HEAD, "minecraft:diamond_helmet", "minecraft:submerged_mining_speed"),
+		new Attr("dke:dragon_lungs", EquipmentSlot.HEAD, "minecraft:diamond_helmet", "minecraft:oxygen_bonus"),
+		new Attr("dke:dragonhearted", EquipmentSlot.CHEST, "minecraft:diamond_chestplate", "minecraft:max_health"),
+		new Attr("dke:wingspan", EquipmentSlot.MAINHAND, "minecraft:diamond_sword", "minecraft:sweeping_damage_ratio"),
 		new Attr("enchantsplus:crabs_touch", EquipmentSlot.MAINHAND, "minecraft:diamond_pickaxe", "minecraft:block_interaction_range"),
 		new Attr("enchantsplus:outreach", EquipmentSlot.MAINHAND, "minecraft:diamond_sword", "minecraft:entity_interaction_range"),
 		new Attr("enchantsplus:stride", EquipmentSlot.LEGS, "minecraft:diamond_leggings", "minecraft:step_height"),
@@ -255,6 +261,67 @@ final class GuiaObserve {
 		double value = inst.getValue();
 		applied.forEach(m -> inst.removeModifier(m.id()));
 		return value;
+	}
+
+	// ---- dano: lo que suma de verdad cada encantamiento a un golpe (EnchantmentHelper.modifyDamage, lo que usa el juego) ----
+	private record Dmg(String ench, String item, EntityType<?> victim) {
+	}
+
+	private static final List<Dmg> DAMAGE_SPECS = List.of(
+		new Dmg("minecraft:sharpness", "minecraft:diamond_sword", EntityTypes.COW),
+		new Dmg("minecraft:smite", "minecraft:diamond_sword", EntityTypes.ZOMBIE),
+		new Dmg("minecraft:bane_of_arthropods", "minecraft:diamond_sword", EntityTypes.CAVE_SPIDER),
+		new Dmg("minecraft:impaling", "minecraft:trident", EntityTypes.SQUID),
+		new Dmg("enchantments:vanquish", "minecraft:diamond_sword", EntityTypes.WITHER),
+		new Dmg("dke:dragonbane", "minecraft:diamond_sword", EntityTypes.ENDER_DRAGON),
+		new Dmg("nova_structures:illagers_bane", "minecraft:diamond_sword", EntityTypes.PILLAGER),
+		new Dmg("nova_structures:aerials_bane", "minecraft:diamond_sword", EntityTypes.BREEZE));
+
+	private static double damageBonus(Ctx ctx, ServerPlayer attacker, Holder<Enchantment> h, int lvl, Dmg s) {
+		ItemStack weapon = new ItemStack(item(s.item()));
+		weapon.enchant(h, lvl);
+		attacker.setItemInHand(InteractionHand.MAIN_HAND, weapon);
+		Entity victim = s.victim().create(ctx.level, EntitySpawnReason.TRIGGERED);
+		victim.snapTo(3.5, 80, 0.5, 0, 0);
+		ctx.level.addFreshEntity(victim);
+		float out = EnchantmentHelper.modifyDamage(ctx.level, weapon, victim, ctx.level.damageSources().playerAttack(attacker), 10.0F);
+		victim.discard();
+		return out - 10.0;
+	}
+
+	private static void damages(Ctx ctx, StringBuilder out) {
+		out.append("\n######## DANO EXTRA (golpe base 10; EnchantmentHelper.modifyDamage)\n");
+		ServerPlayer attacker = ctx.join("guia-obs-dano").player();
+		for (Dmg s : DAMAGE_SPECS) {
+			Holder<Enchantment> h = enchantment(ctx, s.ench());
+			if (h == null) {
+				out.append(s.ench()).append(": (no existe en este servidor)\n");
+				continue;
+			}
+			StringBuilder row = new StringBuilder();
+			for (int lvl = 1; lvl <= h.value().getMaxLevel(); lvl++) {
+				row.append(String.format(" n%d=+%s", lvl, fmt(damageBonus(ctx, attacker, h, lvl, s))));
+			}
+			out.append(String.format("%-34s vs %-14s%s%n", s.ench(), s.victim().getDescriptionId().replace("entity.minecraft.", ""), row));
+		}
+	}
+
+	/** Comprueba que el "+N" de cada descripcion de dano coincide con el que suma el juego. */
+	static void verifyDamage(Ctx ctx) {
+		ServerPlayer attacker = ctx.join("guia-verifica-dano").player();
+		for (Dmg s : DAMAGE_SPECS) {
+			Holder<Enchantment> h = enchantment(ctx, s.ench());
+			var entry = Descriptions.get(s.ench());
+			if (h == null || entry == null) {
+				continue;
+			}
+			for (int lvl = 1; lvl <= h.value().getMaxLevel(); lvl++) {
+				double bonus = damageBonus(ctx, attacker, h, lvl, s);
+				String line = entry.effectAt(lvl);
+				ctx.check(line != null && line.contains("+" + Text.num(bonus)),
+					s.ench() + " nivel " + lvl + ": el juego suma +" + Text.num(bonus) + " de daño; el texto dice '" + line + "'");
+			}
+		}
 	}
 
 	// ---- golpes: efectos aplicados, amplificador, duracion y probabilidad ----
