@@ -35,6 +35,12 @@ mod de pruebas (`tools/run-integration-tests.sh guia`).
     reglas de minado de la herramienta ("×6 en piedra, minerales y metales", "rompe al instante: bambú"); desgaste por
     golpe y si desactiva escudos; hueco de equipo, planeo (élitros), escudo y adorno de armadura. Se lee **el objeto
     concreto**, no el tipo: los atributos que otros mods añaden a un objeto (RPG Loot...) salen igual.
+  - Objetos especiales (fase 5): una entrada **"Qué es"** al principio, con qué es, cómo se usa y cómo se consigue
+    (`objetos.json`). Hoy: mochilas (pequeña/mediana/grande en 16 colores, Ender, Global, de Lava) y sus 5 módulos,
+    piedras de viaje (y la portátil), brújula de tumba, llaves de élitros, cuerno de la visión, polvo ilusorio y los
+    materiales de Illager Expansion. Además **"Al consumirlo"** para lo que no da efectos sino que los quita o hace otra
+    cosa: leche, miel, fruta de chorus y la comida de Farmer's Delight (curar, apagar fuego, quitar un efecto al azar);
+    se lee de los datos del objeto, sin escribir nada.
   - Sin encantamientos ni efectos: tras los datos del equipo, un separador y la lista de los que admite y puede obtener el jugador (mismo criterio que el inventario: mesa,
     aldeanos, botín, tesoro o maldición; los internos de mods no salen). Paginado (36 por página).
   - Todo se explica: no hay objetos "secretos" (decisión de diseño; si más adelante se quiere ocultar alguno, será una
@@ -51,6 +57,15 @@ líneas automáticas cuando un atributo interno no dice nada útil (p. ej. Invis
 van como `potion:<id>`. **Las cifras de intervalos y curas las verifica `GuiaSuite` contra el código del juego**
 (`shouldApplyEffectTickThisTick` y aplicando el efecto a un jugador): si se cambia una fórmula mal, la prueba falla.
 Un efecto nuevo de un mod sin descripción también hace fallar la suite hasta que se describa.
+
+**Objetos especiales** (`objetos.json`): `{ids: [...], desc, uso: [...], consigue: [...]}`; `ids` son todos los objetos a
+los que aplica (variantes de color, de piedra...). **Regla: solo se escribe lo verificado**, con una de estas fuentes:
+datos del mod (recetas, loot tables), la configuración REAL del servidor (`config/`) o el objeto usado de verdad. Esto
+último lo hace `GuiaSuite.observeBehavior` (escribe `purgatorio-guia-comportamiento.txt` en el servidor de pruebas) y la
+suite comprueba que el texto coincide con lo observado (tamaños de mochila, duraciones del polvo ilusorio, si un módulo
+se usa suelto...). Las cifras que dependen de la configuración (costes de las piedras de viaje, tamaños) se sacaron de
+`config/` el 2026-10-04: si cambia la configuración, revisarlas. El informe `docs/guia-inventario.md` lista los candidatos
+por describir (descartando decoración, huevos y bloques).
 
 **Atributos** (`atributos.json`): solo `desc` (qué significa). Las cifras (valor normal, valor del objeto, total) las
 calcula el inspector leyendo el juego. Hay entradas para los 40 atributos porque un objeto puede llevar cualquiera; un
@@ -85,10 +100,15 @@ Los jugadores que ya estén dentro reciben el libro en menos de medio segundo; l
 
 ## Pendiente (fases siguientes)
 
-Ítems especiales a mano (fase 5): **Trims Overhaul** (datapack del servidor con 17 patrones con habilidades, 9
-materiales con atributos, plantillas con propietario y misiones; sus textos están en los `es_es` del propio mod, así que
-se puede reutilizar sin reescribir; hoy el inspector solo dice que hay un adorno), la miel que quita el veneno (quita
-efectos en vez de darlos) y las armas de lanza (componentes `piercing_weapon`/`kinetic_weapon`, aún sin explicar).
-Y las **143 descripciones de encantamientos**: ahora son lo más visible, porque cualquier armadura, arma o herramienta
-sin encantar lista los que admite y casi todos salen como "Sin descripción todavía".
-Tampoco se explica aún cómo se elabora cada poción.
+Pendiente tras la fase 5:
+- **Trims Overhaul** (datapack del servidor con 17 patrones con habilidades, 9 materiales con atributos, plantillas con
+  propietario y misiones; sus textos están en los `es_es` del propio mod, pero son frases de ambientación, no
+  explicaciones mecánicas: hay que leer sus funciones). Hoy el inspector solo dice que hay un adorno.
+- Las armas de lanza (componentes `piercing_weapon`/`kinetic_weapon`) siguen sin explicar.
+- Lo que está descrito con menos certeza, a revisar si se puede comprobar más: la mochila **de Lava** (lo que guardas se
+  quema: leído del código, no probado con el paso del tiempo), la **Global** (solo se sabe su tamaño y su receta, no si
+  comparte contenido) y la **brújula de tumba** (el uso sin tumba no hace nada; el menú con tumba se leyó de la config).
+- Unos 84 candidatos en `docs/guia-inventario.md` (casi todo Farmer's Delight: comida y utensilios de cocina).
+- Las **143 descripciones de encantamientos**: ahora son lo más visible, porque cualquier armadura, arma o herramienta
+  sin encantar lista los que admite y casi todos salen como "Sin descripción todavía".
+- Cómo se elabora cada poción.

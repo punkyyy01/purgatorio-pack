@@ -22,6 +22,7 @@ public final class Descriptions {
 	public static final String ENCHANTMENTS_RESOURCE = "/purgatorio_guia/encantamientos.json";
 	public static final String EFFECTS_RESOURCE = "/purgatorio_guia/efectos.json";
 	public static final String ATTRIBUTES_RESOURCE = "/purgatorio_guia/atributos.json";
+	public static final String ITEMS_RESOURCE = "/purgatorio_guia/objetos.json";
 	/** En efectos.json, las pociones base sin efectos van como "potion:<id de la pocion>". */
 	public static final String POTION_PREFIX = "potion:";
 
@@ -66,9 +67,14 @@ public final class Descriptions {
 		}
 	}
 
+	/** Objeto especial: que es, como se usa y como se consigue (cada lista es una linea por elemento). */
+	public record ItemInfo(String desc, List<String> uso, List<String> consigue) {
+	}
+
 	private static volatile Map<String, Entry> enchantments = Map.of();
 	private static volatile Map<String, Entry> effects = Map.of();
 	private static volatile Map<String, Entry> attributes = Map.of();
+	private static volatile Map<String, ItemInfo> items = Map.of();
 
 	private Descriptions() {
 	}
@@ -77,8 +83,9 @@ public final class Descriptions {
 		enchantments = read(ENCHANTMENTS_RESOURCE);
 		effects = read(EFFECTS_RESOURCE);
 		attributes = read(ATTRIBUTES_RESOURCE);
-		PurgatorioGuia.LOGGER.info("Guia: {} encantamientos, {} efectos y {} atributos descritos",
-			enchantments.size(), effects.size(), attributes.size());
+		items = readItems(ITEMS_RESOURCE);
+		PurgatorioGuia.LOGGER.info("Guia: {} encantamientos, {} efectos, {} atributos y {} objetos descritos",
+			enchantments.size(), effects.size(), attributes.size(), items.size());
 	}
 
 	private static Map<String, Entry> read(String resource) {
@@ -92,6 +99,48 @@ public final class Descriptions {
 			PurgatorioGuia.LOGGER.error("No se pudo leer {}", resource, e);
 			return Map.of();
 		}
+	}
+
+	private static Map<String, ItemInfo> readItems(String resource) {
+		try (InputStream in = Descriptions.class.getResourceAsStream(resource)) {
+			if (in == null) {
+				PurgatorioGuia.LOGGER.warn("No se encontro {}: la guia no tendra descripciones de objetos", resource);
+				return Map.of();
+			}
+			return parseItems(JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject());
+		} catch (IOException | RuntimeException e) {
+			PurgatorioGuia.LOGGER.error("No se pudo leer {}", resource, e);
+			return Map.of();
+		}
+	}
+
+	/**
+	 * objetos.json: cada entrada es {"ids": [...], "desc", "uso": [...], "consigue": [...]}; los "ids" son todos los
+	 * objetos a los que aplica (variantes de color, de piedra...). Las claves que empiezan por "_" son notas.
+	 */
+	public static Map<String, ItemInfo> parseItems(JsonObject root) {
+		Map<String, ItemInfo> out = new HashMap<>();
+		for (Map.Entry<String, JsonElement> e : root.entrySet()) {
+			if (e.getKey().startsWith("_")) {
+				continue;
+			}
+			JsonObject o = e.getValue().getAsJsonObject();
+			ItemInfo info = new ItemInfo(o.get("desc").getAsString(), strings(o, "uso"), strings(o, "consigue"));
+			for (JsonElement id : o.getAsJsonArray("ids")) {
+				out.put(id.getAsString(), info);
+			}
+		}
+		return out;
+	}
+
+	private static List<String> strings(JsonObject o, String key) {
+		List<String> out = new ArrayList<>();
+		if (o.has(key)) {
+			for (JsonElement l : o.getAsJsonArray(key)) {
+				out.add(l.getAsString());
+			}
+		}
+		return out;
 	}
 
 	/** Separado de {@link #load()} para poder probarlo con JSON propio. Las claves que empiezan por "_" son notas. */
@@ -145,6 +194,15 @@ public final class Descriptions {
 
 	public static java.util.Set<String> attributeIds() {
 		return attributes.keySet();
+	}
+
+	/** Descripcion de un objeto especial (mochilas, llaves...) por id, o null. */
+	public static ItemInfo item(String id) {
+		return items.get(id);
+	}
+
+	public static java.util.Set<String> itemIds() {
+		return items.keySet();
 	}
 
 	public static int size() {

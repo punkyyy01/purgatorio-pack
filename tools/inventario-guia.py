@@ -20,6 +20,7 @@ OUT = os.path.join(REPO, "build", "guia")
 ES_VANILLA = os.path.join(REPO, "build", "i18n-cache", "mojang-es_es-26.3.json")
 DESCRIPCIONES = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "encantamientos.json")
 DESCRIPCIONES_ATRIBUTOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "atributos.json")
+DESCRIPCIONES_OBJETOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "objetos.json")
 DESCRIPCIONES_EFECTOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "efectos.json")
 # Volcado del registro REAL de efectos y pociones (lo escribe GuiaSuite en el servidor de pruebas). Para que incluya los
 # mods del servidor real: FULL_PACK=1 tools/run-integration-tests.sh guia
@@ -202,6 +203,26 @@ def main():
         if unknown_at:
             print("AVISO: descripciones de atributos que no existen en el servidor:", unknown_at)
 
+    # Objetos de mods: candidatos a descripcion a mano (se descartan decoracion, huevos, bloques y lo que el inspector ya explica).
+    mod_items = []
+    described_items = set()
+    if os.path.exists(DESCRIPCIONES_OBJETOS):
+        for k, v in json.load(open(DESCRIPCIONES_OBJETOS, encoding="utf-8")).items():
+            if not k.startswith("_"):
+                described_items.update(v["ids"])
+    if registry:
+        skip_ns = {"tsa"}   # TSA Decorations: decoracion pura
+        for iid, it in sorted(registry.get("objetos_de_mods", {}).items()):
+            ns = iid.split(":")[0]
+            cls = it["clase"].rsplit(".", 1)[-1]
+            plain = ns in skip_ns or cls.endswith(("BlockItem", "SpawnEggItem", "SpawnEgg")) or "spawn_egg" in iid
+            mod_items.append({"id": iid, "nombre": it["nombre"], "clase": cls, "descrito": iid in described_items,
+                              "explicado": it["explicado_por_inspector"], "candidato": not plain and not it["explicado_por_inspector"]})
+        unknown_items = sorted(i for i in described_items if i not in registry.get("objetos_de_mods", {})
+                               and any(x.startswith(i.split(":")[0] + ":") for x in registry.get("objetos_de_mods", {})))
+        if unknown_items:
+            print("AVISO: descripciones de objetos que no existen en el servidor:", unknown_items)
+
     # Descripciones ya escritas para el inspector (las claves que empiezan por "_" son notas del formato).
     described = set()
     if os.path.exists(DESCRIPCIONES):
@@ -215,13 +236,13 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     json.dump(result, open(os.path.join(OUT, "enchantments.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(effects, open(os.path.join(OUT, "effects.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    write_doc(result, effects, potions_base, described_fx, registry is not None, attributes)
+    write_doc(result, effects, potions_base, described_fx, registry is not None, attributes, mod_items)
     c = collections.Counter(r["tipo"] for r in result)
     pending_fx = sum(1 for e in effects.values() if not e["descrita"])
     print(f"{len(result)} encantamientos: {dict(c)}; {len(effects)} efectos ({pending_fx} sin descripcion)")
 
 
-def write_doc(result, effects, potions_base, described_fx, has_registry, attributes):
+def write_doc(result, effects, potions_base, described_fx, has_registry, attributes, mod_items):
     by_ns = collections.defaultdict(list)
     for r in result:
         by_ns[r["id"].split(":")[0]].append(r)
@@ -275,6 +296,19 @@ def write_doc(result, effects, potions_base, described_fx, has_registry, attribu
               "| id | objetos | descrita |", "|---|---|---|"]
         for aid, a in sorted(attributes.items(), key=lambda kv: (-kv[1]["objetos"], kv[0])):
             L.append(f"| `{aid}` | {a['objetos']} | {'si' if a['descrita'] else 'NO'} |")
+        L.append("")
+    if mod_items:
+        total = len(mod_items)
+        done = sum(1 for i in mod_items if i["descrito"])
+        explained = sum(1 for i in mod_items if i["explicado"] and not i["descrito"])
+        pending = [i for i in mod_items if i["candidato"] and not i["descrito"]]
+        L += ["## Objetos de mods", "",
+              f"**{total} objetos de mods**: {done} con descripción a mano (`objetos.json`), {explained} que el inspector ya explica "
+              f"solo (efectos, equipo, consumo) y **{len(pending)} candidatos por describir**. No se cuentan como candidatos la "
+              "decoración (TSA), los huevos generadores ni los bloques.", "",
+              "| id | nombre | clase |", "|---|---|---|"]
+        for i in pending:
+            L.append(f"| `{i['id']}` | {i['nombre']} | {i['clase']} |")
         L.append("")
     open(os.path.join(REPO, "docs", "guia-inventario.md"), "w", encoding="utf-8").write("\n".join(L))
 

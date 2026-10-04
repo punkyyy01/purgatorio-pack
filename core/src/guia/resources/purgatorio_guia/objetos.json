@@ -1,0 +1,337 @@
+{
+	"_formato": [
+		"Objetos especiales descritos a mano. Cada entrada: {ids: [todos los objetos a los que aplica], desc, uso: [lineas], consigue: [lineas]}.",
+		"REGLA: solo se escribe lo verificado (datos del mod, configuracion REAL del servidor, o el objeto usado de verdad en GuiaSuite).",
+		"Las cifras que dependen de la configuracion (tamanos, costes) se comprueban en GuiaSuite o salen de config/ del servidor; si cambia la config, revisarlas.",
+		"Lo pendiente de describir (candidatos) se lista en docs/guia-inventario.md."
+	],
+	"mochila_pequena": {
+		"ids": [
+			"serverbackpacks:small",
+			"serverbackpacks:white_small",
+			"serverbackpacks:orange_small",
+			"serverbackpacks:magenta_small",
+			"serverbackpacks:light_blue_small",
+			"serverbackpacks:yellow_small",
+			"serverbackpacks:lime_small",
+			"serverbackpacks:pink_small",
+			"serverbackpacks:gray_small",
+			"serverbackpacks:light_gray_small",
+			"serverbackpacks:cyan_small",
+			"serverbackpacks:purple_small",
+			"serverbackpacks:blue_small",
+			"serverbackpacks:brown_small",
+			"serverbackpacks:green_small",
+			"serverbackpacks:red_small",
+			"serverbackpacks:black_small"
+		],
+		"desc": "Mochila de 9 huecos que llevas encima. Se puede teñir de 16 colores.",
+		"uso": [
+			"Clic derecho: la abre.",
+			"Se mejora a la mochila mediana con una receta que lleva la pequeña."
+		],
+		"consigue": [
+			"Fabricación: cofre, lingote de cobre, cuero e hilo."
+		]
+	},
+	"mochila_mediana": {
+		"ids": [
+			"serverbackpacks:medium",
+			"serverbackpacks:white_medium",
+			"serverbackpacks:orange_medium",
+			"serverbackpacks:magenta_medium",
+			"serverbackpacks:light_blue_medium",
+			"serverbackpacks:yellow_medium",
+			"serverbackpacks:lime_medium",
+			"serverbackpacks:pink_medium",
+			"serverbackpacks:gray_medium",
+			"serverbackpacks:light_gray_medium",
+			"serverbackpacks:cyan_medium",
+			"serverbackpacks:purple_medium",
+			"serverbackpacks:blue_medium",
+			"serverbackpacks:brown_medium",
+			"serverbackpacks:green_medium",
+			"serverbackpacks:red_medium",
+			"serverbackpacks:black_medium"
+		],
+		"desc": "Mochila de 18 huecos que llevas encima. Se puede teñir de 16 colores.",
+		"uso": [
+			"Clic derecho: la abre.",
+			"Se mejora a la mochila grande con una receta que lleva la mediana."
+		],
+		"consigue": [
+			"Fabricación: mochila pequeña, tablones, lingote de oro, cuero e hilo."
+		]
+	},
+	"mochila_grande": {
+		"ids": [
+			"serverbackpacks:large",
+			"serverbackpacks:white_large",
+			"serverbackpacks:orange_large",
+			"serverbackpacks:magenta_large",
+			"serverbackpacks:light_blue_large",
+			"serverbackpacks:yellow_large",
+			"serverbackpacks:lime_large",
+			"serverbackpacks:pink_large",
+			"serverbackpacks:gray_large",
+			"serverbackpacks:light_gray_large",
+			"serverbackpacks:cyan_large",
+			"serverbackpacks:purple_large",
+			"serverbackpacks:blue_large",
+			"serverbackpacks:brown_large",
+			"serverbackpacks:green_large",
+			"serverbackpacks:red_large",
+			"serverbackpacks:black_large"
+		],
+		"desc": "Mochila de 27 huecos que llevas encima. Se puede teñir de 16 colores.",
+		"uso": [
+			"Clic derecho: la abre.",
+			"Con una mochila grande se fabrican las mochilas de Ender y Global."
+		],
+		"consigue": [
+			"Fabricación: mochila mediana, ojo de Ender, lingote de hierro, cuero e hilo."
+		]
+	},
+	"mochila_ender": {
+		"ids": [
+			"serverbackpacks:ender"
+		],
+		"desc": "Al abrirla ves tu propio cofre de Ender (27 huecos): es exactamente el mismo contenido que el cofre de Ender normal, pero lo llevas encima.",
+		"uso": [
+			"Clic derecho: la abre."
+		],
+		"consigue": [
+			"Fabricación: mochila grande, ojo de Ender, obsidiana e hilo."
+		]
+	},
+	"mochila_global": {
+		"ids": [
+			"serverbackpacks:global"
+		],
+		"desc": "Mochila especial de 54 huecos (GlobalPack).",
+		"uso": [
+			"Clic derecho: la abre."
+		],
+		"consigue": [
+			"Fabricación: mochila grande, ojo de Ender, lingote de hierro, estrella del Nether e hilo."
+		]
+	},
+	"mochila_lava": {
+		"ids": [
+			"serverbackpacks:lava_backpack"
+		],
+		"desc": "Mochila de 18 huecos pensada para deshacerte de objetos: lo que metes acaba quemándose. No guardes aquí nada que quieras conservar.",
+		"uso": [
+			"Clic derecho: la abre."
+		]
+	},
+	"modulo_void_upgrade": {
+		"ids": [
+			"serverbackpacks:void_upgrade"
+		],
+		"desc": "Módulo para mochilas. Elimina los objetos sueltos que haya cerca de ti (unos 2,5 bloques) y que cumplan su filtro.",
+		"uso": [
+			"No se usa suelto: se añade a una mochila (receta de mejora)."
+		],
+		"consigue": [
+			"Fabricación: Perla de Ender, cubo de lava, cuero e hilo."
+		]
+	},
+	"modulo_magnet_upgrade": {
+		"ids": [
+			"serverbackpacks:magnet_upgrade"
+		],
+		"desc": "Módulo para mochilas. Recoge los objetos sueltos que haya cerca de ti (unos 2,5 bloques) y los guarda en la mochila. Tiene un filtro (lista blanca o negra).",
+		"uso": [
+			"Se añade a una mochila (receta de mejora).",
+			"Clic derecho con él en la mano: cambia su modo (lista negra, lista blanca, coincidir con el contenido de la mochila, recoger)."
+		],
+		"consigue": [
+			"Fabricación: Perla de Ender, lingote de hierro, cuero e hilo."
+		]
+	},
+	"modulo_crafting_upgrade": {
+		"ids": [
+			"serverbackpacks:crafting_upgrade"
+		],
+		"desc": "Módulo para mochilas. Da a la mochila una mesa de fabricación.",
+		"uso": [
+			"No se usa suelto: se añade a una mochila (receta de mejora)."
+		],
+		"consigue": [
+			"Fabricación: Mesa de fabricación, tablones y cuero."
+		]
+	},
+	"modulo_stonecutter_upgrade": {
+		"ids": [
+			"serverbackpacks:stonecutter_upgrade"
+		],
+		"desc": "Módulo para mochilas. Da a la mochila un cortapiedras.",
+		"uso": [
+			"No se usa suelto: se añade a una mochila (receta de mejora)."
+		],
+		"consigue": [
+			"Fabricación: Cortapiedras, lingote de hierro y cuero."
+		]
+	},
+	"modulo_jukebox_upgrade": {
+		"ids": [
+			"serverbackpacks:jukebox_upgrade"
+		],
+		"desc": "Módulo para mochilas. Reproduce los discos de música que guardes en la mochila (también en bucle).",
+		"uso": [
+			"Se añade a una mochila (receta de mejora).",
+			"Clic derecho con él en la mano: cambia su modo (detenido, reproduciendo, en bucle)."
+		],
+		"consigue": [
+			"Fabricación: Tocadiscos, tablones y cuero."
+		]
+	},
+	"piedra_de_viaje": {
+		"ids": [
+			"sswaystones:waystone",
+			"sswaystones:deepslate_bricks_waystone",
+			"sswaystones:tuff_bricks_waystone",
+			"sswaystones:mud_bricks_waystone",
+			"sswaystones:resin_bricks_waystone",
+			"sswaystones:sandstone_waystone",
+			"sswaystones:red_sandstone_waystone",
+			"sswaystones:prismarine_waystone",
+			"sswaystones:nether_bricks_waystone",
+			"sswaystones:red_nether_bricks_waystone",
+			"sswaystones:polished_blackstone_bricks_waystone",
+			"sswaystones:end_stone_bricks_waystone"
+		],
+		"desc": "Punto de viaje. Las piedras de viaje que descubres quedan en tu lista y puedes teletransportarte a ellas desde otra piedra de viaje.",
+		"uso": [
+			"Puedes cambiarle el nombre y el icono.",
+			"Eliges quién puede usarla: solo tú, tu equipo o todos.",
+			"Viajar dentro de la misma dimensión es gratis; cambiar de dimensión cuesta 1 nivel de experiencia."
+		],
+		"consigue": [
+			"Hay piedras de viaje en las aldeas."
+		]
+	},
+	"piedra_de_viaje_portatil": {
+		"ids": [
+			"sswaystones:portable_waystone"
+		],
+		"desc": "Abre el menú de piedras de viaje estés donde estés, sin tener que ir a una. No se gasta al usarla.",
+		"uso": [
+			"Clic derecho: abre la lista de tus piedras de viaje."
+		]
+	},
+	"brujula_de_tumba": {
+		"ids": [
+			"universal_graves:grave_compass"
+		],
+		"desc": "Te la da tu tumba al morir. Sirve para encontrarla y gestionarla. La tumba guarda tus objetos y tu experiencia; durante un tiempo solo tú puedes abrirla y después cualquiera. No desaparece sola.",
+		"uso": [
+			"Con una tumba activa, clic derecho abre su menú: llevarte todos los objetos, mover la tumba hasta ti o romperla."
+		]
+	},
+	"llave_de_elytros": {
+		"ids": [
+			"vaulted-end:elytra_key"
+		],
+		"desc": "Llave de la cámara de una nave del End: abre la cámara que guarda unos élitros.",
+		"uso": [
+			"Se usa en la cámara de una nave del End."
+		],
+		"consigue": [
+			"La suelta el generador de pruebas de shulkers de una nave del End."
+		]
+	},
+	"llave_de_elytros_ominosa": {
+		"ids": [
+			"vaulted-end:ominous_elytra_key"
+		],
+		"desc": "Versión ominosa de la llave de élitros, para la cámara ominosa de una nave del End.",
+		"uso": [
+			"Se usa en la cámara ominosa de una nave del End."
+		],
+		"consigue": [
+			"La suelta el generador de pruebas ominoso de shulkers de una nave del End."
+		]
+	},
+	"cuerno_de_la_vision": {
+		"ids": [
+			"illagerexp:horn_of_sight"
+		],
+		"desc": "Al tocarlo, hace brillar a las criaturas que haya a tu alrededor para verlas a través de los bloques.",
+		"uso": [
+			"Mantén clic derecho (3 s) y suéltalo.",
+			"Las criaturas hasta unos 30 bloques de distancia brillan durante 20 s."
+		],
+		"consigue": [
+			"Fabricación: lleva una gema sagrada."
+		]
+	},
+	"polvo_ilusorio": {
+		"ids": [
+			"illagerexp:illusionary_dust"
+		],
+		"desc": "Polvo de ilusionista que te vuelve invisible un rato.",
+		"uso": [
+			"Clic derecho: se gasta 1 y te da Invisibilidad durante 60 s y Velocidad durante 10 s.",
+			"También sirve para fabricar la gema sagrada."
+		],
+		"consigue": [
+			"Aparece en los cofres de la torre del ilusionista."
+		]
+	},
+	"polvo_inusual": {
+		"ids": [
+			"illagerexp:unusual_dust"
+		],
+		"desc": "Material mágico de los hechiceros. Sirve para fabricar la gema sagrada.",
+		"consigue": [
+			"Lo sueltan los hechiceros y aparece en los cofres de la cabaña del hechicero."
+		]
+	},
+	"gema_sagrada": {
+		"ids": [
+			"illagerexp:hallowed_gem"
+		],
+		"desc": "Material mágico. Sirve para fabricar el cuerno de la visión y también como material de adorno de armadura.",
+		"consigue": [
+			"Fabricación con polvo inusual y polvo ilusorio."
+		]
+	},
+	"esencia_primigenia": {
+		"ids": [
+			"illagerexp:primal_essence"
+		],
+		"desc": "Esencia mágica del Evocador mayor. Sirve para fabricar la mesa de imbuición.",
+		"consigue": [
+			"La suelta el Evocador mayor."
+		]
+	},
+	"trozo_de_platino": {
+		"ids": [
+			"illagerexp:platinum_chunk"
+		],
+		"desc": "Metal de la expansión de illagers. Sirve para fabricar láminas de platino.",
+		"consigue": [
+			"Lo suelta el inquisidor."
+		]
+	},
+	"lamina_de_platino": {
+		"ids": [
+			"illagerexp:platinum_sheet"
+		],
+		"desc": "Sirve para mejorar herramientas y armaduras de netherita a netherita infundida con platino (junto a su plantilla), para reparar ese equipo y como material de adorno de armadura.",
+		"consigue": [
+			"Fabricación con trozos de platino."
+		]
+	},
+	"plantilla_de_platino": {
+		"ids": [
+			"illagerexp:platinum_upgrade_template"
+		],
+		"desc": "Plantilla de herrería para mejorar objetos de netherita a netherita infundida con platino.",
+		"uso": [
+			"Se usa en la mesa de herrería junto a una lámina de platino."
+		]
+	}
+}

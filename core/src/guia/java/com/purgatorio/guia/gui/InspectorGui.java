@@ -1,8 +1,10 @@
 package com.purgatorio.guia.gui;
 
+import com.purgatorio.guia.inspect.ConsumeEntries;
 import com.purgatorio.guia.inspect.EffectEntries;
 import com.purgatorio.guia.inspect.EnchantmentEntries;
 import com.purgatorio.guia.inspect.EquipmentEntries;
+import com.purgatorio.guia.inspect.SpecialEntries;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.ArrayList;
@@ -105,13 +107,16 @@ public final class InspectorGui {
 		EnchantmentEntries.Result result = EnchantmentEntries.of(player, inspected);
 		List<GuiElementBuilder> effects = EffectEntries.of(player, inspected);
 		List<GuiElementBuilder> equipment = EquipmentEntries.of(player, inspected);
+		List<GuiElementBuilder> special = SpecialEntries.of(inspected);
+		List<GuiElementBuilder> consume = ConsumeEntries.of(inspected);
 		// Orden: encantamientos puestos, efectos y datos del equipo. Si el objeto no tiene encantamientos ni da efectos,
 		// al final se lista lo que admite (con un separador, porque comparte lista con los datos del equipo).
-		List<GuiElementBuilder> entries = new ArrayList<>();
+		List<GuiElementBuilder> entries = new ArrayList<>(special);   // "Qué es" va siempre el primero
 		if (result.enchanted()) {
 			entries.addAll(result.entries());
 		}
 		entries.addAll(effects);
+		entries.addAll(consume);
 		entries.addAll(equipment);
 		if (!result.enchanted() && effects.isEmpty() && !result.entries().isEmpty()) {
 			entries.add(new GuiElementBuilder(Items.OAK_SIGN)

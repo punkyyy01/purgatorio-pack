@@ -240,8 +240,8 @@ El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.s
 
 | id | categoria | descrita |
 |---|---|---|
-| `farmersdelight:comfort` |  | si |
-| `farmersdelight:nourishment` |  | si |
+| `farmersdelight:comfort` | BENEFICIAL | si |
+| `farmersdelight:nourishment` | BENEFICIAL | si |
 | `minecraft:absorption` | BENEFICIAL | si |
 | `minecraft:bad_omen` | NEUTRAL | si |
 | `minecraft:blindness` | HARMFUL | si |
@@ -298,14 +298,14 @@ El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.s
 
 | id | objetos | descrita |
 |---|---|---|
-| `minecraft:attack_damage` | 45 | si |
-| `minecraft:attack_speed` | 45 | si |
-| `minecraft:armor` | 41 | si |
-| `minecraft:armor_toughness` | 41 | si |
+| `minecraft:attack_damage` | 94 | si |
+| `minecraft:attack_speed` | 94 | si |
+| `minecraft:armor` | 45 | si |
+| `minecraft:armor_toughness` | 45 | si |
+| `minecraft:knockback_resistance` | 10 | si |
 | `minecraft:waypoint_transmit_range` | 8 | si |
-| `minecraft:knockback_resistance` | 6 | si |
+| `minecraft:attack_knockback` | 1 | si |
 | `minecraft:air_drag_modifier` | 0 | si |
-| `minecraft:attack_knockback` | 0 | si |
 | `minecraft:below_name_distance` | 0 | si |
 | `minecraft:block_break_speed` | 0 | si |
 | `minecraft:block_interaction_range` | 0 | si |
@@ -338,3 +338,94 @@ El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.s
 | `minecraft:tempt_range` | 0 | si |
 | `minecraft:water_movement_efficiency` | 0 | si |
 | `minecraft:waypoint_receive_range` | 0 | si |
+
+## Objetos de mods
+
+**628 objetos de mods**: 83 con descripción a mano (`objetos.json`), 97 que el inspector ya explica solo (efectos, equipo, consumo) y **84 candidatos por describir**. No se cuentan como candidatos la decoración (TSA), los huevos generadores ni los bloques.
+
+| id | nombre | clase |
+|---|---|---|
+| `babyfat:ranchu_bucket` | Cubo de ranchu | RanchuBucketItem |
+| `danse:player_statue` | Estatua de jugador | StatuePlayerModelItem |
+| `farmersdelight:apple_pie` | Tarta de manzana | PlaceableItem |
+| `farmersdelight:bacon` | Tocino crudo | Item |
+| `farmersdelight:bacon_sandwich` | Sándwich de tocino | ConsumableItem |
+| `farmersdelight:barbecue_stick` | Brocheta de carne asada | ConsumableItem |
+| `farmersdelight:beef_patty` | Hamburguesa | Item |
+| `farmersdelight:black_hanging_canvas_sign` | Cartel colgante de tela negra | HangingSignItem |
+| `farmersdelight:blue_hanging_canvas_sign` | Cartel colgante de tela azul | HangingSignItem |
+| `farmersdelight:brown_hanging_canvas_sign` | Cartel colgante de tela marrón | HangingSignItem |
+| `farmersdelight:brown_mushroom_colony` | Colonia de hongos marrones | MushroomColonyItem |
+| `farmersdelight:cabbage` | Col | Item |
+| `farmersdelight:cabbage_leaf` | Hoja de col | Item |
+| `farmersdelight:cabbage_rolls` | Rollos de col | ConsumableItem |
+| `farmersdelight:canvas` | Tela | FuelItem |
+| `farmersdelight:chicken_sandwich` | Sándwich de pollo | ConsumableItem |
+| `farmersdelight:chocolate_pie` | Pastel de chocolate | PlaceableItem |
+| `farmersdelight:cod_roll` | Rollos de bacalao | ConsumableItem |
+| `farmersdelight:cod_slice` | Rebanada de bacalao crudo | Item |
+| `farmersdelight:cooked_bacon` | Tocino cocido | Item |
+| `farmersdelight:cooked_chicken_cuts` | Cortes de pollo cocidos | Item |
+| `farmersdelight:cooked_cod_slice` | Rebanada de bacalao cocido | Item |
+| `farmersdelight:cooked_mutton_chops` | Chuletas de cordero cocidas | Item |
+| `farmersdelight:cooked_salmon_slice` | Rebanada de salmón cocido | Item |
+| `farmersdelight:cooking_pot` | Olla | CookingPotItem |
+| `farmersdelight:cyan_hanging_canvas_sign` | Cartel colgante de tela cian | HangingSignItem |
+| `farmersdelight:debug_pumpkin_pie` | item.farmersdelight.debug_pumpkin_pie | ModItems$2 |
+| `farmersdelight:dog_food` | Comida para perros | DogFoodItem |
+| `farmersdelight:dumplings` | Albóndigas | ConsumableItem |
+| `farmersdelight:egg_sandwich` | Sándwich de huevo | ConsumableItem |
+| `farmersdelight:fried_egg` | Huevo frito | Item |
+| `farmersdelight:gleaming_salad_block` | Ensalada brillante | PlaceableItem |
+| `farmersdelight:gray_hanging_canvas_sign` | Cartel colgante de tela gris | HangingSignItem |
+| `farmersdelight:green_hanging_canvas_sign` | Cartel colgante de tela verde | HangingSignItem |
+| `farmersdelight:ham` | Jamón | Item |
+| `farmersdelight:hamburger` | Hamburguesa | ConsumableItem |
+| `farmersdelight:hanging_canvas_sign` | Cartel colgante de tela | HangingSignItem |
+| `farmersdelight:honey_cookie` | Galleta de miel | Item |
+| `farmersdelight:honey_glazed_ham_block` | Jamón glaseado con miel | PlaceableItem |
+| `farmersdelight:horse_feed` | Comida para caballos | HorseFeedItem |
+| `farmersdelight:hot_cocoa` | Chocolate caliente | ConsumableItem |
+| `farmersdelight:kelp_roll` | Rollos de sargazo | ConsumableItem |
+| `farmersdelight:kelp_roll_slice` | Rebanada de rollo de sargazo | ConsumableItem |
+| `farmersdelight:light_blue_hanging_canvas_sign` | Cartel colgante de tela azul claro | HangingSignItem |
+| `farmersdelight:light_gray_hanging_canvas_sign` | Cartel colgante de tela gris claro | HangingSignItem |
+| `farmersdelight:lime_hanging_canvas_sign` | Cartel colgante de tela verde lima | HangingSignItem |
+| `farmersdelight:magenta_hanging_canvas_sign` | Cartel colgante de tela magenta | HangingSignItem |
+| `farmersdelight:melon_juice` | Zumo de melón | ConsumableItem |
+| `farmersdelight:melon_popsicle` | Palito de melón | ConsumableItem |
+| `farmersdelight:milk_bottle` | Botella de leche | ConsumableItem |
+| `farmersdelight:minced_beef` | Carne picada | Item |
+| `farmersdelight:mutton_chops` | Chuletas de cordero crudas | Item |
+| `farmersdelight:mutton_wrap` | Wrap de cordero | ConsumableItem |
+| `farmersdelight:orange_hanging_canvas_sign` | Cartel colgante de tela naranja | HangingSignItem |
+| `farmersdelight:pie_crust` | Corteza de tarta | Item |
+| `farmersdelight:pink_hanging_canvas_sign` | Cartel colgante de tela rosa | HangingSignItem |
+| `farmersdelight:pumpkin_slice` | Rodaja de calabaza | Item |
+| `farmersdelight:purple_hanging_canvas_sign` | Cartel colgante de tela morada | HangingSignItem |
+| `farmersdelight:red_hanging_canvas_sign` | Cartel colgante de tela roja | HangingSignItem |
+| `farmersdelight:red_mushroom_colony` | Colonia de hongos rojos | MushroomColonyItem |
+| `farmersdelight:rice` | Arroz | RiceItem |
+| `farmersdelight:rice_panicle` | Panícula de arroz | Item |
+| `farmersdelight:rice_roll_medley_block` | Rollos de arroz | PlaceableItem |
+| `farmersdelight:roast_chicken_block` | Pollo asado | PlaceableItem |
+| `farmersdelight:rope` | Cuerda | RopeItem |
+| `farmersdelight:rotten_tomato` | Tomate podrido | RottenTomatoItem |
+| `farmersdelight:salmon_roll` | Rollos de salmon | ConsumableItem |
+| `farmersdelight:salmon_slice` | Rebanada de salmón crudo | Item |
+| `farmersdelight:shepherds_pie_block` | Pastel de pastor | PlaceableItem |
+| `farmersdelight:smoked_ham` | Jamón cocido | Item |
+| `farmersdelight:straw` | Paja | FuelItem |
+| `farmersdelight:stuffed_potato` | Patata rellena | ConsumableItem |
+| `farmersdelight:stuffed_pumpkin_block` | Calabaza rellena | PlaceableItem |
+| `farmersdelight:sweet_berry_cheesecake` | Cheesecake con bayas dulces | PlaceableItem |
+| `farmersdelight:sweet_berry_cookie` | Galleta de bayas dulces | Item |
+| `farmersdelight:tomato` | Tomate | Item |
+| `farmersdelight:tomato_sauce` | Salsa de tomate | ConsumableItem |
+| `farmersdelight:tomato_seeds` | Semillas de tomate | ModItems$1 |
+| `farmersdelight:tree_bark` | Corteza de árbol | FuelItem |
+| `farmersdelight:white_hanging_canvas_sign` | Cartel colgante de tela blanca | HangingSignItem |
+| `farmersdelight:yellow_hanging_canvas_sign` | Cartel colgante de tela amarilla | HangingSignItem |
+| `purgatorio:esquirla_de_brasa` | Esquirla de Brasa | SimpleItem |
+| `toms_mobs:emperor_wing_pattern` | Patrón de Alas de Emperadora | TexturedPolymerItem |
+| `universal_graves:icon` | item.universal_graves.icon | IconItem |

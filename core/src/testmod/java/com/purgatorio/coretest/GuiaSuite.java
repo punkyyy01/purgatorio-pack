@@ -56,6 +56,7 @@ public final class GuiaSuite implements Suite {
 	@Override
 	public void run(Ctx ctx) {
 		dumpRegistry(ctx);
+		observeBehavior(ctx);
 		book(ctx);
 		bookClicks(ctx);
 		bookLeaks(ctx);
@@ -66,6 +67,8 @@ public final class GuiaSuite implements Suite {
 		inspectorEffects(ctx);
 		attributeDescriptions(ctx);
 		inspectorEquipment(ctx);
+		specialItems(ctx);
+		consumeEffects(ctx);
 	}
 
 	/**
@@ -73,6 +76,7 @@ public final class GuiaSuite implements Suite {
 	 * pruebas). Con FULL_PACK=1 incluye los de todos los mods; tools/inventario-guia.py lo usa para saber que describir.
 	 */
 	private void dumpRegistry(Ctx ctx) {
+		ServerPlayer probe = ctx.join("guia-sonda").player();
 		com.google.gson.JsonObject root = new com.google.gson.JsonObject();
 		com.google.gson.JsonObject effects = new com.google.gson.JsonObject();
 		net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.listElements().forEach(h -> {
@@ -142,12 +146,117 @@ public final class GuiaSuite implements Suite {
 		});
 		tally.forEach(counts::addProperty);
 		root.add("objetos_con_atributos", items);
+
+		// Todos los objetos NO vanilla, con una pista de si el inspector ya los explica (entradas de efectos/equipo) y de
+		// los componentes que traen: sirve para decidir cuales necesitan una descripcion a mano.
+		com.google.gson.JsonObject specials = new com.google.gson.JsonObject();
+		net.minecraft.core.registries.BuiltInRegistries.ITEM.listElements().forEach(h -> {
+			String id = h.key().identifier().toString();
+			if (id.startsWith("minecraft:")) {
+				return;
+			}
+			ItemStack st = new ItemStack(h);
+			com.google.gson.JsonObject o = new com.google.gson.JsonObject();
+			o.addProperty("nombre", st.getHoverName().getString());
+			o.addProperty("explicado_por_inspector",
+				!com.purgatorio.guia.inspect.EffectEntries.of(probe, st).isEmpty()
+					|| !com.purgatorio.guia.inspect.EquipmentEntries.of(probe, st).isEmpty());
+			com.google.gson.JsonArray comps = new com.google.gson.JsonArray();
+			h.value().components().keySet().forEach(t -> comps.add(String.valueOf(net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(t))));
+			o.add("componentes", comps);
+			o.addProperty("clase", h.value().getClass().getName());
+			specials.add(id, o);
+		});
+		root.add("objetos_de_mods", specials);
+
+		// Tipos de efecto de consumo que NO son "aplicar efectos": como se codifican (campos reales) y que objetos los usan.
+		com.google.gson.JsonObject consume = new com.google.gson.JsonObject();
+		net.minecraft.core.registries.BuiltInRegistries.ITEM.listElements().forEach(h -> {
+			var c = h.value().components().get(net.minecraft.core.component.DataComponents.CONSUMABLE);
+			if (c == null) {
+				return;
+			}
+			for (var e : c.onConsumeEffects()) {
+				var json = net.minecraft.world.item.consume_effects.ConsumeEffect.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, e);
+				String text = json.result().map(Object::toString).orElse("?");
+				com.google.gson.JsonObject entry = consume.has(text) ? consume.getAsJsonObject(text) : new com.google.gson.JsonObject();
+				com.google.gson.JsonArray users = entry.has("objetos") ? entry.getAsJsonArray("objetos") : new com.google.gson.JsonArray();
+				users.add(h.key().identifier().toString());
+				entry.add("objetos", users);
+				consume.add(text, entry);
+			}
+		});
+		root.add("efectos_de_consumo", consume);
 		root.add("componentes_en_objetos", counts);
 		try {
 			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-registro.json"),
 				new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root), java.nio.charset.StandardCharsets.UTF_8);
 		} catch (java.io.IOException e) {
 			ctx.check(false, "no se pudo escribir el volcado del registro: " + e);
+		}
+	}
+
+	/**
+	 * Observa que hacen de verdad algunos objetos de mods al usarlos (purgatorio-guia-comportamiento.txt en el servidor de
+	 * pruebas): las descripciones de objetos.json se escriben con lo observado aqui, no de memoria. Solo con el mod cargado.
+	 */
+	private void observeBehavior(Ctx ctx) {
+		StringBuilder out = new StringBuilder();
+		ServerPlayer p = ctx.join("guia-comportamiento").player();
+		for (String id : java.util.List.of("illagerexp:illusionary_dust", "sswaystones:portable_waystone", "serverbackpacks:small",
+			"serverbackpacks:ender", "serverbackpacks:global", "serverbackpacks:lava_backpack", "universal_graves:grave_compass",
+			"serverbackpacks:crafting_upgrade", "illagerexp:horn_of_sight")) {
+			var holder = BuiltInRegistries.ITEM.get(Identifier.parse(id));
+			if (holder.isEmpty()) {
+				continue;
+			}
+			p.removeAllEffects();
+			p.closeContainer();
+			p.getEnderChestInventory().setItem(0, new ItemStack(Items.DIAMOND));
+			ItemStack stack = new ItemStack(holder.get(), 3);
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			out.append("=== ").append(id).append('\n');
+			try {
+				InteractionResult r = stack.use(ctx.level, p, InteractionHand.MAIN_HAND);
+				out.append("  use() -> ").append(r).append('\n');
+			} catch (Throwable t) {
+				out.append("  use() lanzo ").append(t).append('\n');
+			}
+			out.append("  cantidad en mano tras usar: ").append(p.getItemInHand(InteractionHand.MAIN_HAND).getCount()).append(" (antes 3)\n");
+			out.append("  menu abierto: ").append(p.containerMenu != p.inventoryMenu).append(" tipo=").append(p.containerMenu.getClass().getSimpleName());
+			if (p.containerMenu != p.inventoryMenu) {
+				out.append(" huecos=").append(p.containerMenu.slots.size() - 36)
+					.append(" primer hueco=").append(p.containerMenu.getSlot(0).getItem().getItem());
+			}
+			out.append('\n');
+			p.getActiveEffects().forEach(e -> out.append("  efecto: ").append(e.getEffect().unwrapKey().get().identifier())
+				.append(" nivel ").append(e.getAmplifier() + 1).append(" ").append(e.getDuration()).append("t\n"));
+			out.append("  componentes por defecto: ").append(holder.get().value().components().keySet().stream()
+				.map(t -> String.valueOf(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(t))).filter(n -> !n.contains("animation") && !n.contains("use_effects")).toList()).append('\n');
+			p.closeContainer();
+		}
+		// Modulos de mochila: que cambia al usarlos sueltos varias veces (modo del filtro...).
+		for (String id : java.util.List.of("void_upgrade", "magnet_upgrade", "jukebox_upgrade", "crafting_upgrade", "stonecutter_upgrade")) {
+			var holder = BuiltInRegistries.ITEM.get(Identifier.parse("serverbackpacks:" + id));
+			if (holder.isEmpty()) {
+				continue;
+			}
+			ItemStack stack = new ItemStack(holder.get());
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			out.append("=== modulo ").append(id).append('\n');
+			for (int i = 0; i < 5; i++) {
+				InteractionResult r = stack.use(ctx.level, p, InteractionHand.MAIN_HAND);
+				ItemStack now = p.getItemInHand(InteractionHand.MAIN_HAND);
+				out.append("  uso ").append(i + 1).append(": ").append(r.getClass().getSimpleName()).append(" | datos=")
+					.append(now.getComponentsPatch()).append(" | lore=")
+					.append(now.getOrDefault(DataComponents.LORE, ItemLore.EMPTY).lines().stream().map(Component::getString).toList()).append('\n');
+				stack = now;
+			}
+		}
+		try {
+			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-comportamiento.txt"), out.toString(), java.nio.charset.StandardCharsets.UTF_8);
+		} catch (java.io.IOException e) {
+			ctx.check(false, "no se pudo escribir el comportamiento: " + e);
 		}
 	}
 
@@ -666,6 +775,121 @@ public final class GuiaSuite implements Suite {
 			}
 		}
 		return sum;
+	}
+
+	// ---- objetos especiales: el texto coincide con lo observado ----
+	private static boolean present(String id) {
+		return BuiltInRegistries.ITEM.containsKey(Identifier.parse(id));
+	}
+
+	private void specialItems(Ctx ctx) {
+		// Todo id descrito existe; si el mod no esta cargado (no tiene ningun objeto registrado) se salta.
+		for (String id : Descriptions.itemIds()) {
+			Identifier ident = Identifier.parse(id);
+			boolean modLoaded = BuiltInRegistries.ITEM.keySet().stream().anyMatch(k -> k.getNamespace().equals(ident.getNamespace()));
+			if (modLoaded) {
+				ctx.check(BuiltInRegistries.ITEM.containsKey(ident), "el objeto descrito existe: " + id);
+			}
+			ctx.check(!Descriptions.item(id).desc().isBlank(), id + ": tiene descripcion");
+		}
+		ServerPlayer p = ctx.join("guia-especiales").player();
+		InspectorGui insp = InspectorGui.open(p);
+
+		if (present("illagerexp:illusionary_dust")) {
+			var item = BuiltInRegistries.ITEM.get(Identifier.parse("illagerexp:illusionary_dust")).orElseThrow().value();
+			ItemStack stack = new ItemStack(item, 3);
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			p.removeAllEffects();
+			stack.use(ctx.level, p, InteractionHand.MAIN_HAND);
+			int invisibility = p.getEffect(MobEffects.INVISIBILITY).getDuration();
+			int speed = p.getEffect(MobEffects.SPEED).getDuration();
+			String uso = String.join(" ", Descriptions.item("illagerexp:illusionary_dust").uso());
+			ctx.eq(2, p.getItemInHand(InteractionHand.MAIN_HAND).getCount(), "el polvo ilusorio se gasta de 1 en 1");
+			ctx.check(uso.contains("se gasta 1") && uso.contains("Invisibilidad durante " + invisibility / 20 + " s") && uso.contains("Velocidad durante " + speed / 20 + " s"),
+				"el texto del polvo ilusorio coincide con lo observado (" + invisibility + "t y " + speed + "t): " + uso);
+			insp.select(new ItemStack(item));
+			String lore = loreOf(insp.gui(), INSPECTOR_FIRST_ENTRY, INSPECTOR_FIRST_ENTRY);
+			ctx.check(insp.gui().getGuiElement(INSPECTOR_FIRST_ENTRY).getItemStack().is(Items.BOOK) && lore.contains("Cómo se usa") && lore.contains("Cómo se consigue"),
+				"el inspector muestra 'Qué es' el primero, con uso y como se consigue: " + lore);
+			p.removeAllEffects();
+		}
+		if (present("sswaystones:portable_waystone")) {
+			var item = BuiltInRegistries.ITEM.get(Identifier.parse("sswaystones:portable_waystone")).orElseThrow().value();
+			ItemStack stack = new ItemStack(item, 2);
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			stack.use(ctx.level, p, InteractionHand.MAIN_HAND);
+			ctx.check(p.containerMenu != p.inventoryMenu && p.containerMenu.slots.size() - 36 == 54, "la piedra de viaje portatil abre un menu de 54 huecos");
+			ctx.eq(2, p.getItemInHand(InteractionHand.MAIN_HAND).getCount(), "y no se gasta");
+			ctx.check(Descriptions.item("sswaystones:portable_waystone").desc().contains("No se gasta"), "el texto lo dice");
+			p.closeContainer();
+		}
+		// Mochilas: el tamano que dice el texto es el de la mochila abierta de verdad.
+		java.util.Map<String, Integer> sizes = java.util.Map.of("serverbackpacks:small", 9, "serverbackpacks:medium", 18, "serverbackpacks:large", 27,
+			"serverbackpacks:ender", 27, "serverbackpacks:global", 54, "serverbackpacks:lava_backpack", 18);
+		sizes.forEach((id, slots) -> {
+			if (!present(id)) {
+				return;
+			}
+			var item = BuiltInRegistries.ITEM.get(Identifier.parse(id)).orElseThrow().value();
+			ItemStack stack = new ItemStack(item);
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			p.getEnderChestInventory().setItem(0, new ItemStack(Items.DIAMOND));
+			stack.use(ctx.level, p, InteractionHand.MAIN_HAND);
+			ctx.eq(slots, p.containerMenu.slots.size() - 36, id + ": huecos de la mochila abierta");
+			ctx.check(Descriptions.item(id).desc().contains(slots + " huecos"), id + ": el texto dice " + slots + " huecos: " + Descriptions.item(id).desc());
+			if (id.endsWith(":ender")) {
+				ctx.check(p.containerMenu.getSlot(0).getItem().is(Items.DIAMOND), "la mochila de Ender muestra el cofre de Ender del jugador");
+			}
+			p.closeContainer();
+		});
+		// Un color de mochila usa la descripcion de su tamano.
+		if (present("serverbackpacks:red_medium")) {
+			ctx.check(Descriptions.item("serverbackpacks:red_medium") == Descriptions.item("serverbackpacks:medium"), "las variantes de color comparten descripcion");
+		}
+		// Modulos: tres no hacen nada sueltos; aspiracion y tocadiscos cambian su modo (observado en GuiaSuite.observeBehavior).
+		for (String id : java.util.List.of("void_upgrade", "crafting_upgrade", "stonecutter_upgrade", "magnet_upgrade", "jukebox_upgrade")) {
+			String full = "serverbackpacks:" + id;
+			if (!present(full)) {
+				continue;
+			}
+			ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.get(Identifier.parse(full)).orElseThrow().value());
+			p.setItemInHand(InteractionHand.MAIN_HAND, stack);
+			boolean toggles = id.equals("magnet_upgrade") || id.equals("jukebox_upgrade");
+			ctx.eq(toggles ? InteractionResult.SUCCESS.getClass() : InteractionResult.PASS.getClass(),
+				stack.use(ctx.level, p, InteractionHand.MAIN_HAND).getClass(), full + ": usarlo suelto " + (toggles ? "responde" : "no hace nada"));
+			String uso = String.join(" ", Descriptions.item(full).uso());
+			ctx.check(toggles ? uso.contains("cambia su modo") && !uso.contains("No se usa suelto") : uso.contains("No se usa suelto"),
+				full + ": el texto de uso coincide con lo observado: " + uso);
+		}
+		p.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+		ctx.eq(1, GuideBook.count(p), "el inventario sigue intacto");
+	}
+
+	private void consumeEffects(Ctx ctx) {
+		ServerPlayer p = ctx.join("guia-consumo").player();
+		InspectorGui insp = InspectorGui.open(p);
+		var gui = insp.gui();
+		String lore;
+
+		insp.select(new ItemStack(Items.MILK_BUCKET));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("Elimina todos tus efectos activos"), "la leche quita todos los efectos: " + lore);
+		insp.select(new ItemStack(Items.HONEY_BOTTLE));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("Elimina el efecto:"), "la miel quita un efecto concreto (nombrado)");
+		insp.select(new ItemStack(Items.CHORUS_FRUIT));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("Te teletransporta al azar (hasta 8 bloques)"), "la fruta de chorus teletransporta hasta 8 bloques (diametro 16)");
+		insp.select(new ItemStack(Items.BREAD));
+		ctx.eq(0, countOf(gui, Items.HONEY_BOTTLE), "un alimento normal no muestra 'Al consumirlo'");
+
+		// Farmer's Delight (solo si esta cargado): se leen por JSON, sin depender de sus clases.
+		for (var e : java.util.Map.of("farmersdelight:melon_juice", "Cura 2 puntos de vida (1 corazón)", "farmersdelight:melon_popsicle", "Apaga el fuego",
+			"farmersdelight:hot_cocoa", "Elimina un efecto negativo al azar", "farmersdelight:milk_bottle", "Elimina un efecto activo al azar").entrySet()) {
+			if (present(e.getKey())) {
+				insp.select(new ItemStack(BuiltInRegistries.ITEM.get(Identifier.parse(e.getKey())).orElseThrow().value()));
+				lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+				ctx.check(lore.contains(e.getValue()), e.getKey() + " dice '" + e.getValue() + "': " + lore);
+			}
+		}
 	}
 
 	// ---- utilidades ----
