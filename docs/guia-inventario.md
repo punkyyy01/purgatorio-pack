@@ -232,9 +232,62 @@ Tipos: **jugador** = obtenible por el jugador (etiquetas de mesa, aldeanos, boti
 | `tech/resistance/melee` | interno | 1 | Encantamiento técnico: resistencia a ataques |  |  |  |
 | `tech/resistance/projectiles` | interno | 1 | Encantamiento técnico: resistencia a ataques |  |  |  |
 
-## Efectos con nombre conocido
+## Efectos
 
-42 efectos aparecen en los ficheros de idioma (vanilla + mods). El registro real, que incluye efectos sin lang, se cruza despues con el servidor de pruebas (fase de pociones).
+**42 efectos**. **Descripciones: 42 escritas, 0 por escribir.** (Las escritas viven en `core/src/guia/resources/purgatorio_guia/efectos.json`.) Las cifras de atributos (velocidad, daño, vida...) las lee el inspector del propio juego: no se escriben.
 
-- `farmersdelight`: 2
-- `minecraft`: 40
+El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.sh guia` (incluye los efectos de todos los mods del servidor real).
+
+| id | categoria | descrita |
+|---|---|---|
+| `farmersdelight:comfort` | BENEFICIAL | si |
+| `farmersdelight:nourishment` | BENEFICIAL | si |
+| `minecraft:absorption` | BENEFICIAL | si |
+| `minecraft:bad_omen` | NEUTRAL | si |
+| `minecraft:blindness` | HARMFUL | si |
+| `minecraft:breath_of_the_nautilus` | BENEFICIAL | si |
+| `minecraft:conduit_power` | BENEFICIAL | si |
+| `minecraft:darkness` | HARMFUL | si |
+| `minecraft:dolphins_grace` | BENEFICIAL | si |
+| `minecraft:fire_resistance` | BENEFICIAL | si |
+| `minecraft:glowing` | NEUTRAL | si |
+| `minecraft:haste` | BENEFICIAL | si |
+| `minecraft:health_boost` | BENEFICIAL | si |
+| `minecraft:hero_of_the_village` | BENEFICIAL | si |
+| `minecraft:hunger` | HARMFUL | si |
+| `minecraft:infested` | HARMFUL | si |
+| `minecraft:instant_damage` | HARMFUL | si |
+| `minecraft:instant_health` | BENEFICIAL | si |
+| `minecraft:invisibility` | BENEFICIAL | si |
+| `minecraft:jump_boost` | BENEFICIAL | si |
+| `minecraft:levitation` | HARMFUL | si |
+| `minecraft:luck` | BENEFICIAL | si |
+| `minecraft:mining_fatigue` | HARMFUL | si |
+| `minecraft:nausea` | HARMFUL | si |
+| `minecraft:night_vision` | BENEFICIAL | si |
+| `minecraft:oozing` | HARMFUL | si |
+| `minecraft:poison` | HARMFUL | si |
+| `minecraft:raid_omen` | NEUTRAL | si |
+| `minecraft:regeneration` | BENEFICIAL | si |
+| `minecraft:resistance` | BENEFICIAL | si |
+| `minecraft:saturation` | BENEFICIAL | si |
+| `minecraft:slow_falling` | BENEFICIAL | si |
+| `minecraft:slowness` | HARMFUL | si |
+| `minecraft:speed` | BENEFICIAL | si |
+| `minecraft:strength` | BENEFICIAL | si |
+| `minecraft:trial_omen` | NEUTRAL | si |
+| `minecraft:unluck` | HARMFUL | si |
+| `minecraft:water_breathing` | BENEFICIAL | si |
+| `minecraft:weakness` | HARMFUL | si |
+| `minecraft:weaving` | HARMFUL | si |
+| `minecraft:wind_charged` | HARMFUL | si |
+| `minecraft:wither` | HARMFUL | si |
+
+### Pociones sin efectos (base)
+
+| pocion | descrita |
+|---|---|
+| `minecraft:awkward` | si |
+| `minecraft:mundane` | si |
+| `minecraft:thick` | si |
+| `minecraft:water` | si |

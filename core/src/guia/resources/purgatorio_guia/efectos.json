@@ -1,0 +1,184 @@
+{
+	"_formato": [
+		"Una entrada por id de efecto (minecraft:speed...). Mismos campos que encantamientos.json, donde el nivel es el nivel del efecto (I = 1):",
+		"  desc, efecto + valores, niveles; ademas 'atributos': false oculta las lineas automaticas de atributos.",
+		"  valores: {base, paso, tipo, div, tope}. tipo 'lineal' (por defecto): base + paso*(nivel-1); 'der': base >> (nivel-1) con minimo 1 (intervalos en ticks); 'izq': base << (nivel-1). Luego tope y se divide entre div (20 = ticks a segundos).",
+		"Las lineas de atributos (velocidad +20 %, daño +3...) se generan solas leyendo el juego: NO escribirlas aqui.",
+		"Las pociones base sin efectos van como 'potion:<id>' (potion:minecraft:awkward) y solo llevan 'desc'.",
+		"Las cifras de intervalos y curas estan comprobadas por GuiaSuite contra el codigo del juego."
+	],
+
+	"minecraft:speed": {
+		"desc": "Te mueves más rápido al caminar y al correr."
+	},
+	"minecraft:slowness": {
+		"desc": "Te mueves más despacio."
+	},
+	"minecraft:haste": {
+		"desc": "Rompes bloques más rápido y atacas más deprisa.",
+		"efecto": "Velocidad de minado: +{v} %",
+		"valores": { "v": { "base": 20, "paso": 20 } }
+	},
+	"minecraft:mining_fatigue": {
+		"desc": "Rompes bloques mucho más despacio y atacas más lento.",
+		"niveles": [
+			"Velocidad de minado: -70 %",
+			"Velocidad de minado: -91 %",
+			"Velocidad de minado: -99,7 %",
+			"Velocidad de minado: -99,9 %"
+		]
+	},
+	"minecraft:strength": {
+		"desc": "Aumenta el daño de tus ataques cuerpo a cuerpo."
+	},
+	"minecraft:instant_health": {
+		"desc": "Cura al instante. A los muertos vivientes (zombis, esqueletos...) les hace daño en vez de curarlos.",
+		"efecto": "Cura {v} puntos de vida ({c} corazones)",
+		"valores": { "v": { "base": 4, "tipo": "izq" }, "c": { "base": 2, "tipo": "izq" } }
+	},
+	"minecraft:instant_damage": {
+		"desc": "Hace daño al instante. A los muertos vivientes (zombis, esqueletos...) los cura.",
+		"efecto": "Hace {v} puntos de daño ({c} corazones)",
+		"valores": { "v": { "base": 6, "tipo": "izq" }, "c": { "base": 3, "tipo": "izq" } }
+	},
+	"minecraft:jump_boost": {
+		"desc": "Saltas más alto y puedes caer desde más altura sin hacerte daño."
+	},
+	"minecraft:nausea": {
+		"desc": "La pantalla se ondula y te marea. No hace daño."
+	},
+	"minecraft:regeneration": {
+		"desc": "Recuperas vida poco a poco.",
+		"efecto": "Recupera 1 vida (½ corazón) cada {s} s",
+		"valores": { "s": { "base": 50, "tipo": "der", "div": 20 } }
+	},
+	"minecraft:resistance": {
+		"desc": "Reduce casi todo el daño que recibes (no protege del vacío). Con nivel 5 o más no recibes daño.",
+		"efecto": "Reduce el daño recibido un {v} %",
+		"valores": { "v": { "base": 20, "paso": 20, "tope": 100 } }
+	},
+	"minecraft:fire_resistance": {
+		"desc": "Eres inmune al daño del fuego y de la lava."
+	},
+	"minecraft:water_breathing": {
+		"desc": "Respiras bajo el agua sin gastar aire."
+	},
+	"minecraft:invisibility": {
+		"desc": "Te vuelves invisible: no se ve tu cuerpo, pero sí tu armadura y lo que lleves en las manos. Los monstruos te detectan desde menos distancia y dejas de aparecer en la barra de localización de otros jugadores.",
+		"atributos": false
+	},
+	"minecraft:blindness": {
+		"desc": "Casi no ves nada y no puedes correr."
+	},
+	"minecraft:night_vision": {
+		"desc": "Ves con claridad en la oscuridad."
+	},
+	"minecraft:hunger": {
+		"desc": "Tu barra de hambre baja mucho más deprisa.",
+		"niveles": [
+			"Gasta 1 punto de hambre cada 40 s",
+			"Gasta 1 punto de hambre cada 20 s",
+			"Gasta 1 punto de hambre cada 13,3 s",
+			"Gasta 1 punto de hambre cada 10 s",
+			"Gasta 1 punto de hambre cada 8 s"
+		]
+	},
+	"minecraft:weakness": {
+		"desc": "Reduce el daño de tus ataques cuerpo a cuerpo."
+	},
+	"minecraft:poison": {
+		"desc": "Pierdes vida poco a poco, pero no puede matarte: te deja con ½ corazón. No afecta a los muertos vivientes.",
+		"efecto": "Pierde 1 vida (½ corazón) cada {s} s",
+		"valores": { "s": { "base": 25, "tipo": "der", "div": 20 } }
+	},
+	"minecraft:wither": {
+		"desc": "Pierdes vida poco a poco y SÍ puede matarte. Lo causan el Wither, los Esqueletos del Wither y la Rosa del Wither.",
+		"efecto": "Pierde 1 vida (½ corazón) cada {s} s",
+		"valores": { "s": { "base": 40, "tipo": "der", "div": 20 } }
+	},
+	"minecraft:health_boost": {
+		"desc": "Aumenta tu vida máxima. Al acabar el efecto vuelves a tu vida normal."
+	},
+	"minecraft:absorption": {
+		"desc": "Te da corazones amarillos extra que absorben el daño antes que tu vida. Se gastan y no se regeneran."
+	},
+	"minecraft:saturation": {
+		"desc": "Recuperas hambre y saturación al instante.",
+		"efecto": "Hambre restaurada: {v} (y saturación)",
+		"valores": { "v": { "base": 1, "paso": 1 } }
+	},
+	"minecraft:glowing": {
+		"desc": "Quedas resaltado con un contorno visible a través de los bloques: cualquiera te ve."
+	},
+	"minecraft:levitation": {
+		"desc": "Flotas hacia arriba sin poder controlarlo. Cuando acaba el efecto caes: cuidado con la altura.",
+		"efecto": "Sube {v} bloques por segundo",
+		"valores": { "v": { "base": 0.9, "paso": 0.9 } }
+	},
+	"minecraft:luck": {
+		"desc": "Mejora el botín que depende de la suerte (pesca, algunos cofres...)."
+	},
+	"minecraft:unluck": {
+		"desc": "Empeora el botín que depende de la suerte (pesca, algunos cofres...)."
+	},
+	"minecraft:slow_falling": {
+		"desc": "Caes muy despacio y no recibes daño por caída."
+	},
+	"minecraft:conduit_power": {
+		"desc": "Bajo el agua: respiras sin gastar aire, ves mejor y rompes bloques más rápido."
+	},
+	"minecraft:dolphins_grace": {
+		"desc": "Nadas mucho más rápido."
+	},
+	"minecraft:bad_omen": {
+		"desc": "Si entras en una aldea con este efecto, se convierte en Presagio de incursión y empezará una incursión (un asalto de saqueadores). Se consigue al matar al capitán de una patrulla o al beber una botella ominosa."
+	},
+	"minecraft:hero_of_the_village": {
+		"desc": "Los aldeanos te hacen descuentos y a veces te regalan objetos. Se consigue al derrotar una incursión.",
+		"efecto": "Descuento en las compras: {v} %",
+		"valores": { "v": { "base": 30, "paso": 6.25 } }
+	},
+	"minecraft:darkness": {
+		"desc": "Lo que te rodea se oscurece y se aclara en pulsos. Lo causan el Warden y los Chilladores de sculk cuando hay jugadores cerca."
+	},
+	"minecraft:trial_omen": {
+		"desc": "Si entras en una cámara de pruebas con este efecto, sus generadores se vuelven ominosos: enemigos más fuertes y mejor recompensa."
+	},
+	"minecraft:raid_omen": {
+		"desc": "Cuando termina, si estás en una aldea, empieza una incursión."
+	},
+	"minecraft:wind_charged": {
+		"desc": "Si mueres con este efecto, sueltas una ráfaga de viento que empuja a lo que tengas cerca."
+	},
+	"minecraft:weaving": {
+		"desc": "Si mueres con este efecto, tu cuerpo deja telarañas a su alrededor (solo si los mobs pueden alterar el terreno)."
+	},
+	"minecraft:oozing": {
+		"desc": "Si mueres con este efecto, salen babosas del cuerpo."
+	},
+	"minecraft:infested": {
+		"desc": "Cada vez que recibes daño hay una probabilidad de que salgan pececillos de plata de tu cuerpo."
+	},
+	"minecraft:breath_of_the_nautilus": {
+		"desc": "Respiras bajo el agua y recuperas el aire. Te lo da un Nautilo mientras lo montas."
+	},
+	"farmersdelight:nourishment": {
+		"desc": "Tu barra de hambre deja de bajar mientras dura el efecto. Solo gastas hambre cuando te estás curando de forma natural."
+	},
+	"farmersdelight:comfort": {
+		"desc": "Te cura 1 vida (½ corazón) cada 4 s mientras estés herido, aunque tengas hambre. No actúa si te queda saturación o ya tienes Regeneración."
+	},
+
+	"potion:minecraft:water": {
+		"desc": "Frasco con agua, sin efectos. Es la base de todas las pociones: con una Verruga del Nether se convierte en Poción rara."
+	},
+	"potion:minecraft:awkward": {
+		"desc": "Poción rara, sin efectos. Es la base de casi todas las pociones útiles: se le añade un ingrediente para elegir el efecto."
+	},
+	"potion:minecraft:mundane": {
+		"desc": "Poción vulgar, sin efectos. No sirve como base de ninguna otra poción."
+	},
+	"potion:minecraft:thick": {
+		"desc": "Poción densa, sin efectos. No sirve como base de ninguna otra poción."
+	}
+}

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
@@ -21,13 +22,19 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.OminousBottleAmplifier;
+import net.minecraft.world.item.component.SuspiciousStewEffects;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.AABB;
@@ -44,11 +51,57 @@ public final class GuiaSuite implements Suite {
 
 	@Override
 	public void run(Ctx ctx) {
+		dumpRegistry(ctx);
 		book(ctx);
 		bookClicks(ctx);
 		bookLeaks(ctx);
 		descriptions(ctx);
 		inspector(ctx);
+		effectDescriptions(ctx);
+		effectFormulas(ctx);
+		inspectorEffects(ctx);
+	}
+
+	/**
+	 * Vuelca los efectos y pociones REALES del servidor a purgatorio-guia-registro.json (en el directorio del servidor de
+	 * pruebas). Con FULL_PACK=1 incluye los de todos los mods; tools/inventario-guia.py lo usa para saber que describir.
+	 */
+	private void dumpRegistry(Ctx ctx) {
+		com.google.gson.JsonObject root = new com.google.gson.JsonObject();
+		com.google.gson.JsonObject effects = new com.google.gson.JsonObject();
+		net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.listElements().forEach(h -> {
+			var e = h.value();
+			com.google.gson.JsonObject o = new com.google.gson.JsonObject();
+			o.addProperty("categoria", e.getCategory().name());
+			o.addProperty("instantaneo", e.isInstantaneous());
+			o.addProperty("clave", e.getDescriptionId());
+			com.google.gson.JsonArray mods = new com.google.gson.JsonArray();
+			e.createModifiers(0, (attr, mod) -> {
+				com.google.gson.JsonObject m = new com.google.gson.JsonObject();
+				m.addProperty("atributo", attr.unwrapKey().map(k -> k.identifier().toString()).orElse("?"));
+				m.addProperty("operacion", mod.operation().name());
+				m.addProperty("cantidad_nivel1", mod.amount());
+				mods.add(m);
+			});
+			o.add("modificadores", mods);
+			effects.add(h.key().identifier().toString(), o);
+		});
+		root.add("efectos", effects);
+		com.google.gson.JsonObject potions = new com.google.gson.JsonObject();
+		net.minecraft.core.registries.BuiltInRegistries.POTION.listElements().forEach(h -> {
+			com.google.gson.JsonArray list = new com.google.gson.JsonArray();
+			for (var inst : h.value().getEffects()) {
+				list.add(inst.getEffect().unwrapKey().map(k -> k.identifier().toString()).orElse("?") + " nivel " + (inst.getAmplifier() + 1) + " " + inst.getDuration() + "t");
+			}
+			potions.add(h.key().identifier().toString(), list);
+		});
+		root.add("pociones", potions);
+		try {
+			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-registro.json"),
+				new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root), java.nio.charset.StandardCharsets.UTF_8);
+		} catch (java.io.IOException e) {
+			ctx.check(false, "no se pudo escribir el volcado del registro: " + e);
+		}
 	}
 
 	// ---- libro: darlo, mantenerlo, abrirlo ----
@@ -275,6 +328,154 @@ public final class GuiaSuite implements Suite {
 		ctx.eq(1, GuideBook.count(p), "y el libro sigue unico");
 	}
 
+	// ---- efectos: cobertura y cifras contra el codigo del juego ----
+	private void effectDescriptions(Ctx ctx) {
+		// Todo efecto que existe en el servidor tiene descripcion (si un mod nuevo anade uno, esto avisa).
+		BuiltInRegistries.MOB_EFFECT.keySet().forEach(id ->
+			ctx.check(Descriptions.effect(id.toString()) != null, "efecto sin descripcion: " + id));
+		BuiltInRegistries.POTION.listElements().forEach(h -> {
+			if (h.value().getEffects().isEmpty()) {
+				ctx.check(Descriptions.effect(Descriptions.POTION_PREFIX + h.key().identifier()) != null,
+					"pocion sin efectos y sin descripcion: " + h.key().identifier());
+			}
+		});
+		// Todo id descrito es real (un id mal escrito nunca se mostraria). Los de mods solo si el mod esta cargado.
+		for (String id : Descriptions.effectIds()) {
+			boolean potion = id.startsWith(Descriptions.POTION_PREFIX);
+			Identifier ident = Identifier.parse(potion ? id.substring(Descriptions.POTION_PREFIX.length()) : id);
+			boolean checkable = ident.getNamespace().equals("minecraft") || net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(ident.getNamespace());
+			if (checkable) {
+				boolean exists = potion ? BuiltInRegistries.POTION.containsKey(ident) : BuiltInRegistries.MOB_EFFECT.containsKey(ident);
+				ctx.check(exists, "el id descrito existe: " + id);
+			}
+			var entry = Descriptions.effect(id);
+			ctx.check(!entry.desc().isBlank(), id + ": tiene descripcion");
+			ctx.check(entry.niveles() == null || !entry.niveles().isEmpty(), id + ": 'niveles' no esta vacio");
+		}
+	}
+
+	/** Las cifras de los textos salen del codigo del propio juego, no de la memoria. */
+	private void effectFormulas(Ctx ctx) {
+		// Intervalos: cuantas veces dispara el efecto en 1200 ticks segun el juego -> segundos entre disparos.
+		record Interval(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect, String id) {
+		}
+		for (Interval i : java.util.List.of(
+			new Interval(MobEffects.REGENERATION, "minecraft:regeneration"),
+			new Interval(MobEffects.POISON, "minecraft:poison"),
+			new Interval(MobEffects.WITHER, "minecraft:wither"))) {
+			for (int amp = 0; amp < 5; amp++) {
+				int fires = 0;
+				for (int duration = 1; duration <= 1200; duration++) {
+					if (i.effect().value().shouldApplyEffectTickThisTick(duration, amp)) {
+						fires++;
+					}
+				}
+				String seconds = Text.num(1200.0 / fires / 20.0);
+				String line = Descriptions.effect(i.id()).effectAt(amp + 1);
+				ctx.check(line != null && line.contains(" " + seconds + " s"),
+					i.id() + " nivel " + (amp + 1) + ": el juego dispara cada " + seconds + " s; el texto dice '" + line + "'");
+			}
+		}
+		// Curas y danos instantaneos: se aplican de verdad a un jugador y se mide la vida.
+		ServerPlayer p = ctx.join("guia-formulas").player();
+		for (int amp = 0; amp < 3; amp++) {
+			p.setHealth(1.0F);
+			MobEffects.INSTANT_HEALTH.value().applyInstantaneousEffect(ctx.level, p, p, p, amp, 1.0);
+			double healed = p.getHealth() - 1.0F;
+			String line = Descriptions.effect("minecraft:instant_health").effectAt(amp + 1);
+			ctx.check(line.contains("Cura " + Text.num(healed) + " puntos") && line.contains("(" + Text.num(healed / 2) + " corazones)"),
+				"Salud instantanea nivel " + (amp + 1) + ": cura " + healed + " en el juego; el texto dice '" + line + "'");
+		}
+		for (int amp = 0; amp < 2; amp++) {
+			// Un jugador nuevo por medida: tras un golpe hay un enfriamiento de dano que falsearia la segunda.
+			ServerPlayer victim = ctx.join("guia-formulas-dano" + amp).player();
+			victim.setHealth(20.0F);
+			MobEffects.INSTANT_DAMAGE.value().applyInstantaneousEffect(ctx.level, victim, victim, victim, amp, 1.0);
+			double dealt = 20.0F - victim.getHealth();
+			String line = Descriptions.effect("minecraft:instant_damage").effectAt(amp + 1);
+			ctx.check(line.contains("Hace " + Text.num(dealt) + " puntos") && line.contains("(" + Text.num(dealt / 2) + " corazones)"),
+				"Dano instantaneo nivel " + (amp + 1) + ": hace " + dealt + " en el juego; el texto dice '" + line + "'");
+		}
+		p.setHealth(20.0F);
+	}
+
+	private void inspectorEffects(Ctx ctx) {
+		ServerPlayer p = ctx.join("guia-efectos").player();
+		InspectorGui insp = InspectorGui.open(p);
+		var gui = insp.gui();
+
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.SWIFTNESS));
+		String lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.eq(1, countEntries(gui), "una pocion de Velocidad muestra 1 efecto");
+		ctx.check(lore.contains("+20 %"), "Velocidad I: +20 % de velocidad (cifra del juego): " + lore);
+		ctx.check(lore.contains("Duración: 3:00") && lore.contains("Nivel 1"), "duracion 3:00 y nivel 1");
+		ctx.check(gui.getGuiElement(INSPECTOR_FIRST_ENTRY).getItemStack().is(Items.POTION), "el icono es una pocion");
+		ctx.check(!gui.getGuiElement(49).getItemStack().is(Items.OAK_SIGN), "con efectos no se muestra el cartel de catalogo");
+
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.STRONG_SWIFTNESS));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("+40 %") && lore.contains("Nivel 2") && lore.contains("Duración: 1:30"), "Velocidad II: +40 %, nivel 2, 1:30: " + lore);
+
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.HARMING));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("Efecto instantáneo") && lore.contains("Hace 6 puntos de daño") && !lore.contains("Duración"), "Dano instantaneo: sin duracion: " + lore);
+
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.TURTLE_MASTER));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.eq(2, countEntries(gui), "Maestro tortuga mezcla 2 efectos");
+		ctx.check(lore.contains("-60 %") && lore.contains("Reduce el daño recibido un 60 %"), "Lentitud IV (-60 %) y Resistencia III (60 %): " + lore);
+
+		insp.select(PotionContents.createItemStack(Items.SPLASH_POTION, Potions.POISON));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("Arrojadiza"), "la pocion arrojadiza avisa de como dura");
+		insp.select(PotionContents.createItemStack(Items.LINGERING_POTION, Potions.POISON));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("1/4"), "la persistente avisa del 1/4");
+		insp.select(PotionContents.createItemStack(Items.TIPPED_ARROW, Potions.POISON));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("1/8") && lore.contains("cada 1,25 s"), "la flecha avisa del 1/8 y el veneno dice cada 1,25 s: " + lore);
+
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.AWKWARD));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.eq(1, countEntries(gui), "una pocion rara es una entrada (sin efectos)");
+		ctx.check(lore.contains("sin efectos") && lore.contains("base"), "explica que es la base de las demas: " + lore);
+		insp.select(PotionContents.createItemStack(Items.POTION, Potions.WATER));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("Verruga"), "el frasco con agua explica como seguir");
+
+		ItemStack stew = new ItemStack(Items.SUSPICIOUS_STEW);
+		stew.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, new SuspiciousStewEffects(java.util.List.of(
+			new SuspiciousStewEffects.Entry(MobEffects.NIGHT_VISION, 100))));
+		insp.select(stew);
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("Duración: 0:05") && lore.contains("Ves con claridad"), "el estofado sospechoso muestra su efecto y 0:05: " + lore);
+
+		insp.select(new ItemStack(Items.GOLDEN_APPLE));
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(countEntries(gui) >= 2 && lore.contains("cada 1,25 s"), "la manzana dorada: Regeneracion II (cada 1,25 s) y Absorcion: " + lore);
+
+		insp.select(new ItemStack(Items.ROTTEN_FLESH));
+		ctx.check(loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY).contains("Probabilidad: 80 %"), "la carne podrida avisa de su probabilidad");
+
+		ItemStack bottle = new ItemStack(Items.OMINOUS_BOTTLE);
+		bottle.set(DataComponents.OMINOUS_BOTTLE_AMPLIFIER, new OminousBottleAmplifier(2));
+		insp.select(bottle);
+		lore = loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+		ctx.check(lore.contains("Nivel 3") && lore.contains("100:00"), "la botella ominosa da Mal presagio del nivel que lleva: " + lore);
+
+		insp.select(new ItemStack(Items.DIRT));
+		// El unico elemento de la zona es el cartel "Nada que explicar" (hueco 22): ninguna entrada inventada.
+		ctx.eq(1, countEntries(gui), "un objeto sin nada que explicar solo muestra el cartel");
+		ctx.check(gui.getGuiElement(22).getItemStack().is(Items.PAPER), "y ese elemento es el cartel (papel)");
+
+		// Un objeto con encantamientos Y efectos muestra ambos (no se pisan).
+		var registry = ctx.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		ItemStack both = new ItemStack(Items.SUSPICIOUS_STEW);
+		both.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, new SuspiciousStewEffects(java.util.List.of(
+			new SuspiciousStewEffects.Entry(MobEffects.SPEED, 100))));
+		both.enchant(registry.getOrThrow(Enchantments.MENDING), 1);
+		insp.select(both);
+		ctx.eq(2, countEntries(gui), "encantamiento y efecto conviven en la misma lista");
+		ctx.eq(1, GuideBook.count(p), "el inventario sigue intacto");
+	}
+
 	// ---- utilidades ----
 	/** Envia un clic de contenedor por el mismo camino que la red (SGUI y mixins incluidos). */
 	private static void packet(ServerPlayer p, int slot, int button, ContainerInput input) {
@@ -301,8 +502,7 @@ public final class GuiaSuite implements Suite {
 	private static int countEntries(eu.pb4.sgui.api.gui.SimpleGui gui) {
 		int n = 0;
 		for (int i = INSPECTOR_FIRST_ENTRY; i <= INSPECTOR_LAST_ENTRY; i++) {
-			var e = gui.getGuiElement(i);
-			if (e != null && e.getItemStack().is(Items.ENCHANTED_BOOK)) {
+			if (gui.getGuiElement(i) != null) {
 				n++;
 			}
 		}

@@ -18,6 +18,12 @@ public final class Text {
 		return s.replace('.', ',');
 	}
 
+	/** Duracion en ticks como "m:ss" (3600 ticks = "3:00"); los minutos no pasan a horas (6000 s = "100:00"). */
+	public static String duration(int ticks) {
+		int seconds = Math.max(0, ticks) / 20;
+		return (seconds / 60) + ":" + String.format(Locale.ROOT, "%02d", seconds % 60);
+	}
+
 	/** Parte un texto en lineas de como mucho {@code width} caracteres (los tooltips de lore no se ajustan solos). */
 	public static List<String> wrap(String text, int width) {
 		List<String> lines = new ArrayList<>();

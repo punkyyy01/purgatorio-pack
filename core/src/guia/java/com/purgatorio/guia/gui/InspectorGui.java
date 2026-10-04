@@ -1,8 +1,10 @@
 package com.purgatorio.guia.gui;
 
+import com.purgatorio.guia.inspect.EffectEntries;
 import com.purgatorio.guia.inspect.EnchantmentEntries;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
@@ -100,17 +102,24 @@ public final class InspectorGui {
 
 	private void renderEntries() {
 		EnchantmentEntries.Result result = EnchantmentEntries.of(player, inspected);
-		List<GuiElementBuilder> entries = result.entries();
+		List<GuiElementBuilder> effects = EffectEntries.of(player, inspected);
+		// Si el objeto tiene encantamientos o da efectos se explica eso; si no, el catalogo de lo que admite.
+		boolean catalog = !result.enchanted() && effects.isEmpty();
+		List<GuiElementBuilder> entries = new ArrayList<>();
+		if (result.enchanted() || catalog) {
+			entries.addAll(result.entries());
+		}
+		entries.addAll(effects);
 		int pages = Math.max(1, (entries.size() + PAGE_SIZE - 1) / PAGE_SIZE);
 		page = Math.min(page, pages - 1);
 		if (entries.isEmpty()) {
 			gui.setSlot(22, new GuiElementBuilder(Items.PAPER)
-				.setName(Ui.text("Sin encantamientos", ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD))
-				.addLoreLine(Ui.text("Este objeto no tiene encantamientos", ChatFormatting.GRAY))
-				.addLoreLine(Ui.text("y no admite ninguno.", ChatFormatting.GRAY)));
+				.setName(Ui.text("Nada que explicar", ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD))
+				.addLoreLine(Ui.text("Este objeto no tiene encantamientos ni", ChatFormatting.GRAY))
+				.addLoreLine(Ui.text("efectos, y no admite encantamientos.", ChatFormatting.GRAY)));
 			return;
 		}
-		if (!result.enchanted()) {
+		if (catalog) {
 			gui.setSlot(PAGE_INFO_SLOT, new GuiElementBuilder(Items.OAK_SIGN)
 				.setName(Ui.text("Sin encantamientos", ChatFormatting.YELLOW).withStyle(ChatFormatting.BOLD))
 				.addLoreLine(Ui.text("Estos son los que admite:", ChatFormatting.GRAY))

@@ -19,6 +19,10 @@ SERVER = os.environ.get("SERVER_DIR") or glob.glob(os.path.expanduser(
 OUT = os.path.join(REPO, "build", "guia")
 ES_VANILLA = os.path.join(REPO, "build", "i18n-cache", "mojang-es_es-26.3.json")
 DESCRIPCIONES = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "encantamientos.json")
+DESCRIPCIONES_EFECTOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "efectos.json")
+# Volcado del registro REAL de efectos y pociones (lo escribe GuiaSuite en el servidor de pruebas). Para que incluya los
+# mods del servidor real: FULL_PACK=1 tools/run-integration-tests.sh guia
+REGISTRO = os.environ.get("REGISTRO") or os.path.expanduser("~/dev/test-server/purgatorio-guia-registro.json")
 
 ENCH_RE = re.compile(r"^data/([^/]+)/enchantment/(.+)\.json$")
 TAG_RE = re.compile(r"^data/([^/]+)/tags/enchantment/(.+)\.json$")
@@ -153,7 +157,7 @@ def main():
             "etiquetas": in_tags, "descripcion_json": d.get("description"),
         })
 
-    # Efectos: solo lo que traen los lang; el registro real se cruza luego con el servidor de pruebas.
+    # Efectos: los de los ficheros de idioma + los del registro real (si hay volcado), con su categoria.
     effects = {}
     for k, v in lang.items():
         m = re.match(r"^effect\.([a-z0-9_]+)\.([a-z0-9_]+)$", k)
@@ -163,6 +167,23 @@ def main():
         m = re.match(r"^effect\.([a-z0-9_]+)\.([a-z0-9_]+)$", k)
         if m and m.group(1) != "duration":
             effects.setdefault(f"{m.group(1)}:{m.group(2)}", {"nombre_en": None, "nombre_es": v})
+
+    registry = json.load(open(REGISTRO, encoding="utf-8")) if os.path.exists(REGISTRO) else None
+    potions_base = []
+    if registry:
+        for eid, e in registry["efectos"].items():
+            effects.setdefault(eid, {"nombre_en": None, "nombre_es": None})["categoria"] = e["categoria"]
+        potions_base = sorted(pid for pid, eff in registry["pociones"].items() if not eff)
+    else:
+        print("AVISO: no hay volcado del registro (", REGISTRO, "): los efectos salen solo de los ficheros de idioma")
+    described_fx = set()
+    if os.path.exists(DESCRIPCIONES_EFECTOS):
+        described_fx = {k for k in json.load(open(DESCRIPCIONES_EFECTOS, encoding="utf-8")) if not k.startswith("_")}
+    for eid, e in effects.items():
+        e["descrita"] = eid in described_fx
+    unknown_fx = sorted(k for k in described_fx if not k.startswith("potion:") and k not in effects)
+    if unknown_fx:
+        print("AVISO: descripciones de efectos que no existen en el servidor:", unknown_fx)
 
     # Descripciones ya escritas para el inspector (las claves que empiezan por "_" son notas del formato).
     described = set()
@@ -177,12 +198,13 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     json.dump(result, open(os.path.join(OUT, "enchantments.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(effects, open(os.path.join(OUT, "effects.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    write_doc(result, effects)
+    write_doc(result, effects, potions_base, described_fx, registry is not None)
     c = collections.Counter(r["tipo"] for r in result)
-    print(f"{len(result)} encantamientos: {dict(c)}; {len(effects)} efectos con nombre")
+    pending_fx = sum(1 for e in effects.values() if not e["descrita"])
+    print(f"{len(result)} encantamientos: {dict(c)}; {len(effects)} efectos ({pending_fx} sin descripcion)")
 
 
-def write_doc(result, effects):
+def write_doc(result, effects, potions_base, described_fx, has_registry):
     by_ns = collections.defaultdict(list)
     for r in result:
         by_ns[r["id"].split(":")[0]].append(r)
@@ -209,12 +231,23 @@ def write_doc(result, effects):
             L.append(f"| `{r['id'].split(':', 1)[1]}` | {r['tipo']} | {r['max_level']} | {r['nombre_es'] or r['nombre_en'] or ''} "
                      f"| {', '.join(r['etiquetas'])} | {'si' if r['descrita'] else ('' if r['tipo'] == 'interno' else 'NO')} | {'; '.join(note)} |")
         L.append("")
-    L += ["## Efectos con nombre conocido", "",
-          f"{len(effects)} efectos aparecen en los ficheros de idioma (vanilla + mods). El registro real, que incluye "
-          "efectos sin lang, se cruza despues con el servidor de pruebas (fase de pociones).", ""]
-    ns_count = collections.Counter(k.split(":")[0] for k in effects)
-    L += [f"- `{ns}`: {n}" for ns, n in sorted(ns_count.items())]
+    done_fx = sum(1 for e in effects.values() if e["descrita"])
+    L += ["## Efectos", "",
+          f"**{len(effects)} efectos**{'' if has_registry else ' (solo los que traen los ficheros de idioma: falta el volcado del registro)'}. "
+          f"**Descripciones: {done_fx} escritas, {len(effects) - done_fx} por escribir.** "
+          "(Las escritas viven en `core/src/guia/resources/purgatorio_guia/efectos.json`.) Las cifras de atributos "
+          "(velocidad, daño, vida...) las lee el inspector del propio juego: no se escriben.", "",
+          "El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.sh guia` "
+          "(incluye los efectos de todos los mods del servidor real).", "",
+          "| id | categoria | descrita |", "|---|---|---|"]
+    for eid, e in sorted(effects.items()):
+        L.append(f"| `{eid}` | {e.get('categoria', '')} | {'si' if e['descrita'] else 'NO'} |")
     L.append("")
+    if potions_base:
+        L += ["### Pociones sin efectos (base)", "", "| pocion | descrita |", "|---|---|"]
+        for pid in potions_base:
+            L.append(f"| `{pid}` | {'si' if 'potion:' + pid in described_fx else 'NO'} |")
+        L.append("")
     open(os.path.join(REPO, "docs", "guia-inventario.md"), "w", encoding="utf-8").write("\n".join(L))
 
 

@@ -22,14 +22,30 @@ mod de pruebas (`tools/run-integration-tests.sh guia`).
   El objeto **nunca se mueve**: el inspector trabaja con una copia, así que no hay forma de perderlo.
   - Con encantamientos (puestos o guardados en un libro): una entrada por encantamiento con descripción, efecto en
     el nivel actual, nivel máximo e incompatibilidades.
-  - Sin encantamientos: lista los que admite y puede obtener el jugador (mismo criterio que el inventario: mesa,
+  - Efectos (fase 3): pociones (normales, arrojadizas, persistentes y flechas con efecto), estofado sospechoso, botella
+    ominosa y cualquier comida o consumible que aplique efectos (manzana dorada, carne podrida...). Una entrada por
+    efecto con descripción, el efecto en ese nivel, nivel y duración (o "instantáneo"), la probabilidad si no es segura y
+    un aviso cuando la duración real cambia (flecha 1/8, nube persistente 1/4, arrojadiza según la distancia). Las pociones
+    sin efectos (agua, rara, vulgar, densa) explican para qué sirven. Si un objeto tiene encantamientos **y** efectos,
+    salen los dos.
+  - Sin encantamientos ni efectos: lista los que admite y puede obtener el jugador (mismo criterio que el inventario: mesa,
     aldeanos, botín, tesoro o maldición; los internos de mods no salen). Paginado (36 por página).
   - Todo se explica: no hay objetos "secretos" (decisión de diseño; si más adelante se quiere ocultar alguno, será una
     lista explícita).
 
 ## Añadir descripciones
 
-Editar `core/src/guia/resources/purgatorio_guia/encantamientos.json` (el formato está en la clave `_formato`):
+**Efectos** (`efectos.json`, mismos campos): las cifras de atributos (velocidad +20 %, daño +3, vida +4...) **no se
+escriben**: el inspector las lee del propio juego (`MobEffect.createModifiers`), así que nunca quedan desfasadas. Solo se
+escribe `desc` y, para lo que no es un atributo, el efecto por nivel. Los `valores` admiten `tipo`: `lineal` (por
+defecto), `der` (`base >> (nivel-1)`, mínimo 1: intervalos en ticks como Regeneración, Veneno y Wither), `izq`
+(`base << (nivel-1)`: curas que se duplican), más `tope` y `div` (20 = ticks a segundos). `"atributos": false` oculta las
+líneas automáticas cuando un atributo interno no dice nada útil (p. ej. Invisibilidad). Las pociones base sin efectos
+van como `potion:<id>`. **Las cifras de intervalos y curas las verifica `GuiaSuite` contra el código del juego**
+(`shouldApplyEffectTickThisTick` y aplicando el efecto a un jugador): si se cambia una fórmula mal, la prueba falla.
+Un efecto nuevo de un mod sin descripción también hace fallar la suite hasta que se describa.
+
+**Encantamientos:** editar `core/src/guia/resources/purgatorio_guia/encantamientos.json` (el formato está en la clave `_formato`):
 
 ```json
 "minecraft:sharpness": {
@@ -44,7 +60,9 @@ Editar `core/src/guia/resources/purgatorio_guia/encantamientos.json` (el formato
 mod o de vanilla) en vez de fiarse de la wiki; la suite valida que cada id existe y que `niveles` tiene un texto por nivel.
 
 Lo que no esté descrito se muestra como "Sin descripción todavía" con su id. `python3 tools/inventario-guia.py`
-regenera `docs/guia-inventario.md` con lo que falta (ahora 4 de 147).
+regenera `docs/guia-inventario.md` con lo que falta (encantamientos: 4 de 147; efectos: 42 de 42). Para que el
+inventario de efectos incluya los de todos los mods, antes: `FULL_PACK=1 tools/run-integration-tests.sh guia` (vuelca el
+registro real a `~/dev/test-server/purgatorio-guia-registro.json`).
 
 ## Desplegar en el servidor real
 
@@ -56,5 +74,6 @@ Los jugadores que ya estén dentro reciben el libro en menos de medio segundo; l
 
 ## Pendiente (fases siguientes)
 
-Pociones y efectos (cruzar con el registro real: solo hay 42 efectos con nombre en los ficheros de idioma),
-armaduras/armas por atributos, ítems especiales a mano, y las 143 descripciones de encantamientos.
+Armaduras/armas/herramientas por atributos (fase 4), ítems especiales a mano (fase 5; p. ej. la miel que cura el
+veneno, que hoy no se explica porque quita efectos en vez de darlos), y las 143 descripciones de encantamientos.
+Tampoco se explica aún cómo se elabora cada poción.
