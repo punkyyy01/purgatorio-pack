@@ -73,6 +73,37 @@ def compile_entrypoint():
     return os.path.join(work, "purgatorio", "es", "EsMod.class")
 
 
+def override_literal_enchantments(mine):
+    """Encantamientos cuyo nombre esta escrito como texto literal en ingles (no traducible por lang): se reescribe
+    el JSON con description = {translate, fallback}. El datapack de zz_purgatorio_es va el ultimo y gana."""
+    names = mine.get(("assets", "zz_ench"), {})
+    done = skipped = 0
+    for jar in sorted(glob.glob(os.path.join(MODS_DIR, "*.jar"))):
+        if os.path.basename(jar).startswith(SKIP_JARS):
+            continue
+        z = zipfile.ZipFile(jar)
+        for name in z.namelist():
+            m = re.match(r"^data/([^/]+)/enchantment/(.+)\.json$", name)
+            if not m:
+                continue
+            d = json.loads(z.read(name))
+            desc = d.get("description")
+            text = desc if isinstance(desc, str) else desc.get("text") if isinstance(desc, dict) and "translate" not in desc else None
+            if text is None:
+                continue
+            key = f"zz_ench.enchantment.{m.group(1)}.{m.group(2).replace('/', '.')}"
+            if key not in names:
+                skipped += 1
+                print(f"  encantamiento sin traducir: {m.group(1)}:{m.group(2)} ({text})")
+                continue
+            d["description"] = {"translate": key, "fallback": text}
+            p = os.path.join(OUT, name)
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            json.dump(d, open(p, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            done += 1
+    print(f"i18n: {done} encantamientos reescritos con nombre en espanol, {skipped} sin traduccion")
+
+
 def build_mod_jar():
     """Mod minimo `zz_purgatorio_es`: Fabric aplica los idiomas de los mods en orden alfabetico de id, asi que
     el nuestro tiene que ser el ULTIMO para ganar a los en_us de los demas (traducciones del lado servidor de
@@ -128,6 +159,14 @@ def main():
             with open(p, "w", encoding="utf-8") as f:
                 json.dump(d, f, ensure_ascii=False, indent=1)
         stats.append((kind, ns, len(base), len(missing)))
+    for (kind, ns), d in sorted(mine.items()):          # claves nuestras que ningun mod trae (p. ej. zz_ench)
+        if (kind, ns) not in en and not any(k[1] == ns for k in en):
+            for kd in ("assets", "data"):
+                for lang in ("en_us", "es_es"):
+                    p = os.path.join(OUT, kd, ns, "lang", f"{lang}.json")
+                    os.makedirs(os.path.dirname(p), exist_ok=True)
+                    json.dump(d, open(p, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    override_literal_enchantments(mine)
     build_mod_jar()
     print(f"i18n: {len(stats)} espacios de nombres -> {os.path.relpath(OUT, REPO)}")
     for kind, ns, n, miss in stats:
