@@ -32,6 +32,20 @@ public final class SpecialEntries {
 		return List.of(b);
 	}
 
+	/** Ficha de un objeto especial para la Guia del servidor: el propio objeto con su descripcion; null si no esta descrito. */
+	public static GuiElementBuilder card(ItemStack stack) {
+		Descriptions.ItemInfo info = Descriptions.item(BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+		if (info == null) {
+			return null;
+		}
+		GuiElementBuilder b = new GuiElementBuilder(stack.copy()).hideDefaultTooltip()
+			.setName(stack.getHoverName().copy().withStyle(ChatFormatting.GOLD).withStyle(s -> s.withBold(true).withItalic(false)));
+		Text.wrap(info.desc(), WRAP).forEach(l -> b.addLoreLine(Ui.text(l, ChatFormatting.GRAY)));
+		section(b, "Cómo se usa", info.uso());
+		section(b, "Cómo se consigue", info.consigue());
+		return b;
+	}
+
 	private static void section(GuiElementBuilder b, String title, List<String> lines) {
 		if (lines.isEmpty()) {
 			return;

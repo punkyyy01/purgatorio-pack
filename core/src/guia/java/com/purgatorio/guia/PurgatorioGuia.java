@@ -1,8 +1,9 @@
 package com.purgatorio.guia;
 
 import com.purgatorio.guia.book.GuideBookEvents;
-import com.purgatorio.guia.gui.InspectorGui;
+import com.purgatorio.guia.gui.HubGui;
 import com.purgatorio.guia.inspect.Descriptions;
+import com.purgatorio.guia.inspect.Topics;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.Commands;
@@ -17,11 +18,12 @@ public final class PurgatorioGuia implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Descriptions.load();
+		Topics.load();
 		GuideBookEvents.register();
 		// /guia: abre la guia aunque no se tenga el libro a mano.
 		CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, environment) ->
 			dispatcher.register(Commands.literal("guia").executes(c -> {
-				InspectorGui.open(c.getSource().getPlayerOrException());
+				HubGui.open(c.getSource().getPlayerOrException());
 				return 1;
 			})));
 		LOGGER.info("Purgatorio Guia cargada");

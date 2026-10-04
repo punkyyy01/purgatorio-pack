@@ -142,6 +142,79 @@ public final class EffectEntries {
 		return b;
 	}
 
+	/** Ficha de catalogo de un efecto: descripcion y su efecto por nivel (texto escrito y cifras de atributos del juego). */
+	public static GuiElementBuilder catalogEntry(Holder<MobEffect> holder) {
+		MobEffect effect = holder.value();
+		ItemStack icon = new ItemStack(Items.POTION);
+		icon.set(DataComponents.POTION_CONTENTS, new PotionContents(Optional.empty(), Optional.of(effect.getColor()), List.of(), Optional.empty()));
+		MutableComponent name = effect.getDisplayName().copy().withStyle(effect.getCategory().getTooltipFormatting())
+			.withStyle(s -> s.withBold(true).withItalic(false));
+		GuiElementBuilder b = new GuiElementBuilder(icon).hideDefaultTooltip().setName(name);
+		String id = idOf(holder);
+		Descriptions.Entry d = Descriptions.effect(id);
+		if (d == null) {
+			b.addLoreLine(Ui.text("Sin descripción todavía.", ChatFormatting.DARK_GRAY));
+			b.addLoreLine(Ui.text(id, ChatFormatting.DARK_GRAY));
+		} else {
+			Text.wrap(d.desc(), WRAP).forEach(l -> b.addLoreLine(Ui.text(l, ChatFormatting.GRAY)));
+		}
+		boolean header = false;
+		for (int level = 1; level <= 3; level++) {
+			final int lvl = level;
+			String line = d == null ? null : d.effectAt(lvl);
+			List<Component> attrs = new ArrayList<>();
+			if (d == null || d.atributos()) {
+				effect.createModifiers(lvl - 1, (attribute, modifier) -> attrs.add(attributeLine(attribute, modifier)));
+			}
+			if (line == null && attrs.isEmpty()) {
+				continue;
+			}
+			if (!header) {
+				b.addLoreLine(Ui.blank());
+				b.addLoreLine(Ui.text("Por nivel:", ChatFormatting.AQUA));
+				header = true;
+			}
+			if (line != null) {
+				b.addLoreLine(Ui.text(Text.roman(lvl) + ": " + line, ChatFormatting.YELLOW));
+			}
+			for (Component attr : attrs) {
+				b.addLoreLine(Component.empty().append(Ui.text(Text.roman(lvl) + ": ", ChatFormatting.YELLOW)).append(attr).withStyle(s -> s.withItalic(false)));
+			}
+		}
+		if (effect.isInstantaneous()) {
+			b.addLoreLine(Ui.blank());
+			b.addLoreLine(Ui.text("Efecto instantáneo", ChatFormatting.AQUA));
+		}
+		return b;
+	}
+
+	/** Ficha de catalogo de una pocion: sus efectos con nivel y duracion; las bases sin efectos explican para que sirven. */
+	public static GuiElementBuilder potionCatalogEntry(Holder<Potion> potion) {
+		PotionContents contents = new PotionContents(potion);
+		ItemStack icon = new ItemStack(Items.POTION);
+		icon.set(DataComponents.POTION_CONTENTS, contents);
+		GuiElementBuilder b = new GuiElementBuilder(icon).hideDefaultTooltip()
+			.setName(contents.getName("item.minecraft.potion.effect.").copy().withStyle(ChatFormatting.AQUA).withStyle(s -> s.withBold(true).withItalic(false)));
+		boolean any = false;
+		for (MobEffectInstance instance : contents.getAllEffects()) {
+			any = true;
+			String time = instance.getEffect().value().isInstantaneous() ? "instantáneo" : Text.duration(instance.getDuration());
+			b.addLoreLine(Component.empty().append(Ui.text("• ", ChatFormatting.YELLOW))
+				.append(PotionContents.getPotionDescription(instance.getEffect(), instance.getAmplifier()).withStyle(instance.getEffect().value().getCategory().getTooltipFormatting()))
+				.append(Ui.text(" · " + time, ChatFormatting.GRAY)).withStyle(s -> s.withItalic(false)));
+		}
+		if (!any) {
+			String id = potion.unwrapKey().map(k -> k.identifier().toString()).orElse("?");
+			Descriptions.Entry d = Descriptions.effect(Descriptions.POTION_PREFIX + id);
+			if (d == null) {
+				b.addLoreLine(Ui.text("Sin efectos.", ChatFormatting.GRAY));
+			} else {
+				Text.wrap(d.desc(), WRAP).forEach(l -> b.addLoreLine(Ui.text(l, ChatFormatting.GRAY)));
+			}
+		}
+		return b;
+	}
+
 	/** "Velocidad de movimiento: +20 %": el nombre lo traduce el cliente; la cifra sale del propio juego. */
 	static Component attributeLine(Holder<Attribute> attribute, AttributeModifier modifier) {
 		boolean percent = modifier.operation() != AttributeModifier.Operation.ADD_VALUE;

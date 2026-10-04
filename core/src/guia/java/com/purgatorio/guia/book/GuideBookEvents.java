@@ -1,6 +1,6 @@
 package com.purgatorio.guia.book;
 
-import com.purgatorio.guia.gui.InspectorGui;
+import com.purgatorio.guia.gui.HubGui;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -45,7 +45,7 @@ public final class GuideBookEvents {
 				return InteractionResult.PASS;
 			}
 			if (player instanceof ServerPlayer serverPlayer) {
-				InspectorGui.open(serverPlayer);
+				HubGui.open(serverPlayer);
 			}
 			return InteractionResult.SUCCESS;
 		});

@@ -1,0 +1,165 @@
+{
+	"_formato": [
+		"Temas de la Guia del servidor. Cada tema: {id, titulo, icono (id de objeto), requiere (espacio de nombres del mod; el tema solo sale si esta cargado), resumen, parrafos:[{titulo,texto}], objetos:[ids]}.",
+		"REGLA: solo se escribe lo verificado (ver objetos.json). Los objetos salen con su ficha de objetos.json."
+	],
+	"temas": [
+		{
+			"id": "mochilas",
+			"titulo": "Mochilas",
+			"icono": "serverbackpacks:medium",
+			"requiere": "serverbackpacks",
+			"resumen": "Tres tamaños, de Ender, global y de lava, y sus cinco módulos.",
+			"parrafos": [
+				{
+					"titulo": "Cómo se usan",
+					"texto": "Clic derecho con la mochila en la mano la abre. Hay tres tamaños: pequeña (9 huecos), mediana (18) y grande (27). Cada una se mejora a la siguiente con una receta que lleva la anterior."
+				},
+				{
+					"titulo": "Colores",
+					"texto": "Las mochilas pequeñas, medianas y grandes se pueden teñir de 16 colores."
+				},
+				{
+					"titulo": "Módulos",
+					"texto": "Cinco módulos se añaden a una mochila con una receta de mejora: aspiración (recoge los objetos sueltos cercanos), vacío (elimina los objetos sueltos cercanos), tocadiscos, fabricación y cortapiedras."
+				},
+				{
+					"titulo": "Ender, Global y Lava",
+					"texto": "La mochila de Ender abre tu propio cofre de Ender. La Global tiene 54 huecos. La de Lava tiene 18 y lo que guardas en ella acaba quemándose."
+				},
+				{
+					"titulo": "Capacidad",
+					"texto": "El encantamiento Capacidad no cambia el tamaño de las mochilas en este servidor."
+				}
+			],
+			"objetos": [
+				"serverbackpacks:small",
+				"serverbackpacks:medium",
+				"serverbackpacks:large",
+				"serverbackpacks:ender",
+				"serverbackpacks:global",
+				"serverbackpacks:lava_backpack",
+				"serverbackpacks:magnet_upgrade",
+				"serverbackpacks:void_upgrade",
+				"serverbackpacks:jukebox_upgrade",
+				"serverbackpacks:crafting_upgrade",
+				"serverbackpacks:stonecutter_upgrade"
+			]
+		},
+		{
+			"id": "tumbas",
+			"titulo": "Tumbas",
+			"icono": "universal_graves:grave_compass",
+			"requiere": "universal_graves",
+			"resumen": "Qué pasa con tus objetos y tu experiencia al morir.",
+			"parrafos": [
+				{
+					"titulo": "Al morir",
+					"texto": "Se crea una tumba con tus objetos y el 100 % de tu experiencia. Durante un tiempo solo tú puedes abrirla; pasado ese tiempo, cualquiera puede. La tumba no desaparece sola."
+				},
+				{
+					"titulo": "La brújula de tumba",
+					"texto": "Te la da tu tumba al morir. Sirve para encontrarla y gestionarla: llevarte todos los objetos, mover la tumba hasta ti o romperla."
+				}
+			],
+			"objetos": [
+				"universal_graves:grave_compass"
+			]
+		},
+		{
+			"id": "piedras_de_viaje",
+			"titulo": "Piedras de viaje",
+			"icono": "sswaystones:waystone",
+			"requiere": "sswaystones",
+			"resumen": "Puntos de teletransporte: cómo se descubren, qué cuestan y quién puede usarlas.",
+			"parrafos": [
+				{
+					"titulo": "Cómo funcionan",
+					"texto": "Cuando descubres una piedra de viaje queda en tu lista y puedes teletransportarte a ella desde otra piedra de viaje. Puedes cambiarle el nombre y el icono y elegir quién puede usarla: solo tú, tu equipo o todos."
+				},
+				{
+					"titulo": "Coste",
+					"texto": "Viajar dentro de la misma dimensión es gratis. Cambiar de dimensión cuesta 1 nivel de experiencia. No hay límite de piedras por jugador ni enfriamiento tras un combate."
+				},
+				{
+					"titulo": "Dónde hay",
+					"texto": "Hay piedras de viaje en las aldeas."
+				}
+			],
+			"objetos": [
+				"sswaystones:waystone",
+				"sswaystones:portable_waystone"
+			]
+		},
+		{
+			"id": "cofres_de_botin",
+			"titulo": "Cofres de botín",
+			"icono": "lootr:chest",
+			"requiere": "lootr",
+			"resumen": "Cada jugador encuentra su propio botín.",
+			"parrafos": [
+				{
+					"titulo": "Botín individual",
+					"texto": "En los cofres de botín (cofres, barriles y otros contenedores) cada jugador encuentra su propio contenido: lo que saca otro jugador no te lo quita a ti."
+				},
+				{
+					"titulo": "Se convierten solos",
+					"texto": "Los cofres de las estructuras del mundo se convierten en cofres de botín automáticamente."
+				}
+			],
+			"objetos": []
+		},
+		{
+			"id": "llaves_de_elytros",
+			"titulo": "Élitros de las naves del End",
+			"icono": "vaulted-end:elytra_key",
+			"requiere": "vaulted-end",
+			"resumen": "Cómo conseguir los élitros que guardan las naves del End.",
+			"parrafos": [
+				{
+					"titulo": "La cámara",
+					"texto": "Las naves del End tienen una cámara que guarda unos élitros y se abre con una llave de élitros."
+				},
+				{
+					"titulo": "Las llaves",
+					"texto": "La llave la suelta el generador de pruebas de shulkers de la nave. El generador ominoso da además la llave ominosa, para la cámara ominosa."
+				}
+			],
+			"objetos": [
+				"vaulted-end:elytra_key",
+				"vaulted-end:ominous_elytra_key"
+			]
+		},
+		{
+			"id": "illager_expansion",
+			"titulo": "Expansión de Illagers",
+			"icono": "illagerexp:hallowed_gem",
+			"requiere": "illagerexp",
+			"resumen": "Magia, platino y esencia: de dónde sale cada material y para qué sirve.",
+			"parrafos": [
+				{
+					"titulo": "Magia",
+					"texto": "El polvo inusual (lo sueltan los hechiceros) y el polvo ilusorio (aparece en la torre del ilusionista) sirven para fabricar la gema sagrada, que a su vez se usa para el cuerno de la visión."
+				},
+				{
+					"titulo": "Platino",
+					"texto": "El inquisidor suelta trozos de platino; con ellos se fabrican láminas de platino que, junto a la plantilla de platino, mejoran el equipo de netherita a netherita infundida con platino."
+				},
+				{
+					"titulo": "Esencia",
+					"texto": "El Evocador mayor suelta esencia primigenia, que sirve para fabricar la mesa de imbuición."
+				}
+			],
+			"objetos": [
+				"illagerexp:horn_of_sight",
+				"illagerexp:illusionary_dust",
+				"illagerexp:unusual_dust",
+				"illagerexp:hallowed_gem",
+				"illagerexp:primal_essence",
+				"illagerexp:platinum_chunk",
+				"illagerexp:platinum_sheet",
+				"illagerexp:platinum_upgrade_template"
+			]
+		}
+	]
+}

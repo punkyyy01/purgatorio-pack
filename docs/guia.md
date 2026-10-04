@@ -18,6 +18,18 @@ mod de pruebas (`tools/run-integration-tests.sh guia`).
   - Un libro que llegue a ser objeto suelto se elimina; antes de morir se retira (no cae ni entra en tumbas).
   - Cada 10 ticks `GuideBook.ensure` repone el libro si falta y quita duplicados (creativo, comandos, otros mods).
   - Si el inventario está lleno no se desplaza nada: se reintenta (y `/guia` funciona sin libro).
+- **El menú principal** (lo abre el libro y `/guia`): cuatro secciones.
+  - **Inspector de objetos** (el de siempre, con botón de volver).
+  - **Catálogo de encantamientos:** los 147 descritos, con lo que hacen por nivel e incompatibilidades. Filtros (clic = siguiente,
+    clic derecho = anterior): tipo de objeto (espadas, hachas, herramientas, arcos, ballestas, tridentes, mazas, lanzas, las
+    cuatro piezas de armadura, élitros, escudos, cañas), origen (vanilla o el mod) y maldiciones. Paginado de 36 en 36.
+  - **Efectos y pociones:** modo *Efectos* (los 42, filtrables por beneficiosos/perjudiciales/neutros, con lo que hacen por
+    nivel) y modo *Pociones* (las 49, con sus efectos y duración; las bases sin efectos explican para qué sirven).
+  - **Guía del servidor:** temas escritos en `guia_servidor.json` (mochilas, tumbas, piedras de viaje, cofres de botín, élitros
+    de las naves del End, Expansión de Illagers). Cada tema muestra sus párrafos y, debajo, las fichas de los objetos de los que
+    habla (las de `objetos.json`). Un tema solo sale si su mod está cargado (`requiere`).
+  Los filtros llevan **etiqueta y condición juntas** (`PagedGui.Option`), así lo que se ve nunca se desincroniza de lo que
+  filtra; `GuiaSuite` comprueba ambas.
 - **El inspector** (cofre doble): abajo se refleja el inventario del jugador; un clic en un objeto lo elige.
   El objeto **nunca se mueve**: el inspector trabaja con una copia, así que no hay forma de perderlo.
   - Con encantamientos (puestos o guardados en un libro): una entrada por encantamiento con descripción, efecto en
@@ -47,6 +59,9 @@ mod de pruebas (`tools/run-integration-tests.sh guia`).
     lista explícita).
 
 ## Añadir descripciones
+
+**Guía del servidor** (`guia_servidor.json`): `{id, titulo, icono, requiere, resumen, parrafos: [{titulo, texto}], objetos: [ids]}`.
+Misma regla que `objetos.json`: solo lo verificado; los tamaños de las mochilas del tema los comprueba la suite.
 
 **Efectos** (`efectos.json`, mismos campos): las cifras de atributos (velocidad +20 %, daño +3, vida +4...) **no se
 escriben**: el inspector las lee del propio juego (`MobEffect.createModifiers`), así que nunca quedan desfasadas. Solo se
