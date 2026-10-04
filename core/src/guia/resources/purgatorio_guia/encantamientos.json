@@ -500,5 +500,251 @@
 				"paso": 2
 			}
 		}
+	},
+	"enchantments:attack_speed": {
+		"desc": "Espada: golpeas muchísimo más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 50,
+				"paso": 600
+			}
+		}
+	},
+	"enchantments:big_foot": {
+		"desc": "Botas: subes escalones mucho más altos sin saltar.",
+		"niveles": [
+			"Altura de escalón: 1,2 bloques (normal: 0,6)",
+			"Altura de escalón: 2,1 bloques (normal: 0,6)",
+			"Altura de escalón: 3 bloques (normal: 0,6)"
+		]
+	},
+	"enchantments:block_reach": {
+		"desc": "Solo en el casco de tortuga: te permite romper y colocar bloques desde mucho más lejos.",
+		"efecto": "Alcance de bloques: +{v} % (normal: 4,5 bloques)",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:burning_protection": {
+		"desc": "Armadura: dejas de arder del todo; el tiempo en llamas se reduce a cero."
+	},
+	"enchantments:burst": {
+		"desc": "Lanza: golpeas más rápido.",
+		"efecto": "Velocidad de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 50,
+				"paso": 50
+			}
+		}
+	},
+	"enchantments:curse_of_decaying": {
+		"desc": "Maldición: el objeto se gasta muchísimo más deprisa. Cada uso gasta 21 de durabilidad en vez de 1 (201 si además tiene Reparación)."
+	},
+	"enchantments:curse_of_giantism": {
+		"desc": "Maldición: armadura que te hace un 30 % más grande."
+	},
+	"enchantments:curse_of_smallism": {
+		"desc": "Maldición: armadura que te hace un 22 % más pequeño."
+	},
+	"enchantments:dolphins_grace": {
+		"desc": "Botas: mientras te mueves tienes Gracia del delfín, que te hace nadar más rápido.",
+		"niveles": [
+			"Gracia del delfín I",
+			"Gracia del delfín III",
+			"Gracia del delfín V"
+		]
+	},
+	"enchantments:entity_reach": {
+		"desc": "Solo en el casco de tortuga: aumenta mucho tu alcance para golpear criaturas.",
+		"efecto": "Alcance de ataque: +{v} % (normal: 3 bloques)",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:evoking": {
+		"desc": "Cada golpe invoca colmillos de Evocador que muerden al enemigo."
+	},
+	"enchantments:falling_wings": {
+		"desc": "Botas: puedes caer desde un poco más alto sin hacerte daño.",
+		"niveles": [
+			"Caída segura: 3,24 bloques (normal: 3)",
+			"Caída segura: 4,44 bloques (normal: 3)",
+			"Caída segura: 5,64 bloques (normal: 3)"
+		]
+	},
+	"enchantments:frozen": {
+		"desc": "Al golpear ralentiza al enemigo con una Lentitud fuerte (de nivel III a VII al azar).",
+		"niveles": [
+			"Lentitud III-VII durante 3 s",
+			"Lentitud III-VII durante 3 a 8 s",
+			"Lentitud III-VII durante 3 a 13 s"
+		]
+	},
+	"enchantments:glow": {
+		"desc": "Al golpear hace brillar al enemigo: se ve a través de los bloques.",
+		"niveles": [
+			"Brilla durante 5 s",
+			"Brilla durante 5 a 10 s",
+			"Brilla durante 5 a 15 s"
+		]
+	},
+	"enchantments:gravity": {
+		"desc": "Armadura: pesas menos y caes más despacio.",
+		"efecto": "La gravedad te afecta un {v} % menos",
+		"valores": {
+			"v": {
+				"base": 17,
+				"paso": 0
+			}
+		}
+	},
+	"enchantments:harvesting_touch": {
+		"desc": "Al romper un cultivo maduro (trigo, zanahorias, patatas o remolacha) cosechas también los maduros de alrededor (3×3) y se vuelven a plantar solos."
+	},
+	"enchantments:haste": {
+		"desc": "Herramienta: rompes bloques muchísimo más rápido.",
+		"efecto": "Velocidad de minado: ×{v}",
+		"valores": {
+			"v": {
+				"base": 3,
+				"paso": 2
+			}
+		}
+	},
+	"enchantments:healthy": {
+		"desc": "Armadura: aumenta un poco tu vida máxima.",
+		"niveles": [
+			"Vida máxima: +0,4 puntos (2 %)",
+			"Vida máxima: +1 punto (5 %)",
+			"Vida máxima: +1,6 puntos (8 %)"
+		]
+	},
+	"enchantments:invisibility": {
+		"desc": "Al golpear te vuelves invisible un rato.",
+		"niveles": [
+			"Invisible durante 5 a 10 s",
+			"Invisible durante 5 a 15 s",
+			"Invisible durante 5 a 20 s"
+		]
+	},
+	"enchantments:jump": {
+		"desc": "Botas: saltas más alto.",
+		"efecto": "Fuerza de salto: +{v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:knockback_protection": {
+		"desc": "Armadura: debería reducir el empuje que recibes, pero casi no hace nada: sin netherita no cambia nada y con ella solo suma una milésima.",
+		"efecto": "Con netherita: +{v} % de resistencia al empuje (con otras armaduras, nada)",
+		"valores": {
+			"v": {
+				"base": 0.1,
+				"paso": 0.2
+			}
+		}
+	},
+	"enchantments:lava_walker": {
+		"desc": "Botas: al caminar sobre lava la convierte en obsidiana a tu alrededor (3×3). La obsidiana se queda para siempre."
+	},
+	"enchantments:lifesteal": {
+		"desc": "Al golpear recibes Regeneración durante 1 s; a más nivel, más fuerte.",
+		"niveles": [
+			"Regeneración I durante 1 s (no llega a curar nada)",
+			"Regeneración III durante 1 s (cura 1 vida por golpe)",
+			"Regeneración V durante 1 s (cura 6 vidas por golpe)"
+		]
+	},
+	"enchantments:shulker": {
+		"desc": "Arco: al impactar levita al enemigo (Levitación de nivel III a V al azar).",
+		"niveles": [
+			"Levita durante 1 a 3 s",
+			"Levita durante 3 a 5 s",
+			"Levita durante 3 a 9 s"
+		]
+	},
+	"enchantments:smelting_touch": {
+		"desc": "Herramienta: mientras la usas, el mineral crudo (hierro, cobre y oro) que haya suelto a menos de 5 bloques de ti se convierte en lingotes."
+	},
+	"enchantments:speed": {
+		"desc": "Botas: caminas y corres más rápido.",
+		"efecto": "Velocidad de movimiento: +{v} %",
+		"valores": {
+			"v": {
+				"base": 20,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:spider": {
+		"desc": "Al golpear hay una probabilidad de dejar una telaraña sobre el enemigo.",
+		"efecto": "Probabilidad de telaraña: {v} %",
+		"valores": {
+			"v": {
+				"base": 10,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:strength": {
+		"desc": "Arma: aumenta el daño de tus golpes (sobre el daño total del arma, no solo el básico).",
+		"efecto": "Daño de ataque: +{v} %",
+		"valores": {
+			"v": {
+				"base": 40,
+				"paso": 30
+			}
+		}
+	},
+	"enchantments:telekinesis": {
+		"desc": "Herramienta: al usarla (por ejemplo, al romper un bloque), todos los objetos sueltos a menos de 10 bloques vuelan hasta ti."
+	},
+	"enchantments:thunderbolt": {
+		"desc": "Maza: si hay tormenta eléctrica, cada golpe invoca un rayo sobre el enemigo."
+	},
+	"enchantments:vanquish": {
+		"desc": "Arma: hace más daño a los jefes (Wither, Warden, Ender Dragon y Guardián anciano).",
+		"efecto": "Daño extra a jefes: +{v}",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			}
+		}
+	},
+	"enchantments:villager_healer": {
+		"desc": "Con una esmeralda encantada: al golpear aplica Debilidad (nivel III a V al azar, de 1 a 30 s) al objetivo. Es lo que necesita un zombi aldeano para poder curarse con una manzana dorada."
+	},
+	"enchantments:vision": {
+		"desc": "Armadura: la cámara en tercera persona se aleja de ti.",
+		"efecto": "Distancia de la cámara: +{v} %",
+		"valores": {
+			"v": {
+				"base": 5,
+				"paso": 10
+			}
+		}
+	},
+	"enchantments:void_step": {
+		"desc": "Peto: si caes por debajo de Y -70 (al vacío), te teletransporta a un punto al azar a menos de 350 bloques del centro del mundo y te protege del daño 1 s. Cada vez gasta la mitad de la durabilidad máxima del peto, y si no le queda, se rompe."
+	},
+	"enchantments:wither": {
+		"desc": "Al golpear aplica Wither al enemigo (nivel III a V al azar), que le quita vida poco a poco.",
+		"niveles": [
+			"Wither durante 3 a 5 s",
+			"Wither durante 3 a 10 s",
+			"Wither durante 3 a 15 s"
+		]
 	}
 }

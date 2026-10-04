@@ -58,6 +58,8 @@ public final class GuiaSuite implements Suite {
 	public void run(Ctx ctx) {
 		dumpRegistry(ctx);
 		observeBehavior(ctx);
+		GuiaObserve.run(ctx);
+		GuiaObserve.verify(ctx);
 		book(ctx);
 		bookClicks(ctx);
 		bookLeaks(ctx);
