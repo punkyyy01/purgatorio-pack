@@ -146,7 +146,7 @@ public final class EffectEntries {
 	static Component attributeLine(Holder<Attribute> attribute, AttributeModifier modifier) {
 		boolean percent = modifier.operation() != AttributeModifier.Operation.ADD_VALUE;
 		double amount = modifier.amount();
-		String value = (amount >= 0 ? "+" : "-") + Text.num(Math.abs(percent ? amount * 100.0 : amount)) + (percent ? " %" : "");
+		String value = Text.signed(amount, percent);
 		return Component.empty()
 			.append(Component.translatable(attribute.value().getDescriptionId()).withStyle(ChatFormatting.YELLOW))
 			.append(Component.literal(": " + value).withStyle(ChatFormatting.YELLOW))

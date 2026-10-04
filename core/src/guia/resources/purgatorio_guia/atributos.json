@@ -1,0 +1,128 @@
+{
+	"_formato": [
+		"Una entrada por id de atributo (minecraft:armor...). Solo 'desc': que significa el atributo.",
+		"Las cifras (valor normal, valor del objeto, total) las calcula el inspector leyendo el juego: NO escribirlas aqui.",
+		"Hay entradas para los 40 atributos del juego porque un objeto puede llevar cualquiera (p. ej. los de RPG Loot)."
+	],
+
+	"minecraft:armor": {
+		"desc": "Reduce el daño que recibes: hasta un 4 % por punto en golpes pequeños (menos en golpes muy fuertes; tope total 80 %). No reduce el daño de caída, ahogamiento, hambre, magia ni veneno, Wither, estar ardiendo, congelación ni el vacío."
+	},
+	"minecraft:armor_toughness": {
+		"desc": "Con los golpes muy fuertes la armadura pierde eficacia; la dureza compensa esa pérdida. Cuanta más dureza, más armadura conservas contra ataques potentes."
+	},
+	"minecraft:attack_damage": {
+		"desc": "Daño de tus golpes cuerpo a cuerpo, sin contar encantamientos ni efectos. 2 puntos = 1 corazón."
+	},
+	"minecraft:attack_speed": {
+		"desc": "Golpes por segundo con la carga completa. Si golpeas antes de que cargue del todo, haces menos daño."
+	},
+	"minecraft:attack_knockback": {
+		"desc": "Empuja más lejos a quien golpeas."
+	},
+	"minecraft:knockback_resistance": {
+		"desc": "Reduce lo que te empujan los golpes. Cada 0,1 son un 10 % menos de empuje; con 1 no te mueven nada."
+	},
+	"minecraft:explosion_knockback_resistance": {
+		"desc": "Reduce lo que te empujan las explosiones. Con 1 no te mueven nada."
+	},
+	"minecraft:max_health": {
+		"desc": "Tu vida máxima. 2 puntos = 1 corazón."
+	},
+	"minecraft:max_absorption": {
+		"desc": "Cuántos corazones amarillos de absorción puedes tener a la vez."
+	},
+	"minecraft:movement_speed": {
+		"desc": "Velocidad al caminar y correr."
+	},
+	"minecraft:sneaking_speed": {
+		"desc": "Velocidad al andar agachado, como proporción de la normal."
+	},
+	"minecraft:flying_speed": {
+		"desc": "Velocidad de vuelo (modo creativo y criaturas voladoras)."
+	},
+	"minecraft:movement_efficiency": {
+		"desc": "Reduce la lentitud que te causan bloques como la arena de almas o la miel. Con 1 no te frenan."
+	},
+	"minecraft:water_movement_efficiency": {
+		"desc": "Reduce lo que te frena el agua al nadar. Con 1 te mueves como en tierra."
+	},
+	"minecraft:jump_strength": {
+		"desc": "Fuerza de tu salto: a más fuerza, más alto saltas."
+	},
+	"minecraft:step_height": {
+		"desc": "Altura de los escalones que subes sin saltar, en bloques."
+	},
+	"minecraft:safe_fall_distance": {
+		"desc": "Altura, en bloques, desde la que caes sin hacerte daño."
+	},
+	"minecraft:fall_damage_multiplier": {
+		"desc": "Multiplicador del daño por caída. Por debajo de 1 te haces menos daño."
+	},
+	"minecraft:gravity": {
+		"desc": "Con qué fuerza te atrae el suelo al caer. Menos gravedad, caída más lenta."
+	},
+	"minecraft:oxygen_bonus": {
+		"desc": "Alarga el tiempo que aguantas bajo el agua, como el encantamiento Respiración."
+	},
+	"minecraft:burning_time": {
+		"desc": "Multiplicador del tiempo que ardes. Por debajo de 1 ardes menos."
+	},
+	"minecraft:luck": {
+		"desc": "Mejora el botín que depende de la suerte (pesca, algunos cofres...)."
+	},
+	"minecraft:mining_efficiency": {
+		"desc": "Velocidad de minado extra cuando usas la herramienta adecuada, como el encantamiento Eficiencia."
+	},
+	"minecraft:block_break_speed": {
+		"desc": "Multiplicador de la velocidad con la que rompes bloques. Por encima de 1 rompes más deprisa."
+	},
+	"minecraft:submerged_mining_speed": {
+		"desc": "Multiplicador de la velocidad de minado bajo el agua. Normalmente el agua te hace minar muy despacio."
+	},
+	"minecraft:block_interaction_range": {
+		"desc": "Distancia, en bloques, a la que puedes romper y colocar bloques."
+	},
+	"minecraft:entity_interaction_range": {
+		"desc": "Distancia, en bloques, a la que puedes golpear o interactuar con criaturas."
+	},
+	"minecraft:sweeping_damage_ratio": {
+		"desc": "Qué parte del daño de tu golpe reciben los enemigos cercanos con el barrido de la espada."
+	},
+	"minecraft:scale": {
+		"desc": "Tamaño del cuerpo. Por debajo de 1 eres más pequeño; por encima, más grande."
+	},
+	"minecraft:waypoint_transmit_range": {
+		"desc": "A qué distancia te ven los demás jugadores en su barra de localización. Con -100 % no apareces."
+	},
+	"minecraft:waypoint_receive_range": {
+		"desc": "A qué distancia ves a otros jugadores en tu barra de localización."
+	},
+	"minecraft:follow_range": {
+		"desc": "Distancia a la que una criatura te detecta y te persigue. Solo afecta a criaturas."
+	},
+	"minecraft:tempt_range": {
+		"desc": "Distancia a la que un animal reacciona a la comida que llevas. Solo afecta a animales."
+	},
+	"minecraft:spawn_reinforcements": {
+		"desc": "Probabilidad de que un zombi llame a refuerzos al ser herido. Solo afecta a zombis."
+	},
+	"minecraft:camera_distance": {
+		"desc": "Distancia de la cámara en tercera persona."
+	},
+	"minecraft:name_tag_distance": {
+		"desc": "Distancia máxima desde la que se ve el nombre sobre la cabeza."
+	},
+	"minecraft:below_name_distance": {
+		"desc": "Distancia máxima desde la que se ve el texto bajo el nombre."
+	},
+	"minecraft:air_drag_modifier": {
+		"desc": "Ajuste interno de la resistencia del aire al moverse. No lo usan los objetos normales."
+	},
+	"minecraft:friction_modifier": {
+		"desc": "Ajuste interno del rozamiento con el suelo. No lo usan los objetos normales."
+	},
+	"minecraft:bounciness": {
+		"desc": "Ajuste interno de cuánto rebota la criatura. No lo usan los objetos normales."
+	}
+}

@@ -24,6 +24,9 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -32,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.OminousBottleAmplifier;
 import net.minecraft.world.item.component.SuspiciousStewEffects;
@@ -60,6 +64,8 @@ public final class GuiaSuite implements Suite {
 		effectDescriptions(ctx);
 		effectFormulas(ctx);
 		inspectorEffects(ctx);
+		attributeDescriptions(ctx);
+		inspectorEquipment(ctx);
 	}
 
 	/**
@@ -96,6 +102,47 @@ public final class GuiaSuite implements Suite {
 			potions.add(h.key().identifier().toString(), list);
 		});
 		root.add("pociones", potions);
+
+		// Atributos y objetos que los usan (los modificadores de los objetos vienen de sus componentes por defecto).
+		com.google.gson.JsonObject attrs = new com.google.gson.JsonObject();
+		net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.listElements().forEach(h -> {
+			com.google.gson.JsonObject o = new com.google.gson.JsonObject();
+			o.addProperty("clave", h.value().getDescriptionId());
+			o.addProperty("por_defecto", h.value().getDefaultValue());
+			attrs.add(h.key().identifier().toString(), o);
+		});
+		root.add("atributos", attrs);
+		com.google.gson.JsonObject items = new com.google.gson.JsonObject();
+		com.google.gson.JsonObject counts = new com.google.gson.JsonObject();
+		java.util.Map<String, Integer> tally = new java.util.TreeMap<>();
+		net.minecraft.core.registries.BuiltInRegistries.ITEM.listElements().forEach(h -> {
+			var comps = h.value().components();
+			String id = h.key().identifier().toString();
+			for (var t : java.util.List.of(
+				net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.core.component.DataComponents.TOOL,
+				net.minecraft.core.component.DataComponents.WEAPON, net.minecraft.core.component.DataComponents.EQUIPPABLE,
+				net.minecraft.core.component.DataComponents.MAX_DAMAGE, net.minecraft.core.component.DataComponents.ENCHANTABLE,
+				net.minecraft.core.component.DataComponents.REPAIRABLE, net.minecraft.core.component.DataComponents.BLOCKS_ATTACKS,
+				net.minecraft.core.component.DataComponents.GLIDER, net.minecraft.core.component.DataComponents.PIERCING_WEAPON,
+				net.minecraft.core.component.DataComponents.KINETIC_WEAPON, net.minecraft.core.component.DataComponents.DAMAGE_RESISTANT,
+				net.minecraft.core.component.DataComponents.UNBREAKABLE)) {
+				if (comps.has(t)) {
+					tally.merge(net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(t) + (id.startsWith("minecraft:") ? "" : " [mods]"), 1, Integer::sum);
+				}
+			}
+			var mods = comps.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
+			if (mods != null && !mods.modifiers().isEmpty()) {
+				com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+				for (var e : mods.modifiers()) {
+					arr.add(e.attribute().unwrapKey().map(k -> k.identifier().toString()).orElse("?") + " " + e.modifier().operation().name()
+						+ " " + e.modifier().amount() + " @" + e.slot().getSerializedName());
+				}
+				items.add(id, arr);
+			}
+		});
+		tally.forEach(counts::addProperty);
+		root.add("objetos_con_atributos", items);
+		root.add("componentes_en_objetos", counts);
 		try {
 			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-registro.json"),
 				new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(root), java.nio.charset.StandardCharsets.UTF_8);
@@ -286,7 +333,7 @@ public final class GuiaSuite implements Suite {
 		ctx.check(all.contains("Nivel 3 de 5"), "muestra nivel actual y maximo del Filo");
 		ctx.check(all.contains("Sin descripción todavía."), "lo que no esta descrito lo dice (Irrompibilidad)");
 		ctx.check(all.contains("minecraft:unbreaking"), "e incluye el id para poder reportarlo");
-		ctx.eq(2, countEntries(gui), "una entrada por encantamiento (2)");
+		ctx.eq(2, countOf(gui, Items.ENCHANTED_BOOK), "una entrada por encantamiento (2)");
 
 		ItemStack real = p.getInventory().getItem(9);
 		ctx.check(real.is(Items.DIAMOND_SWORD) && real.getCount() == 1 && real.getEnchantments().size() == 2, "el objeto real sigue intacto en el inventario");
@@ -308,7 +355,7 @@ public final class GuiaSuite implements Suite {
 		ctx.check(catalog.contains("Velocidad de minado") || catalog.contains("Nivel máximo: 5"), "incluye Eficiencia con su dato");
 		ctx.check(catalog.contains("2 de durabilidad"), "incluye Reparacion con su descripcion");
 		ctx.check(!catalog.contains("Nivel 1 de"), "en el catalogo no hay nivel actual");
-		ctx.check(gui.getGuiElement(49).getItemStack().is(Items.OAK_SIGN), "explica que son los que admite");
+		ctx.check(countOf(gui, Items.OAK_SIGN) >= 1 && catalog.contains("puede recibir"), "un separador explica que son los que admite");
 		ctx.check(!catalog.contains("warft:tech") && !catalog.contains("rnt:internal"), "no lista encantamientos internos de los mods");
 
 		// Libro encantado: los encantamientos guardados tambien se leen.
@@ -476,6 +523,151 @@ public final class GuiaSuite implements Suite {
 		ctx.eq(1, GuideBook.count(p), "el inventario sigue intacto");
 	}
 
+	// ---- atributos y equipo ----
+	private void attributeDescriptions(Ctx ctx) {
+		// Todo atributo del juego tiene descripcion (un objeto puede llevar cualquiera, p. ej. los de RPG Loot).
+		BuiltInRegistries.ATTRIBUTE.keySet().forEach(id ->
+			ctx.check(Descriptions.attribute(id.toString()) != null, "atributo sin descripcion: " + id));
+		for (String id : Descriptions.attributeIds()) {
+			ctx.check(BuiltInRegistries.ATTRIBUTE.containsKey(Identifier.parse(id)), "el atributo descrito existe: " + id);
+			ctx.check(!Descriptions.attribute(id).desc().isBlank(), id + ": tiene descripcion");
+		}
+		ctx.eq("+7", Text.signed(7.0, false), "signed: entero con signo");
+		ctx.eq("-3,1", Text.signed(-3.1, false), "signed: negativo con coma");
+		ctx.eq("+20 %", Text.signed(0.2, true), "signed: proporcional como porcentaje");
+	}
+
+	/** Fichas de ejemplo tal como las lee el jugador (purgatorio-guia-muestras.txt en el servidor de pruebas), para revisarlas. */
+	private void writeSamples(Ctx ctx, ServerPlayer p) {
+		StringBuilder out = new StringBuilder();
+		InspectorGui insp = InspectorGui.open(p);
+		var registry = ctx.level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+		ItemStack enchanted = new ItemStack(Items.DIAMOND_SWORD);
+		enchanted.enchant(registry.getOrThrow(Enchantments.SHARPNESS), 3);
+		for (var item : java.util.List.of(enchanted, new ItemStack(Items.NETHERITE_CHESTPLATE), new ItemStack(Items.IRON_PICKAXE),
+			new ItemStack(Items.IRON_AXE), PotionContents.createItemStack(Items.POTION, Potions.TURTLE_MASTER), new ItemStack(Items.GOLDEN_APPLE))) {
+			insp.select(item);
+			out.append("=================== ").append(item.getHoverName().getString()).append('\n');
+			for (int i = INSPECTOR_FIRST_ENTRY; i <= INSPECTOR_LAST_ENTRY; i++) {
+				var e = insp.gui().getGuiElement(i);
+				if (e == null) {
+					continue;
+				}
+				out.append("[").append(e.getItemStack().getHoverName().getString()).append("]\n");
+				ItemLore lore = e.getItemStack().get(DataComponents.LORE);
+				if (lore != null) {
+					lore.lines().forEach(l -> out.append("    ").append(l.getString()).append('\n'));
+				}
+				if (i > INSPECTOR_FIRST_ENTRY + 11) {
+					out.append("    ... (").append("recortado a 12 entradas)\n");
+					break;
+				}
+			}
+		}
+		try {
+			java.nio.file.Files.writeString(java.nio.file.Path.of("purgatorio-guia-muestras.txt"), out.toString(), java.nio.charset.StandardCharsets.UTF_8);
+		} catch (java.io.IOException e) {
+			ctx.check(false, "no se pudieron escribir las muestras: " + e);
+		}
+	}
+
+	private void inspectorEquipment(Ctx ctx) {
+		ServerPlayer p = ctx.join("guia-equipo").player();
+		InspectorGui insp = InspectorGui.open(p);
+		var gui = insp.gui();
+		var all = (java.util.function.Supplier<String>) () -> loreOf(gui, INSPECTOR_FIRST_ENTRY, INSPECTOR_LAST_ENTRY);
+
+		// Espada de hierro: las cifras esperadas se calculan LEYENDO EL JUEGO, no se escriben a mano.
+		ItemStack sword = new ItemStack(Items.IRON_SWORD);
+		double damageBase = p.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
+		double speedBase = p.getAttribute(Attributes.ATTACK_SPEED).getBaseValue();
+		double damageMod = modifierSum(sword, Attributes.ATTACK_DAMAGE);
+		double speedMod = modifierSum(sword, Attributes.ATTACK_SPEED);
+		insp.select(sword);
+		String lore = all.get();
+		ctx.check(lore.contains("En la mano principal: " + Text.signed(damageMod, false) + "  (total: " + Text.num(damageBase + damageMod) + ")"),
+			"el daño de la espada y su total salen del juego (" + damageBase + " + " + damageMod + "): " + lore);
+		ctx.check(lore.contains("(total: " + Text.num(speedBase + speedMod) + ")"), "y los golpes por segundo (" + speedBase + " + " + speedMod + ")");
+		ctx.check(lore.contains("Valor normal: " + Text.num(damageBase)), "con el valor normal del jugador");
+		ctx.check(lore.contains("Daño de tus golpes cuerpo a cuerpo"), "y explica que significa el atributo");
+		ctx.check(lore.contains("Durabilidad: " + sword.getMaxDamage() + " de " + sword.getMaxDamage() + " (100 %)"), "durabilidad completa: " + lore);
+		ctx.check(lore.contains(new ItemStack(Items.IRON_INGOT).getHoverName().getString()), "dice con que se repara (lingote de hierro)");
+		ctx.check(lore.contains("Encantabilidad: " + sword.get(DataComponents.ENCHANTABLE).value()), "y su encantabilidad");
+		ctx.check(lore.contains("Desgaste: " + sword.get(DataComponents.WEAPON).itemDamagePerAttack() + " por golpe"), "desgaste por golpe del arma");
+		ctx.check(countOf(gui, Items.OAK_SIGN) >= 1, "y tras los datos, lo que admite como encantamiento");
+
+		// La espada rompe la telaraña y el bambu al instante: debe decirlo, no escribir el valor interno del juego.
+		ctx.check(lore.contains("Rompe al instante:") && !lore.contains("340282"), "el minado instantaneo no enseña el numero interno: " + lore);
+		ctx.check(lore.contains(net.minecraft.world.level.block.Blocks.COBWEB.getName().getString()), "y nombra los bloques concretos (telaraña)");
+
+		ItemStack worn = new ItemStack(Items.IRON_SWORD);
+		worn.setDamageValue(worn.getMaxDamage() / 2);
+		insp.select(worn);
+		ctx.check(all.get().contains("Durabilidad: " + (worn.getMaxDamage() - worn.getDamageValue()) + " de " + worn.getMaxDamage() + " (50 %)"), "durabilidad a medias: " + all.get());
+
+		insp.select(new ItemStack(Items.IRON_AXE));
+		ctx.check(all.get().contains("Desactiva el escudo del rival"), "el hacha desactiva escudos");
+		insp.select(new ItemStack(Items.IRON_PICKAXE));
+		lore = all.get();
+		ctx.check(lore.contains("piedra, minerales y metales") && lore.contains("Desgaste: 1 por bloque roto"), "el pico explica sus reglas de minado: " + lore);
+
+		// Armadura: hueco, atributos y resistencia del objeto suelto (netherita).
+		ItemStack chest = new ItemStack(Items.NETHERITE_CHESTPLATE);
+		insp.select(chest);
+		lore = all.get();
+		ctx.check(lore.contains("En el pecho: " + Text.signed(modifierSum(chest, Attributes.ARMOR), false)), "la armadura del peto sale del juego: " + lore);
+		ctx.check(lore.contains("En el pecho: " + Text.signed(modifierSum(chest, Attributes.KNOCKBACK_RESISTANCE), false)), "y su resistencia al empuje");
+		ctx.check(lore.contains("Se equipa en: el pecho"), "dice donde se equipa");
+		ctx.check(lore.contains("no se destruye por:") && lore.contains("fuego y lava"), "la netherita no se quema como objeto suelto: " + lore);
+		ctx.check(lore.contains("Valor normal: 0"), "el valor normal de la armadura es 0");
+
+		// Adorno de armadura.
+		var trimMaterials = ctx.level.registryAccess().lookupOrThrow(Registries.TRIM_MATERIAL);
+		var trimPatterns = ctx.level.registryAccess().lookupOrThrow(Registries.TRIM_PATTERN);
+		ItemStack trimmed = new ItemStack(Items.DIAMOND_CHESTPLATE);
+		trimmed.set(DataComponents.TRIM, new net.minecraft.world.item.equipment.trim.ArmorTrim(
+			trimMaterials.get(net.minecraft.world.item.equipment.trim.TrimMaterials.AMETHYST).orElseThrow(),
+			trimPatterns.get(net.minecraft.world.item.equipment.trim.TrimPatterns.SENTRY).orElseThrow()));
+		insp.select(trimmed);
+		ctx.check(all.get().contains("Adorno: "), "una armadura con adorno lo muestra: " + all.get());
+
+		insp.select(new ItemStack(Items.ELYTRA));
+		ctx.check(all.get().contains("Permite planear"), "los elytros permiten planear");
+		insp.select(new ItemStack(Items.SHIELD));
+		ctx.check(all.get().contains("Bloquea ataques de frente"), "el escudo bloquea");
+
+		// Atributos AÑADIDOS al objeto (como hace RPG Loot): se leen del objeto concreto, no del tipo.
+		ItemStack loot = new ItemStack(Items.IRON_SWORD);
+		ItemAttributeModifiers base = loot.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+		loot.set(DataComponents.ATTRIBUTE_MODIFIERS, base
+			.withModifierAdded(Attributes.MAX_HEALTH, new AttributeModifier(Identifier.parse("test:bonus_vida"), 4.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+			.withModifierAdded(Attributes.MOVEMENT_SPEED, new AttributeModifier(Identifier.parse("test:bonus_vel"), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_BASE), EquipmentSlotGroup.MAINHAND)
+			.withModifierAdded(Attributes.FOLLOW_RANGE, new AttributeModifier(Identifier.parse("test:bonus_follow"), 5.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND));
+		insp.select(loot);
+		lore = all.get();
+		ctx.check(lore.contains("En la mano principal: +4") && lore.contains("Tu vida máxima"), "un atributo añadido (vida +4) aparece con su explicacion: " + lore);
+		ctx.check(lore.contains("En la mano principal: +10 %"), "uno proporcional sale como porcentaje (+10 %)");
+		ctx.check(lore.contains("Valor normal: " + Text.num(Attributes.FOLLOW_RANGE.value().getDefaultValue())), "un atributo que el jugador no tiene usa su valor por defecto sin fallar");
+		ctx.check(countOf(gui, Items.PAPER) >= 1 || countOf(gui, Items.GOLDEN_APPLE) >= 1, "con su propio icono");
+
+		// Objetos sin nada de esto siguen sin inventar entradas.
+		insp.select(new ItemStack(Items.DIRT));
+		ctx.eq(1, countEntries(gui), "la tierra sigue mostrando solo el cartel");
+		ctx.eq(1, GuideBook.count(p), "el inventario sigue intacto");
+		writeSamples(ctx, p);
+	}
+
+	/** Suma de los modificadores ADD_VALUE de un atributo en un objeto (lo que el juego dice que aporta). */
+	private static double modifierSum(ItemStack stack, Holder<net.minecraft.world.entity.ai.attributes.Attribute> attribute) {
+		double sum = 0;
+		for (var e : stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY).modifiers()) {
+			if (e.attribute().equals(attribute) && e.modifier().operation() == AttributeModifier.Operation.ADD_VALUE) {
+				sum += e.modifier().amount();
+			}
+		}
+		return sum;
+	}
+
 	// ---- utilidades ----
 	/** Envia un clic de contenedor por el mismo camino que la red (SGUI y mixins incluidos). */
 	private static void packet(ServerPlayer p, int slot, int button, ContainerInput input) {
@@ -503,6 +695,18 @@ public final class GuiaSuite implements Suite {
 		int n = 0;
 		for (int i = INSPECTOR_FIRST_ENTRY; i <= INSPECTOR_LAST_ENTRY; i++) {
 			if (gui.getGuiElement(i) != null) {
+				n++;
+			}
+		}
+		return n;
+	}
+
+	/** Entradas de la zona cuyo icono es ese objeto. */
+	private static int countOf(eu.pb4.sgui.api.gui.SimpleGui gui, net.minecraft.world.item.Item item) {
+		int n = 0;
+		for (int i = INSPECTOR_FIRST_ENTRY; i <= INSPECTOR_LAST_ENTRY; i++) {
+			var e = gui.getGuiElement(i);
+			if (e != null && e.getItemStack().is(item)) {
 				n++;
 			}
 		}

@@ -21,6 +21,7 @@ import java.util.Map;
 public final class Descriptions {
 	public static final String ENCHANTMENTS_RESOURCE = "/purgatorio_guia/encantamientos.json";
 	public static final String EFFECTS_RESOURCE = "/purgatorio_guia/efectos.json";
+	public static final String ATTRIBUTES_RESOURCE = "/purgatorio_guia/atributos.json";
 	/** En efectos.json, las pociones base sin efectos van como "potion:<id de la pocion>". */
 	public static final String POTION_PREFIX = "potion:";
 
@@ -67,6 +68,7 @@ public final class Descriptions {
 
 	private static volatile Map<String, Entry> enchantments = Map.of();
 	private static volatile Map<String, Entry> effects = Map.of();
+	private static volatile Map<String, Entry> attributes = Map.of();
 
 	private Descriptions() {
 	}
@@ -74,7 +76,9 @@ public final class Descriptions {
 	public static void load() {
 		enchantments = read(ENCHANTMENTS_RESOURCE);
 		effects = read(EFFECTS_RESOURCE);
-		PurgatorioGuia.LOGGER.info("Guia: {} encantamientos y {} efectos descritos", enchantments.size(), effects.size());
+		attributes = read(ATTRIBUTES_RESOURCE);
+		PurgatorioGuia.LOGGER.info("Guia: {} encantamientos, {} efectos y {} atributos descritos",
+			enchantments.size(), effects.size(), attributes.size());
 	}
 
 	private static Map<String, Entry> read(String resource) {
@@ -132,6 +136,15 @@ public final class Descriptions {
 	/** Descripcion de un efecto (o, con {@link #POTION_PREFIX}, de una pocion base) por id, o null. */
 	public static Entry effect(String id) {
 		return effects.get(id);
+	}
+
+	/** Descripcion de un atributo (minecraft:armor...) por id, o null. */
+	public static Entry attribute(String id) {
+		return attributes.get(id);
+	}
+
+	public static java.util.Set<String> attributeIds() {
+		return attributes.keySet();
 	}
 
 	public static int size() {

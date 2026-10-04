@@ -19,6 +19,7 @@ SERVER = os.environ.get("SERVER_DIR") or glob.glob(os.path.expanduser(
 OUT = os.path.join(REPO, "build", "guia")
 ES_VANILLA = os.path.join(REPO, "build", "i18n-cache", "mojang-es_es-26.3.json")
 DESCRIPCIONES = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "encantamientos.json")
+DESCRIPCIONES_ATRIBUTOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "atributos.json")
 DESCRIPCIONES_EFECTOS = os.path.join(REPO, "core", "src", "guia", "resources", "purgatorio_guia", "efectos.json")
 # Volcado del registro REAL de efectos y pociones (lo escribe GuiaSuite en el servidor de pruebas). Para que incluya los
 # mods del servidor real: FULL_PACK=1 tools/run-integration-tests.sh guia
@@ -185,6 +186,22 @@ def main():
     if unknown_fx:
         print("AVISO: descripciones de efectos que no existen en el servidor:", unknown_fx)
 
+    # Atributos: los del registro real, cuantos objetos los llevan de serie y si estan descritos.
+    attributes = {}
+    if registry:
+        used = collections.Counter()
+        for arr in registry.get("objetos_con_atributos", {}).values():
+            for a in {x.split()[0] for x in arr}:
+                used[a] += 1
+        described_at = set()
+        if os.path.exists(DESCRIPCIONES_ATRIBUTOS):
+            described_at = {k for k in json.load(open(DESCRIPCIONES_ATRIBUTOS, encoding="utf-8")) if not k.startswith("_")}
+        for aid in registry.get("atributos", {}):
+            attributes[aid] = {"objetos": used.get(aid, 0), "descrita": aid in described_at}
+        unknown_at = sorted(described_at - set(attributes))
+        if unknown_at:
+            print("AVISO: descripciones de atributos que no existen en el servidor:", unknown_at)
+
     # Descripciones ya escritas para el inspector (las claves que empiezan por "_" son notas del formato).
     described = set()
     if os.path.exists(DESCRIPCIONES):
@@ -198,13 +215,13 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     json.dump(result, open(os.path.join(OUT, "enchantments.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
     json.dump(effects, open(os.path.join(OUT, "effects.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    write_doc(result, effects, potions_base, described_fx, registry is not None)
+    write_doc(result, effects, potions_base, described_fx, registry is not None, attributes)
     c = collections.Counter(r["tipo"] for r in result)
     pending_fx = sum(1 for e in effects.values() if not e["descrita"])
     print(f"{len(result)} encantamientos: {dict(c)}; {len(effects)} efectos ({pending_fx} sin descripcion)")
 
 
-def write_doc(result, effects, potions_base, described_fx, has_registry):
+def write_doc(result, effects, potions_base, described_fx, has_registry, attributes):
     by_ns = collections.defaultdict(list)
     for r in result:
         by_ns[r["id"].split(":")[0]].append(r)
@@ -247,6 +264,17 @@ def write_doc(result, effects, potions_base, described_fx, has_registry):
         L += ["### Pociones sin efectos (base)", "", "| pocion | descrita |", "|---|---|"]
         for pid in potions_base:
             L.append(f"| `{pid}` | {'si' if 'potion:' + pid in described_fx else 'NO'} |")
+        L.append("")
+    if attributes:
+        done_at = sum(1 for a in attributes.values() if a["descrita"])
+        L += ["## Atributos", "",
+              f"**{len(attributes)} atributos**. **Descripciones: {done_at} escritas, {len(attributes) - done_at} por escribir.** "
+              "(Viven en `core/src/guia/resources/purgatorio_guia/atributos.json`.) Un objeto puede llevar cualquiera "
+              "(p. ej. los que añade RPG Loot a objetos concretos), por eso se describen todos. La columna *objetos* es "
+              "cuántos objetos los llevan de serie.", "",
+              "| id | objetos | descrita |", "|---|---|---|"]
+        for aid, a in sorted(attributes.items(), key=lambda kv: (-kv[1]["objetos"], kv[0])):
+            L.append(f"| `{aid}` | {a['objetos']} | {'si' if a['descrita'] else 'NO'} |")
         L.append("")
     open(os.path.join(REPO, "docs", "guia-inventario.md"), "w", encoding="utf-8").write("\n".join(L))
 

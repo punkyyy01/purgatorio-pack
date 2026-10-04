@@ -240,8 +240,8 @@ El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.s
 
 | id | categoria | descrita |
 |---|---|---|
-| `farmersdelight:comfort` | BENEFICIAL | si |
-| `farmersdelight:nourishment` | BENEFICIAL | si |
+| `farmersdelight:comfort` |  | si |
+| `farmersdelight:nourishment` |  | si |
 | `minecraft:absorption` | BENEFICIAL | si |
 | `minecraft:bad_omen` | NEUTRAL | si |
 | `minecraft:blindness` | HARMFUL | si |
@@ -291,3 +291,50 @@ El volcado del registro se genera con `FULL_PACK=1 tools/run-integration-tests.s
 | `minecraft:mundane` | si |
 | `minecraft:thick` | si |
 | `minecraft:water` | si |
+
+## Atributos
+
+**40 atributos**. **Descripciones: 40 escritas, 0 por escribir.** (Viven en `core/src/guia/resources/purgatorio_guia/atributos.json`.) Un objeto puede llevar cualquiera (p. ej. los que añade RPG Loot a objetos concretos), por eso se describen todos. La columna *objetos* es cuántos objetos los llevan de serie.
+
+| id | objetos | descrita |
+|---|---|---|
+| `minecraft:attack_damage` | 45 | si |
+| `minecraft:attack_speed` | 45 | si |
+| `minecraft:armor` | 41 | si |
+| `minecraft:armor_toughness` | 41 | si |
+| `minecraft:waypoint_transmit_range` | 8 | si |
+| `minecraft:knockback_resistance` | 6 | si |
+| `minecraft:air_drag_modifier` | 0 | si |
+| `minecraft:attack_knockback` | 0 | si |
+| `minecraft:below_name_distance` | 0 | si |
+| `minecraft:block_break_speed` | 0 | si |
+| `minecraft:block_interaction_range` | 0 | si |
+| `minecraft:bounciness` | 0 | si |
+| `minecraft:burning_time` | 0 | si |
+| `minecraft:camera_distance` | 0 | si |
+| `minecraft:entity_interaction_range` | 0 | si |
+| `minecraft:explosion_knockback_resistance` | 0 | si |
+| `minecraft:fall_damage_multiplier` | 0 | si |
+| `minecraft:flying_speed` | 0 | si |
+| `minecraft:follow_range` | 0 | si |
+| `minecraft:friction_modifier` | 0 | si |
+| `minecraft:gravity` | 0 | si |
+| `minecraft:jump_strength` | 0 | si |
+| `minecraft:luck` | 0 | si |
+| `minecraft:max_absorption` | 0 | si |
+| `minecraft:max_health` | 0 | si |
+| `minecraft:mining_efficiency` | 0 | si |
+| `minecraft:movement_efficiency` | 0 | si |
+| `minecraft:movement_speed` | 0 | si |
+| `minecraft:name_tag_distance` | 0 | si |
+| `minecraft:oxygen_bonus` | 0 | si |
+| `minecraft:safe_fall_distance` | 0 | si |
+| `minecraft:scale` | 0 | si |
+| `minecraft:sneaking_speed` | 0 | si |
+| `minecraft:spawn_reinforcements` | 0 | si |
+| `minecraft:step_height` | 0 | si |
+| `minecraft:submerged_mining_speed` | 0 | si |
+| `minecraft:sweeping_damage_ratio` | 0 | si |
+| `minecraft:tempt_range` | 0 | si |
+| `minecraft:water_movement_efficiency` | 0 | si |
+| `minecraft:waypoint_receive_range` | 0 | si |

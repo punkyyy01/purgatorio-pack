@@ -28,7 +28,14 @@ mod de pruebas (`tools/run-integration-tests.sh guia`).
     un aviso cuando la duración real cambia (flecha 1/8, nube persistente 1/4, arrojadiza según la distancia). Las pociones
     sin efectos (agua, rara, vulgar, densa) explican para qué sirven. Si un objeto tiene encantamientos **y** efectos,
     salen los dos.
-  - Sin encantamientos ni efectos: lista los que admite y puede obtener el jugador (mismo criterio que el inventario: mesa,
+  - Equipo (fase 4): armaduras, armas y herramientas. Una entrada por **atributo del objeto** (armadura, dureza,
+    daño, golpes por segundo, resistencia al empuje, vida...) con qué significa, el valor normal del jugador, lo que
+    aporta cada hueco ("En el pecho: +8") y, cuando importa, el total (daño del golpe, golpes por segundo). Además:
+    durabilidad actual y máxima, con qué se repara, encantabilidad y resistencia del objeto suelto (netherita);
+    reglas de minado de la herramienta ("×6 en piedra, minerales y metales", "rompe al instante: bambú"); desgaste por
+    golpe y si desactiva escudos; hueco de equipo, planeo (élitros), escudo y adorno de armadura. Se lee **el objeto
+    concreto**, no el tipo: los atributos que otros mods añaden a un objeto (RPG Loot...) salen igual.
+  - Sin encantamientos ni efectos: tras los datos del equipo, un separador y la lista de los que admite y puede obtener el jugador (mismo criterio que el inventario: mesa,
     aldeanos, botín, tesoro o maldición; los internos de mods no salen). Paginado (36 por página).
   - Todo se explica: no hay objetos "secretos" (decisión de diseño; si más adelante se quiere ocultar alguno, será una
     lista explícita).
@@ -44,6 +51,10 @@ líneas automáticas cuando un atributo interno no dice nada útil (p. ej. Invis
 van como `potion:<id>`. **Las cifras de intervalos y curas las verifica `GuiaSuite` contra el código del juego**
 (`shouldApplyEffectTickThisTick` y aplicando el efecto a un jugador): si se cambia una fórmula mal, la prueba falla.
 Un efecto nuevo de un mod sin descripción también hace fallar la suite hasta que se describa.
+
+**Atributos** (`atributos.json`): solo `desc` (qué significa). Las cifras (valor normal, valor del objeto, total) las
+calcula el inspector leyendo el juego. Hay entradas para los 40 atributos porque un objeto puede llevar cualquiera; un
+atributo nuevo sin descripción hace fallar la suite.
 
 **Encantamientos:** editar `core/src/guia/resources/purgatorio_guia/encantamientos.json` (el formato está en la clave `_formato`):
 
@@ -74,6 +85,10 @@ Los jugadores que ya estén dentro reciben el libro en menos de medio segundo; l
 
 ## Pendiente (fases siguientes)
 
-Armaduras/armas/herramientas por atributos (fase 4), ítems especiales a mano (fase 5; p. ej. la miel que cura el
-veneno, que hoy no se explica porque quita efectos en vez de darlos), y las 143 descripciones de encantamientos.
+Ítems especiales a mano (fase 5): **Trims Overhaul** (datapack del servidor con 17 patrones con habilidades, 9
+materiales con atributos, plantillas con propietario y misiones; sus textos están en los `es_es` del propio mod, así que
+se puede reutilizar sin reescribir; hoy el inspector solo dice que hay un adorno), la miel que quita el veneno (quita
+efectos en vez de darlos) y las armas de lanza (componentes `piercing_weapon`/`kinetic_weapon`, aún sin explicar).
+Y las **143 descripciones de encantamientos**: ahora son lo más visible, porque cualquier armadura, arma o herramienta
+sin encantar lista los que admite y casi todos salen como "Sin descripción todavía".
 Tampoco se explica aún cómo se elabora cada poción.

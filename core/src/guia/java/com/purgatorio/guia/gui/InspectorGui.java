@@ -2,6 +2,7 @@ package com.purgatorio.guia.gui;
 
 import com.purgatorio.guia.inspect.EffectEntries;
 import com.purgatorio.guia.inspect.EnchantmentEntries;
+import com.purgatorio.guia.inspect.EquipmentEntries;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import java.util.ArrayList;
@@ -103,13 +104,22 @@ public final class InspectorGui {
 	private void renderEntries() {
 		EnchantmentEntries.Result result = EnchantmentEntries.of(player, inspected);
 		List<GuiElementBuilder> effects = EffectEntries.of(player, inspected);
-		// Si el objeto tiene encantamientos o da efectos se explica eso; si no, el catalogo de lo que admite.
-		boolean catalog = !result.enchanted() && effects.isEmpty();
+		List<GuiElementBuilder> equipment = EquipmentEntries.of(player, inspected);
+		// Orden: encantamientos puestos, efectos y datos del equipo. Si el objeto no tiene encantamientos ni da efectos,
+		// al final se lista lo que admite (con un separador, porque comparte lista con los datos del equipo).
 		List<GuiElementBuilder> entries = new ArrayList<>();
-		if (result.enchanted() || catalog) {
+		if (result.enchanted()) {
 			entries.addAll(result.entries());
 		}
 		entries.addAll(effects);
+		entries.addAll(equipment);
+		if (!result.enchanted() && effects.isEmpty() && !result.entries().isEmpty()) {
+			entries.add(new GuiElementBuilder(Items.OAK_SIGN)
+				.setName(Ui.text("Encantamientos que admite", ChatFormatting.YELLOW).withStyle(ChatFormatting.BOLD))
+				.addLoreLine(Ui.text("Este objeto no tiene encantamientos.", ChatFormatting.GRAY))
+				.addLoreLine(Ui.text("Estos son los que puede recibir (" + result.entries().size() + "):", ChatFormatting.GRAY)));
+			entries.addAll(result.entries());
+		}
 		int pages = Math.max(1, (entries.size() + PAGE_SIZE - 1) / PAGE_SIZE);
 		page = Math.min(page, pages - 1);
 		if (entries.isEmpty()) {
@@ -119,12 +129,7 @@ public final class InspectorGui {
 				.addLoreLine(Ui.text("efectos, y no admite encantamientos.", ChatFormatting.GRAY)));
 			return;
 		}
-		if (catalog) {
-			gui.setSlot(PAGE_INFO_SLOT, new GuiElementBuilder(Items.OAK_SIGN)
-				.setName(Ui.text("Sin encantamientos", ChatFormatting.YELLOW).withStyle(ChatFormatting.BOLD))
-				.addLoreLine(Ui.text("Estos son los que admite:", ChatFormatting.GRAY))
-				.addLoreLine(Ui.text(entries.size() + " en total (página " + (page + 1) + "/" + pages + ")", ChatFormatting.DARK_GRAY)));
-		} else if (pages > 1) {
+		if (pages > 1) {
 			gui.setSlot(PAGE_INFO_SLOT, new GuiElementBuilder(Items.OAK_SIGN)
 				.setName(Ui.text("Página " + (page + 1) + "/" + pages, ChatFormatting.YELLOW)));
 		}
