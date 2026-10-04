@@ -746,5 +746,140 @@
 			"Wither durante 3 a 10 s",
 			"Wither durante 3 a 15 s"
 		]
+	},
+	"nova_structures:aerials_bane": {
+		"desc": "Hace más daño a los enemigos que están en el aire y a los voladores (Breeze, Vex y Wither). No cuenta si están en el agua o montados. Con arco o ballesta suma menos.",
+		"efecto": "Cuerpo a cuerpo: +{v} de daño · Con arco o ballesta: +{w}",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			},
+			"w": {
+				"base": 2,
+				"paso": 1
+			}
+		}
+	},
+	"nova_structures:antidote": {
+		"desc": "Peto: mientras tengas Veneno o Wither no recibes el daño de esos efectos, pero la pieza pierde 1 de durabilidad cada vez que te habría hecho daño."
+	},
+	"nova_structures:conductivity_curse": {
+		"desc": "Maldición (objetos de metal): con tormenta eléctrica y a cielo abierto, cada segundo hay un 10 % de probabilidad de que te caiga un rayo. Con una maza o una llave de cámara de pruebas en la mano sube a un 23 %."
+	},
+	"nova_structures:function_only": {
+		"desc": "Encantamiento técnico de Dungeons & Taverns, para palos y pedernales de los jefes: evita que el objeto se suelte al morir y activa mecánicas de jefes. No tiene ningún uso para el jugador."
+	},
+	"nova_structures:ghasted": {
+		"desc": "Ballesta: la flecha se convierte en una bola de fuego como la del Ghast, que explota al impactar. Cargar la ballesta tarda más.",
+		"niveles": [
+			"Explosión de potencia 1 · carga 1,5 s más lenta",
+			"Explosión de potencia 2 · carga 2 s más lenta",
+			"Explosión de potencia 3 · carga 2,5 s más lenta"
+		]
+	},
+	"nova_structures:gravity": {
+		"desc": "Ballesta: al impactar, la flecha atrae hacia el punto de impacto todo lo que haya cerca (unos 6 bloques si da a una criatura, 10 si se clava en un bloque), sin romper bloques.",
+		"niveles": [
+			"Atracción: ×0,75",
+			"Atracción: ×1",
+			"Atracción: ×1,25"
+		]
+	},
+	"nova_structures:hydro_veil": {
+		"desc": "Arnés de Happy Ghast: la montura se cura sola, arde un 25 % menos por nivel, empuja menos de las explosiones (25 % por nivel) y recibe un 20 % menos de daño de fuego y explosiones por nivel.",
+		"niveles": [
+			"La montura recupera 1 vida cada 4 s",
+			"La montura recupera 1 vida cada 3 s",
+			"La montura recupera 1 vida cada 2 s",
+			"La montura recupera 1 vida cada 1 s"
+		]
+	},
+	"nova_structures:illagers_bane": {
+		"desc": "Hace más daño a los illagers (saqueadores, vindicadores, evocadores, ilusionistas...), a los Vex, a los Ravager y a las brujas.",
+		"efecto": "Daño extra: +{v}",
+		"valores": {
+			"v": {
+				"base": 2.5,
+				"paso": 2.5
+			}
+		}
+	},
+	"nova_structures:multishot": {
+		"desc": "Arco: dispara 3 flechas a la vez en abanico."
+	},
+	"nova_structures:outreach": {
+		"desc": "Peto: aumenta tu alcance para romper y colocar bloques.",
+		"efecto": "Alcance de bloques: +{v} (normal: 4,5)",
+		"valores": {
+			"v": {
+				"base": 0.5,
+				"paso": 0.5
+			}
+		}
+	},
+	"nova_structures:photosynthesis": {
+		"desc": "El objeto se repara solo poco a poco mientras hay luz suficiente (nivel de luz 9 o más, de día a cielo abierto o en el End): recupera de media 1 de durabilidad cada 5 s."
+	},
+	"nova_structures:piercing": {
+		"desc": "Arco: la flecha atraviesa a las criaturas y sigue su camino.",
+		"efecto": "Atraviesa {v} objetivo(s) antes de detenerse",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 1
+			}
+		}
+	},
+	"nova_structures:power": {
+		"desc": "Ballesta: más daño.",
+		"efecto": "Daño extra: +{v} (2 puntos = 1 corazón)",
+		"valores": {
+			"v": {
+				"base": 1,
+				"paso": 0.5
+			}
+		}
+	},
+	"nova_structures:spiteful": {
+		"desc": "Arma: cuando te queda poca vida (5 puntos o menos, 2,5 corazones) haces más daño. Y cuando te golpean tienes una probabilidad de recibir Fuerza I durante 1 a 3 s.",
+		"efecto": "Con poca vida: +{v} de daño · Probabilidad de Fuerza al ser golpeado: {w} %",
+		"valores": {
+			"v": {
+				"base": 2,
+				"paso": 2
+			},
+			"w": {
+				"base": 30,
+				"paso": 15
+			}
+		}
+	},
+	"nova_structures:swift_soar": {
+		"desc": "Arnés de Happy Ghast: la montura vuela más rápido, y aún más si corres (sprint) montado, y la cámara se aleja.",
+		"niveles": [
+			"Velocidad de vuelo +10 % (+10 % más al correr)",
+			"Velocidad de vuelo +15 % (+20 % más al correr)",
+			"Velocidad de vuelo +20 % (+30 % más al correr)"
+		]
+	},
+	"nova_structures:traveler": {
+		"desc": "Botas: al correr (no agachado, nadando ni volando) subes escalones más altos y vas un poco más rápido. Se gastan muy poco.",
+		"niveles": [
+			"Al correr: escalones +0,5 bloques y velocidad +10 %",
+			"Al correr: escalones +0,6 bloques y velocidad +15 %",
+			"Al correr: escalones +0,7 bloques y velocidad +20 %"
+		]
+	},
+	"nova_structures:wax_wings": {
+		"desc": "Élitros: planear con calma no gasta durabilidad, pero a gran velocidad (más de 30 bloques por segundo) o por encima de Y 500 de día, las alas se derriten y se gastan muy deprisa. Solo funciona mientras al élitro le queden más de 3 de durabilidad."
+	},
+	"nova_structures:wither_coated": {
+		"desc": "Espadas, lanzas, hachas, tridente y maza: cada golpe directo aplica Wither al enemigo (menos a los esqueletos del Wither); a más nivel, más fuerte pero más corto. El objeto gasta 1 de durabilidad extra por golpe.",
+		"niveles": [
+			"Wither I durante 12 s",
+			"Wither II durante 6 s",
+			"Wither III durante 3 s"
+		]
 	}
 }
